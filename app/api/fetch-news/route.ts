@@ -41,7 +41,8 @@ export async function GET() {
     }
     
     return new Response('News Updated Successfully!', { status: 200 });
-  } catch (error) {
-    return new Response('Error updating news', { status: 500 });
+  } catch (error: any) {
+    console.error("The Error:", error);
+    return new Response(`Error: ${error.message || 'Unknown error'}`, { status: 500 });
   }
 }
