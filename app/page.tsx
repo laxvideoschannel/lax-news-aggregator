@@ -1,4 +1,6 @@
 export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 "use client";
 import { createClient } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
