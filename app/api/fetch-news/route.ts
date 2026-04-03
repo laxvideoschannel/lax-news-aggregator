@@ -1,18 +1,20 @@
 import { createClient } from '@supabase/supabase-js'
 import Parser from 'rss-parser'
 
-// This line is CRITICAL. It tells Vercel not to "pre-render" this page.
 export const dynamic = 'force-dynamic';
 
 const parser = new Parser();
 
 export async function GET() {
-  // Use the NEW variable names we set in Vercel
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || '', 
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
-  );
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
+  // DEFENSE MODE: If variables are missing, don't crash, just return an error message
+  if (!url || !key) {
+    return new Response("Database keys are missing in Vercel settings.", { status: 500 });
+  }
+
+  const supabase = createClient(url, key);
   const GOOGLE_NEWS_RSS = "https://news.google.com/rss/search?q=lacrosse+news+when:24h&hl=en-US&gl=US&ceid=US:en";
 
   try {
