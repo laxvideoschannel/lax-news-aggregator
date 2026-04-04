@@ -154,21 +154,6 @@ export default function TeamPage() {
                 <div
                   style={{
                     position: 'absolute',
-                    left: '42px',
-                    bottom: '26px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'flex-start',
-                    gap: '2px',
-                  }}
-                >
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', color: '#fff', letterSpacing: '0.05em', maxWidth: '150px' }}>
-                    {activePlayer.position.toUpperCase()}
-                  </div>
-                </div>
-                <div
-                  style={{
-                    position: 'absolute',
                     inset: '-16px',
                     border: '1px dashed rgba(204,0,0,0.3)',
                     borderRadius: '50%',
@@ -179,19 +164,42 @@ export default function TeamPage() {
               <div
                 style={{
                   position: 'absolute',
-                  top: '50%',
-                  right: '-28px',
+                  top: '58%',
+                  right: '-36px',
                   transform: 'translateY(-50%)',
-                  fontFamily: 'var(--font-display)',
-                  fontWeight: 900,
-                  fontSize: '76px',
-                  color: 'var(--primary)',
-                  lineHeight: 0.9,
-                  textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  gap: '2px',
                   pointerEvents: 'none',
                 }}
               >
-                #{activePlayer.number}
+                <div
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontWeight: 900,
+                    fontSize: '76px',
+                    color: 'var(--primary)',
+                    lineHeight: 0.9,
+                    textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                  }}
+                >
+                  #{activePlayer.number}
+                </div>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontWeight: 900,
+                    fontSize: '20px',
+                    color: '#fff',
+                    letterSpacing: '0.05em',
+                    lineHeight: 1,
+                    textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                    maxWidth: '160px',
+                  }}
+                >
+                  {activePlayer.position.toUpperCase()}
+                </div>
               </div>
               <div style={{ textAlign: 'center', marginTop: '24px' }}>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '48px', lineHeight: 0.95 }}>{activePlayer.name.toUpperCase()}</h2>

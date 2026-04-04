@@ -73,7 +73,7 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse',
     stats: [
       { label: 'All-Star Selections', value: '3x' },
-      { label: 'Position', value: 'Close D' },
+      { label: 'Career-High CT', value: '14' },
       { label: 'Conference', value: 'East' },
       { label: 'College', value: 'Duke' },
     ],
@@ -91,7 +91,7 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
     stats: [
       { label: 'All-Star', value: '2024' },
-      { label: 'Position', value: 'Close Defense' },
+      { label: 'Fastest Shot', value: '121 MPH' },
       { label: 'College', value: 'Cornell' },
       { label: 'Conference', value: 'East' },
     ],
