@@ -108,7 +108,9 @@ export default function SchedulePage() {
   }, [filter]);
 
   const upcoming = CHAOS_SCHEDULE_2026.find((game) => game.status === 'upcoming');
-  const finals = CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final').length;
+  const completedGames = CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final');
+  const wins = completedGames.filter((game) => game.homeId === 'chaos').length;
+  const losses = completedGames.length - wins;
 
   return (
     <div>
@@ -137,10 +139,18 @@ export default function SchedulePage() {
 
           <div style={{ display: 'flex', gap: '24px', marginTop: '36px', flexWrap: 'wrap' }}>
             {[
-              { label: 'Completed', val: `${finals}`, sub: 'Championship Series wins logged' },
-              { label: 'Next Game', val: upcoming ? upcoming.dateLabel.split(',')[0] : 'TBD', sub: upcoming ? `${getTeam(upcoming.awayId).city} at ${getTeam(upcoming.homeId).city}` : 'Awaiting official update' },
-              { label: 'Venue', val: upcoming ? 'Charlotte' : 'TBD', sub: upcoming ? upcoming.event : 'Official PLL schedule pending' },
-              { label: 'Theme', val: 'Logo', sub: 'Logo-first matchup cards' },
+              {
+                label: 'Next Game',
+                val: upcoming ? upcoming.dateLabel.split(',')[0] : 'TBD',
+                sub: upcoming
+                  ? `${getTeam(upcoming.awayId).full} vs ${getTeam(upcoming.homeId).full}`
+                  : 'Awaiting official update',
+              },
+              {
+                label: 'Season Record',
+                val: `${wins}-${losses}`,
+                sub: `${wins} wins / ${losses} losses`,
+              },
             ].map((item) => (
               <div key={item.label} style={{ borderLeft: '2px solid var(--primary)', paddingLeft: '16px' }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.val}</div>
