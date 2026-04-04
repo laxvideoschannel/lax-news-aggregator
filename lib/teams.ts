@@ -11,12 +11,12 @@ export interface Team {
 }
 
 export const PLL_TEAMS: Team[] = [
+  // Eastern
+  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: '🔴' },
   // Western
-  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Western', logo: '🔴' },
   { id: 'archers', name: 'Archers', city: 'Utah', full: 'Utah Archers', primary: '#1B3A6B', secondary: '#C8A951', accent: '#FFFFFF', conference: 'Western', logo: '🏹' },
   { id: 'outlaws', name: 'Outlaws', city: 'Denver', full: 'Denver Outlaws', primary: '#002868', secondary: '#BF0A30', accent: '#FFFFFF', conference: 'Western', logo: '⭐' },
   { id: 'redwoods', name: 'Redwoods', city: 'California', full: 'California Redwoods', primary: '#8B2500', secondary: '#228B22', accent: '#FFFFFF', conference: 'Western', logo: '🌲' },
-  // Eastern
   { id: 'cannons', name: 'Cannons', city: 'Boston', full: 'Boston Cannons', primary: '#002244', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: '💣' },
   { id: 'whipsnakes', name: 'Whipsnakes', city: 'Maryland', full: 'Maryland Whipsnakes', primary: '#FFD700', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: '🐍' },
   { id: 'atlas', name: 'Atlas', city: 'New York', full: 'New York Atlas', primary: '#003087', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: '🗺️' },
@@ -74,8 +74,8 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     stats: [
       { label: 'All-Star Selections', value: '3x' },
       { label: 'Position', value: 'Close D' },
-      { label: 'Conference', value: 'Western' },
-      { label: 'Season', value: '2025' },
+      { label: 'Conference', value: 'East' },
+      { label: 'College', value: 'Duke' },
     ],
     quote: 'Every year we come back hungry. This defense doesn\'t accept anything less than the best.',
     accolades: ['3x PLL All-Star', '2021 PLL Champion', 'Top-rated close defender'],
@@ -91,9 +91,9 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
     stats: [
       { label: 'All-Star', value: '2024' },
-      { label: 'Specialty', value: 'LH Attackmen' },
-      { label: 'Style', value: 'World-Class' },
-      { label: 'Conference', value: 'Western' },
+      { label: 'Position', value: 'Close Defense' },
+      { label: 'College', value: 'Cornell' },
+      { label: 'Conference', value: 'East' },
     ],
     quote: 'Defense wins championships. That\'s the identity we carry every single game.',
     accolades: ['2024 PLL All-Star', '2021 PLL Champion', 'Elite left-hand specialist defender'],
