@@ -1,147 +1,240 @@
 'use client';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { getTeam } from '@/lib/teams';
 
-const SCHEDULE_2026 = [
-  { date: 'Mar 8', day: 'Sun', home: 'Carolina Chaos', away: 'Utah Archers', time: '3:00 PM ET', location: 'Washington, D.C.', broadcast: 'ESPN+', type: 'Championship', result: 'W 24-16', final: true },
-  { date: 'Mar 7', day: 'Sat', home: 'Carolina Chaos', away: 'Denver Outlaws', time: '7:00 PM ET', location: 'Washington, D.C.', broadcast: 'ESPN+', type: 'Semifinal', result: 'W 23-22', final: true },
-  { date: 'Jun 7', day: 'Sat', home: 'Carolina Chaos', away: 'Denver Outlaws', time: '5:00 PM ET', location: 'Charlotte, NC', broadcast: 'ESPN+', type: 'Regular Season', result: 'W 12-9', final: true },
-  { date: 'Jun 14', day: 'Sat', home: 'Maryland Whipsnakes', away: 'Carolina Chaos', time: '2:00 PM ET', location: 'Baltimore, MD', broadcast: 'ESPN2', type: 'Regular Season', result: null, final: false },
-  { date: 'Jun 21', day: 'Sat', home: 'Carolina Chaos', away: 'Boston Cannons', time: '4:00 PM ET', location: 'Charlotte, NC', broadcast: 'ESPN+', type: 'Regular Season', result: null, final: false },
-  { date: 'Jun 28', day: 'Sat', home: 'Utah Archers', away: 'Carolina Chaos', time: '6:00 PM ET', location: 'Salt Lake City, UT', broadcast: 'ESPN+', type: 'Regular Season', result: null, final: false },
-  { date: 'Jul 5', day: 'Sat', home: 'Carolina Chaos', away: 'New York Atlas', time: '3:00 PM ET', location: 'Charlotte, NC', broadcast: 'ESPN', type: 'Regular Season', result: null, final: false },
-  { date: 'Jul 12', day: 'Sat', home: 'California Redwoods', away: 'Carolina Chaos', time: '7:00 PM ET', location: 'Los Angeles, CA', broadcast: 'ESPN+', type: 'Regular Season', result: null, final: false },
-  { date: 'Jul 19', day: 'Sat', home: 'Carolina Chaos', away: 'Philadelphia Waterdogs', time: '5:00 PM ET', location: 'Charlotte, NC', broadcast: 'ESPN2', type: 'Regular Season', result: null, final: false },
-  { date: 'Jul 26', day: 'Sat', home: 'Carolina Chaos', away: 'Maryland Whipsnakes', time: '4:00 PM ET', location: 'Charlotte, NC', broadcast: 'ESPN+', type: 'Regular Season', result: null, final: false },
-  { date: 'Aug 2', day: 'Sat', home: 'Denver Outlaws', away: 'Carolina Chaos', time: '8:00 PM ET', location: 'Denver, CO', broadcast: 'ESPN+', type: 'Regular Season', result: null, final: false },
-  { date: 'Aug 9', day: 'Sat', home: 'Carolina Chaos', away: 'Utah Archers', time: '3:00 PM ET', location: 'Charlotte, NC', broadcast: 'ABC', type: 'Regular Season', result: null, final: false },
+type Game = {
+  dateLabel: string;
+  sortDate: string;
+  venue: string;
+  event: string;
+  homeId: string;
+  awayId: string;
+  time: string;
+  broadcast: string;
+  status: 'final' | 'upcoming';
+  score?: string;
+};
+
+const CHAOS_SCHEDULE_2026: Game[] = [
+  {
+    dateLabel: 'Mar 8, Sun',
+    sortDate: '2026-03-08',
+    venue: 'Washington, D.C.',
+    event: 'Championship Series Final',
+    homeId: 'chaos',
+    awayId: 'archers',
+    time: '3:00 PM ET',
+    broadcast: 'ESPN+',
+    status: 'final',
+    score: '24-16',
+  },
+  {
+    dateLabel: 'Mar 7, Sat',
+    sortDate: '2026-03-07',
+    venue: 'Washington, D.C.',
+    event: 'Championship Series Semifinal',
+    homeId: 'chaos',
+    awayId: 'outlaws',
+    time: '7:00 PM ET',
+    broadcast: 'ESPN+',
+    status: 'final',
+    score: '23-22',
+  },
+  {
+    dateLabel: 'Jun 5, Fri',
+    sortDate: '2026-06-05',
+    venue: 'Charlotte, NC',
+    event: 'Chaos Homecoming',
+    homeId: 'chaos',
+    awayId: 'archers',
+    time: '6:00 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+  },
+  {
+    dateLabel: 'Jun 6, Sat',
+    sortDate: '2026-06-06',
+    venue: 'Charlotte, NC',
+    event: 'Chaos Homecoming',
+    homeId: 'chaos',
+    awayId: 'outlaws',
+    time: '5:30 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+  },
 ];
 
-export default function SchedulePage() {
-  const [filter, setFilter] = useState<'all' | 'upcoming' | 'results'>('all');
+function TeamBadge({ teamId }: { teamId: string }) {
+  const team = getTeam(teamId);
 
-  const filtered = SCHEDULE_2026.filter(g => {
-    if (filter === 'upcoming') return !g.final;
-    if (filter === 'results') return g.final;
-    return true;
-  });
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', minWidth: '118px' }}>
+      <div
+        style={{
+          width: '72px',
+          height: '72px',
+          borderRadius: '22px',
+          background: `linear-gradient(135deg, ${team.primary} 0%, ${team.secondary} 100%)`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          border: '1px solid var(--border)',
+          boxShadow: '0 16px 32px rgba(0,0,0,0.18)',
+          fontFamily: 'var(--font-display)',
+          fontWeight: 900,
+          fontSize: '28px',
+          color: team.accent,
+          letterSpacing: '0.04em',
+        }}
+      >
+        {team.short}
+      </div>
+      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)', textAlign: 'center' }}>
+        {team.city.toUpperCase()}
+      </div>
+    </div>
+  );
+}
+
+export default function SchedulePage() {
+  const [filter, setFilter] = useState<'all' | 'results' | 'upcoming'>('all');
+
+  const filtered = useMemo(() => {
+    if (filter === 'results') return CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final');
+    if (filter === 'upcoming') return CHAOS_SCHEDULE_2026.filter((game) => game.status === 'upcoming');
+    return CHAOS_SCHEDULE_2026;
+  }, [filter]);
+
+  const upcoming = CHAOS_SCHEDULE_2026.find((game) => game.status === 'upcoming');
+  const finals = CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final').length;
 
   return (
     <div>
-      {/* Header */}
-      <div style={{
-        background: 'linear-gradient(180deg, #0a0000 0%, var(--bg) 100%)',
-        padding: '80px 0 60px', borderBottom: '1px solid var(--border)',
-        position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', inset: 0,
-          backgroundImage: 'linear-gradient(rgba(204,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(204,0,0,0.04) 1px, transparent 1px)',
-          backgroundSize: '40px 40px',
-        }} />
+      <section
+        style={{
+          background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 10%, var(--bg)) 0%, var(--bg) 100%)',
+          padding: '80px 0 60px',
+          borderBottom: '1px solid var(--border)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'linear-gradient(color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px)',
+            backgroundSize: '40px 40px',
+          }}
+        />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div className="section-tag" style={{ marginBottom: '16px' }}>CAROLINA CHAOS</div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
             2026<br /><span style={{ color: 'var(--primary)' }}>SCHEDULE</span>
           </h1>
 
-          {/* Record banner */}
-          <div style={{ display: 'flex', gap: '24px', marginTop: '36px' }}>
+          <div style={{ display: 'flex', gap: '24px', marginTop: '36px', flexWrap: 'wrap' }}>
             {[
-              { label: 'Season Record', val: '—', sub: 'Season begins Jun 14' },
-              { label: 'Championship', val: '✓', sub: '2026 PLL Champions' },
-              { label: 'Next Game', val: 'Jun 14', sub: 'at Maryland' },
-              { label: 'Broadcast', val: 'ESPN', sub: 'Select games on ABC' },
-            ].map(s => (
-              <div key={s.label} style={{ borderLeft: '2px solid var(--primary)', paddingLeft: '16px' }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{s.val}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.1em', color: '#fff', marginTop: '2px' }}>{s.label.toUpperCase()}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{s.sub}</div>
+              { label: 'Completed', val: `${finals}`, sub: 'Championship Series wins logged' },
+              { label: 'Next Game', val: upcoming ? upcoming.dateLabel.split(',')[0] : 'TBD', sub: upcoming ? `${getTeam(upcoming.awayId).city} at ${getTeam(upcoming.homeId).city}` : 'Awaiting official update' },
+              { label: 'Venue', val: upcoming ? 'Charlotte' : 'TBD', sub: upcoming ? upcoming.event : 'Official PLL schedule pending' },
+              { label: 'Theme', val: 'Logo', sub: 'Logo-first matchup cards' },
+            ].map((item) => (
+              <div key={item.label} style={{ borderLeft: '2px solid var(--primary)', paddingLeft: '16px' }}>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.val}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--text)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
+                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{item.sub}</div>
               </div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Filter tabs */}
       <div style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', position: 'sticky', top: '70px', zIndex: 100 }}>
         <div className="container" style={{ display: 'flex', gap: '0', height: '52px', alignItems: 'center' }}>
-          {[['all', 'All Games'], ['results', 'Results'], ['upcoming', 'Upcoming']].map(([val, label]) => (
-            <button key={val} onClick={() => setFilter(val as any)} style={{
-              height: '100%', padding: '0 24px',
-              fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.15em',
-              border: 'none', cursor: 'pointer', transition: 'all 0.2s',
-              background: filter === val ? 'var(--primary)' : 'transparent',
-              color: filter === val ? '#fff' : 'var(--text-muted)',
-              borderBottom: filter === val ? 'none' : '2px solid transparent',
-            }}>{label.toUpperCase()}</button>
+          {[
+            ['all', 'All Games'],
+            ['results', 'Results'],
+            ['upcoming', 'Upcoming'],
+          ].map(([value, label]) => (
+            <button
+              key={value}
+              onClick={() => setFilter(value as 'all' | 'results' | 'upcoming')}
+              style={{
+                height: '100%',
+                padding: '0 24px',
+                fontFamily: 'var(--font-accent)',
+                fontSize: '11px',
+                letterSpacing: '0.15em',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: filter === value ? 'var(--primary)' : 'transparent',
+                color: filter === value ? '#fff' : 'var(--text-muted)',
+              }}
+            >
+              {label.toUpperCase()}
+            </button>
           ))}
         </div>
       </div>
 
-      {/* Schedule list */}
       <div className="container" style={{ padding: '48px 24px' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {filtered.map((game, i) => {
-            const isChaosHome = game.home === 'Carolina Chaos';
-            const isChampionship = game.type !== 'Regular Season';
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
+          {filtered.map((game) => {
+            const home = getTeam(game.homeId);
+            const away = getTeam(game.awayId);
+
             return (
-              <div key={i} className="card" style={{
-                display: 'grid', gridTemplateColumns: '80px 1fr auto auto',
-                gap: '24px', padding: '20px 24px', alignItems: 'center',
-                borderLeft: isChampionship ? '3px solid var(--primary)' : '3px solid transparent',
-              }}>
-                {/* Date */}
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: '#fff', lineHeight: 1 }}>
-                    {game.date.split(' ')[1]}
+              <div key={`${game.sortDate}-${game.homeId}-${game.awayId}`} className="card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%)' }} />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                    <div className="section-tag">{game.event}</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{game.dateLabel.toUpperCase()}</div>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--primary)' }}>
-                    {game.date.split(' ')[0].toUpperCase()}
-                  </div>
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '11px', color: 'var(--text-muted)' }}>{game.day}</div>
-                </div>
 
-                {/* Teams */}
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                    {isChampionship && (
-                      <span style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.15em', color: '#fff', background: 'var(--primary)', padding: '2px 8px' }}>
-                        {game.type.toUpperCase()}
-                      </span>
-                    )}
-                    <span style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.1em', color: 'var(--text-muted)' }}>
-                      {isChaosHome ? 'HOME' : 'AWAY'}
-                    </span>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '26px' }}>
+                    {game.venue} · {game.time} · <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
                   </div>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', lineHeight: 1.1 }}>
-                    <span style={{ color: isChaosHome ? '#fff' : 'var(--text-muted)' }}>{game.home}</span>
-                    <span style={{ color: 'var(--text-muted)', fontSize: '14px', margin: '0 8px' }}>vs</span>
-                    <span style={{ color: !isChaosHome ? '#fff' : 'var(--text-muted)' }}>{game.away}</span>
-                  </div>
-                  <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '4px' }}>
-                    {game.location} · {game.time} · <span style={{ color: '#fff' }}>{game.broadcast}</span>
-                  </div>
-                </div>
 
-                {/* Result or time */}
-                <div style={{ textAlign: 'right' }}>
-                  {game.result ? (
-                    <div style={{
-                      fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px',
-                      color: game.result.startsWith('W') ? '#22c55e' : '#ef4444',
-                    }}>{game.result}</div>
-                  ) : (
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '16px', color: 'var(--text-muted)' }}>
-                      {game.time.split(' ')[0]}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '16px', alignItems: 'center', marginBottom: '22px' }}>
+                    <TeamBadge teamId={game.awayId} />
+                    <div style={{ textAlign: 'center' }}>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginBottom: '8px' }}>VS</div>
+                      <div style={{ width: '42px', height: '2px', background: 'var(--border)', margin: '0 auto' }} />
                     </div>
-                  )}
-                </div>
+                    <TeamBadge teamId={game.homeId} />
+                  </div>
 
-                {/* Arrow */}
-                <div style={{ color: 'var(--primary)', fontSize: '18px' }}>→</div>
+                  <div style={{ textAlign: 'center', paddingTop: '18px', borderTop: '1px solid var(--border)' }}>
+                    {game.status === 'final' ? (
+                      <>
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '44px', color: '#22c55e', lineHeight: 1 }}>{game.score}</div>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                          FINAL SCORE
+                        </div>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>
+                          {home.full} vs {away.full}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '36px', color: 'var(--text)', lineHeight: 1 }}>{game.time}</div>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                          NEXT FACEOFF
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}
+        </div>
+
+        <div style={{ marginTop: '28px', color: 'var(--text-muted)', fontSize: '12px', lineHeight: 1.7 }}>
+          Schedule note: this page now reflects the official June 5-6 Charlotte "Chaos Homecoming" slate shown on the PLL 2026 schedule screenshot you shared, plus the 2026 Championship Series results already on the site. Additional regular-season weekends should be filled in from the official PLL schedule once confirmed.
         </div>
       </div>
     </div>

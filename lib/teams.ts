@@ -3,6 +3,7 @@ export interface Team {
   name: string;
   city: string;
   full: string;
+  short: string;
   primary: string;
   secondary: string;
   accent: string;
@@ -12,18 +13,19 @@ export interface Team {
 
 export const PLL_TEAMS: Team[] = [
   // Eastern
-  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: '🔴' },
+  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', short: 'CC', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'CC' },
   // Western
-  { id: 'archers', name: 'Archers', city: 'Utah', full: 'Utah Archers', primary: '#1B3A6B', secondary: '#C8A951', accent: '#FFFFFF', conference: 'Western', logo: '🏹' },
-  { id: 'outlaws', name: 'Outlaws', city: 'Denver', full: 'Denver Outlaws', primary: '#002868', secondary: '#BF0A30', accent: '#FFFFFF', conference: 'Western', logo: '⭐' },
-  { id: 'redwoods', name: 'Redwoods', city: 'California', full: 'California Redwoods', primary: '#8B2500', secondary: '#228B22', accent: '#FFFFFF', conference: 'Western', logo: '🌲' },
-  { id: 'cannons', name: 'Cannons', city: 'Boston', full: 'Boston Cannons', primary: '#002244', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: '💣' },
-  { id: 'whipsnakes', name: 'Whipsnakes', city: 'Maryland', full: 'Maryland Whipsnakes', primary: '#FFD700', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: '🐍' },
-  { id: 'atlas', name: 'Atlas', city: 'New York', full: 'New York Atlas', primary: '#003087', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: '🗺️' },
-  { id: 'waterdogs', name: 'Waterdogs', city: 'Philadelphia', full: 'Philadelphia Waterdogs', primary: '#003087', secondary: '#009A44', accent: '#FFFFFF', conference: 'Eastern', logo: '🐕' },
+  { id: 'archers', name: 'Archers', city: 'Utah', full: 'Utah Archers', short: 'UA', primary: '#1B3A6B', secondary: '#C8A951', accent: '#FFFFFF', conference: 'Western', logo: 'UA' },
+  { id: 'outlaws', name: 'Outlaws', city: 'Denver', full: 'Denver Outlaws', short: 'DO', primary: '#002868', secondary: '#BF0A30', accent: '#FFFFFF', conference: 'Western', logo: 'DO' },
+  { id: 'redwoods', name: 'Redwoods', city: 'California', full: 'California Redwoods', short: 'CR', primary: '#8B2500', secondary: '#228B22', accent: '#FFFFFF', conference: 'Western', logo: 'CR' },
+  { id: 'cannons', name: 'Cannons', city: 'Boston', full: 'Boston Cannons', short: 'BC', primary: '#002244', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'BC' },
+  { id: 'whipsnakes', name: 'Whipsnakes', city: 'Maryland', full: 'Maryland Whipsnakes', short: 'MW', primary: '#FFD700', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'MW' },
+  { id: 'atlas', name: 'Atlas', city: 'New York', full: 'New York Atlas', short: 'NY', primary: '#003087', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'NY' },
+  { id: 'waterdogs', name: 'Waterdogs', city: 'Philadelphia', full: 'Philadelphia Waterdogs', short: 'PW', primary: '#003087', secondary: '#009A44', accent: '#FFFFFF', conference: 'Eastern', logo: 'PW' },
 ];
 
 export const DEFAULT_TEAM = PLL_TEAMS[0]; // Carolina Chaos
+export const ALL_TEAMS = PLL_TEAMS;
 
 export function getTeam(id: string): Team {
   return PLL_TEAMS.find(t => t.id === id) ?? DEFAULT_TEAM;
