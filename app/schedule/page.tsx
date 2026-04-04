@@ -5,7 +5,7 @@ import { getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
 import { CHAOS_SCHEDULE_2026 } from '@/lib/schedule';
 
-function TeamBadge({ teamId }: { teamId: string }) {
+function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: boolean }) {
   const team = getTeam(teamId);
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', minWidth: '132px' }}>
@@ -13,9 +13,14 @@ function TeamBadge({ teamId }: { teamId: string }) {
         style={{
           width: '96px',
           height: '96px',
+          borderRadius: '18px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          overflow: 'hidden',
+          border: isWinner ? '2px solid color-mix(in srgb, var(--primary) 75%, transparent)' : '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
+          boxShadow: isWinner ? '0 0 0 1px color-mix(in srgb, var(--primary) 24%, transparent), 0 16px 38px color-mix(in srgb, var(--primary) 14%, transparent)' : 'none',
+          background: isWinner ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 100%)' : 'transparent',
         }}
       >
         <TeamLogo teamId={teamId} size={90} />
@@ -142,7 +147,30 @@ export default function SchedulePage() {
             const winnerTeamId = winnerSide === 'right' ? game.homeId : winnerSide === 'left' ? game.awayId : null;
 
             const cardInner = (
-              <div className="card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
+              <div className="card schedule-card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '16px',
+                    right: '16px',
+                    padding: '7px 12px',
+                    background: 'color-mix(in srgb, var(--bg-card) 88%, black)',
+                    border: '1px solid color-mix(in srgb, var(--primary) 42%, transparent)',
+                    color: '#fff',
+                    fontFamily: 'var(--font-accent)',
+                    fontSize: '10px',
+                    letterSpacing: '0.14em',
+                    textTransform: 'uppercase',
+                    opacity: 0,
+                    transform: 'translateY(-6px)',
+                    transition: 'opacity 0.2s, transform 0.2s',
+                    pointerEvents: 'none',
+                    zIndex: 3,
+                  }}
+                  className="schedule-card-tooltip"
+                >
+                  {game.status === 'final' ? 'See Game Recap' : 'Buy Tickets'}
+                </div>
                 {winnerTeamId ? (
                   <div
                     style={{
@@ -152,7 +180,8 @@ export default function SchedulePage() {
                       transform: 'rotate(-14deg)',
                       opacity: 0.12,
                       pointerEvents: 'none',
-                      filter: 'grayscale(0.1) saturate(1.1)',
+                      filter: 'grayscale(0.08) saturate(1.05) contrast(1.08)',
+                      mixBlendMode: 'multiply',
                     }}
                   >
                     <TeamLogo teamId={winnerTeamId} size={190} />
@@ -170,33 +199,15 @@ export default function SchedulePage() {
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '16px', alignItems: 'center', marginBottom: '22px' }}>
-                    <div
-                      style={{
-                        justifySelf: 'center',
-                        padding: winnerSide === 'left' ? '10px 12px 12px' : '10px 12px 12px',
-                        borderRadius: '20px',
-                        border: winnerSide === 'left' ? '1px solid color-mix(in srgb, var(--primary) 70%, transparent)' : '1px solid transparent',
-                        boxShadow: winnerSide === 'left' ? 'inset 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 44px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
-                        background: winnerSide === 'left' ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 100%)' : 'transparent',
-                      }}
-                    >
-                      <TeamBadge teamId={game.awayId} />
+                    <div style={{ justifySelf: 'center' }}>
+                      <TeamBadge teamId={game.awayId} isWinner={winnerSide === 'left'} />
                     </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginBottom: '8px' }}>VS</div>
                       <div style={{ width: '42px', height: '2px', background: 'var(--border)', margin: '0 auto' }} />
                     </div>
-                    <div
-                      style={{
-                        justifySelf: 'center',
-                        padding: winnerSide === 'right' ? '10px 12px 12px' : '10px 12px 12px',
-                        borderRadius: '20px',
-                        border: winnerSide === 'right' ? '1px solid color-mix(in srgb, var(--primary) 70%, transparent)' : '1px solid transparent',
-                        boxShadow: winnerSide === 'right' ? 'inset 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 44px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
-                        background: winnerSide === 'right' ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 100%)' : 'transparent',
-                      }}
-                    >
-                      <TeamBadge teamId={game.homeId} />
+                    <div style={{ justifySelf: 'center' }}>
+                      <TeamBadge teamId={game.homeId} isWinner={winnerSide === 'right'} />
                     </div>
                   </div>
 
@@ -274,6 +285,12 @@ export default function SchedulePage() {
           Schedule note: this page now reflects the official June 5-6 Charlotte "Chaos Homecoming" slate shown on the PLL 2026 schedule screenshot you shared, plus the 2026 Championship Series results already on the site. Additional regular-season weekends should be filled in from the official PLL schedule once confirmed.
         </div>
       </div>
+      <style>{`
+        .schedule-card:hover .schedule-card-tooltip {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      `}</style>
     </div>
   );
 }
