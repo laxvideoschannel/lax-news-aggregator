@@ -281,7 +281,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     transition: 'background 0.2s',
                   }}
                 >
-                  <TeamLogo teamId={team.id} size={20} />
+                  <TeamLogo teamId={team.id} size={24} />
                   {team.full.toUpperCase()}
                   <span style={{ fontSize: '8px', opacity: 0.6 }}>v</span>
                 </button>
@@ -326,7 +326,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
                             onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
                           >
-                            <TeamLogo teamId={t.id} size={18} style={{ flexShrink: 0 }} />
+                            <TeamLogo teamId={t.id} size={22} style={{ flexShrink: 0 }} />
                             {t.full}
                             {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '10px' }}>OK</span>}
                           </button>

@@ -108,8 +108,8 @@ export default function TeamPage() {
                 onClick={() => selectTeam(option.id)}
                 aria-label={`Show ${option.full}`}
                 style={{
-                  width: '52px',
-                  height: '52px',
+                  width: '58px',
+                  height: '58px',
                   borderRadius: '16px',
                   border: `1px solid ${teamId === option.id ? 'var(--primary)' : 'var(--border)'}`,
                   background: teamId === option.id ? 'color-mix(in srgb, var(--team-surface-strong) 84%, transparent)' : 'color-mix(in srgb, var(--bg-card) 88%, transparent)',
@@ -121,7 +121,7 @@ export default function TeamPage() {
                   boxShadow: teamId === option.id ? '0 0 0 1px color-mix(in srgb, var(--primary) 24%, transparent)' : 'none',
                 }}
               >
-                <TeamLogo teamId={option.id} size={34} />
+                <TeamLogo teamId={option.id} size={42} />
               </button>
             ))}
           </div>

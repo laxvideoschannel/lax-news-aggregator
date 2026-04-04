@@ -79,21 +79,17 @@ const CHAOS_SCHEDULE_2026: Game[] = [
 function TeamBadge({ teamId }: { teamId: string }) {
   const team = getTeam(teamId);
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px', minWidth: '118px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', minWidth: '132px' }}>
       <div
         style={{
-          width: '72px',
-          height: '72px',
-          borderRadius: '22px',
-          background: 'color-mix(in srgb, var(--team-surface-strong) 76%, transparent)',
+          width: '96px',
+          height: '96px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          border: '1px solid var(--border)',
-          boxShadow: '0 16px 32px rgba(0,0,0,0.18)',
         }}
       >
-        <TeamLogo teamId={teamId} size={54} />
+        <TeamLogo teamId={teamId} size={90} />
       </div>
       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)', textAlign: 'center' }}>
         {team.city.toUpperCase()}
