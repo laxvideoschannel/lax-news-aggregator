@@ -169,6 +169,7 @@ export default function SchedulePage() {
                     )}
                   </div>
                 </div>
+              </div>
             );
 
             if (game.status === 'upcoming') {
