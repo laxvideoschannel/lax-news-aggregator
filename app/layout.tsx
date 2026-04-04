@@ -3,7 +3,7 @@ import './globals.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
-import { PLL_TEAMS, getTeam } from '@/lib/teams';
+import { ALL_TEAMS, getTeam } from "../lib/teams";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
