@@ -32,8 +32,11 @@ export interface TeamPlayer {
 }
 
 const CHAOS_ROSTER_URL = 'https://premierlacrosseleague.com/teams/chaos/roster';
-const PLL_SHOP_URL = 'https://shop.premierlacrosseleague.com/';
 const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
+
+function getPlayerMerchUrl(query: string) {
+  return `https://shop.premierlacrosseleague.com/search?q=${encodeURIComponent(query)}&options%5Bprefix%5D=last`;
+}
 
 export const CHAOS_PLAYERS: TeamPlayer[] = [
   {
@@ -70,7 +73,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Riorden Chaos jersey'),
   },
   {
     slug: 'austin-kaut',
@@ -105,7 +108,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Austin Kaut Chaos jersey'),
   },
   {
     slug: 'jack-rowlett',
@@ -141,7 +144,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Jack Rowlett Chaos jersey'),
   },
   {
     slug: 'jarrod-neumann',
@@ -176,7 +179,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Jarrod Neumann Chaos jersey'),
   },
   {
     slug: 'troy-reh',
@@ -211,7 +214,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Troy Reh Chaos jersey'),
   },
   {
     slug: 'shane-knobloch',
@@ -247,7 +250,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Shane Knobloch Chaos jersey'),
   },
   {
     slug: 'pat-resch',
@@ -280,7 +283,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Pat Resch Chaos jersey'),
   },
   {
     slug: 'mark-glicini',
@@ -315,7 +318,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Mark Glicini Chaos jersey'),
   },
   {
     slug: 'owen-hiltz',
@@ -350,7 +353,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Owen Hiltz Chaos jersey'),
   },
   {
     slug: 'josh-zawada',
@@ -385,7 +388,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Josh Zawada Chaos jersey'),
   },
   {
     slug: 'carter-parlette',
@@ -420,7 +423,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Carter Parlette Chaos jersey'),
   },
   {
     slug: 'jack-posey',
@@ -453,7 +456,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     ],
     pllRosterUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
-    shopUrl: PLL_SHOP_URL,
+    shopUrl: getPlayerMerchUrl('Jack Posey Chaos jersey'),
   },
 ];
 

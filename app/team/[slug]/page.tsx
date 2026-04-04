@@ -18,13 +18,11 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
   const player = getChaosPlayer(params.slug);
 
   if (!player) {
-    return {
-      title: 'Player Not Found | LaxHub',
-    };
+    return { title: 'Player Not Found | LaxHub' };
   }
 
   const title = `${player.name} Bio, Stats, Highlights & Carolina Chaos Profile | LaxHub`;
-  const description = `${player.name} profile page with Carolina Chaos bio, position, hometown, college, stats, highlights, and official PLL links.`;
+  const description = `${player.name} profile page with Carolina Chaos bio, position, hometown, college, stats, highlights, videos, and official PLL links.`;
   const image = getPlayerImageSrc(player.imagePage);
   const imageUrl = image ? `${SITE_URL}${image}` : undefined;
 
@@ -59,6 +57,9 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
 
   const team = getTeam(player.teamId);
   const imageSrc = getPlayerImageSrc(player.imagePage);
+  const videoMedia = player.media.filter((item) => item.type === 'video');
+  const otherMedia = player.media.filter((item) => item.type !== 'video');
+
   const schema = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -67,7 +68,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
     homeLocation: player.hometown,
     alumniOf: player.college,
     memberOf: team.full,
-    url: `/team/${player.slug}`,
+    url: `${SITE_URL}/team/${player.slug}`,
   };
 
   return (
@@ -92,7 +93,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '70px', paddingBottom: '70px' }}>
           <div style={{ marginBottom: '20px' }}>
             <Link href="/team" style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
-              ← BACK TO TEAM
+              {'<-'} BACK TO TEAM
             </Link>
           </div>
 
@@ -157,9 +158,9 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
               </div>
 
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <a href={player.pllRosterUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Official PLL Roster ↗</a>
-                <a href={player.ticketsUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Tickets ↗</a>
-                <a href={player.shopUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Shop ↗</a>
+                <a href={player.pllRosterUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Official PLL Roster -&gt;</a>
+                <a href={player.ticketsUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Tickets -&gt;</a>
+                <a href={player.shopUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Shop {player.name.split(' ')[0]} Merch -&gt;</a>
               </div>
             </div>
           </div>
@@ -198,19 +199,46 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
         </div>
       </section>
 
-      <section style={{ paddingBottom: '70px' }}>
+      <section style={{ paddingBottom: '40px' }}>
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '22px' }}>
             <div>
-              <div className="section-tag" style={{ marginBottom: '10px' }}>LINKS & MEDIA</div>
+              <div className="section-tag" style={{ marginBottom: '10px' }}>VIDEOS FIRST</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)' }}>
                 WATCH, READ,<br /><span style={{ color: 'var(--primary)' }}>AND FOLLOW</span>
               </h2>
             </div>
           </div>
 
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px', marginBottom: '18px' }}>
+            {videoMedia.map((item) => (
+              <a
+                key={item.href}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="card"
+                style={{ padding: '22px', display: 'block', position: 'relative', overflow: 'hidden', minHeight: '220px' }}
+              >
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(204,0,0,0.14), rgba(0,0,0,0.9))' }} />
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ width: '62px', height: '62px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', marginBottom: '18px' }}>
+                    ▶
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
+                    WATCH
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1.05, marginBottom: '16px' }}>
+                    {item.title}
+                  </div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Open player videos -&gt;</div>
+                </div>
+              </a>
+            ))}
+          </div>
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '18px' }}>
-            {player.media.map((item) => (
+            {otherMedia.map((item) => (
               <a
                 key={item.href}
                 href={item.href}
@@ -220,14 +248,66 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 style={{ padding: '22px', display: 'block' }}
               >
                 <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
-                  {item.type.toUpperCase()}
+                  {item.type === 'article' ? 'READ' : 'FOLLOW'}
                 </div>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1.05, marginBottom: '16px' }}>
                   {item.title}
                 </div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Open official source ↗</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Open official source -&gt;</div>
               </a>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ paddingBottom: '80px' }}>
+        <div className="container">
+          <div className="card" style={{ padding: '34px', display: 'grid', gridTemplateColumns: '360px 1fr', gap: '36px', alignItems: 'center', overflow: 'hidden' }}>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div
+                style={{
+                  width: '240px',
+                  height: '300px',
+                  background: 'linear-gradient(180deg, #ffffff 0%, #f1f1f1 100%)',
+                  borderRadius: '24px 24px 34px 34px',
+                  position: 'relative',
+                  boxShadow: '0 24px 60px rgba(0,0,0,0.35)',
+                  border: '1px solid rgba(255,255,255,0.5)',
+                }}
+              >
+                <div style={{ position: 'absolute', top: '18px', left: '22px', right: '22px', height: '10px', borderTop: '4px solid var(--primary)' }} />
+                <div style={{ position: 'absolute', top: '0', left: '68px', width: '104px', height: '46px', background: '#0f0f0f', borderRadius: '0 0 22px 22px', borderBottom: '3px solid var(--primary)' }} />
+                <div style={{ position: 'absolute', left: '14px', top: '74px', width: '26px', height: '92px', background: '#fff', border: '1px solid rgba(0,0,0,0.06)', transform: 'skewY(14deg)', borderTop: '4px solid var(--primary)' }} />
+                <div style={{ position: 'absolute', right: '14px', top: '74px', width: '26px', height: '92px', background: '#fff', border: '1px solid rgba(0,0,0,0.06)', transform: 'skewY(-14deg)', borderTop: '4px solid var(--primary)' }} />
+                <div style={{ position: 'absolute', top: '98px', left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '26px', color: '#111' }}>
+                  CHAOS
+                </div>
+                <div style={{ position: 'absolute', top: '136px', left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '86px', lineHeight: 0.9, color: 'var(--primary)' }}>
+                  {player.number}
+                </div>
+                <div style={{ position: 'absolute', bottom: '18px', left: '18px', right: '18px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: '#222' }}>
+                  {player.name.toUpperCase()}
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="section-tag" style={{ marginBottom: '14px' }}>FEATURED MERCH</div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: 0.94, marginBottom: '14px' }}>
+                SHOP {player.name.toUpperCase()}<br /><span style={{ color: 'var(--primary)' }}>JERSEY & MERCH</span>
+              </h2>
+              <p style={{ color: '#bdbdbd', fontSize: '15px', lineHeight: 1.8, maxWidth: '640px', marginBottom: '24px' }}>
+                Browse player-specific Carolina Chaos merch and jersey results on the official PLL shop.
+              </p>
+              <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                <a href={player.shopUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
+                  Shop {player.name.split(' ')[0]}'s Merch -&gt;
+                </a>
+                <a href={player.ticketsUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                  Buy Tickets -&gt;
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </section>
