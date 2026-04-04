@@ -1,5 +1,5 @@
 'use client';
-// TEST EDITED EMAIL
+// TEST RENEW
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getTeam } from "../lib/teams";
