@@ -11,6 +11,7 @@ export type GameScorer = {
   teamId: string;
   goals: number;
   assists?: number;
+  note?: string;
 };
 
 export type GameMediaLink = {
@@ -31,7 +32,7 @@ export type Game = {
   broadcast: string;
   status: GameStatus;
   score?: string;
-  ticketUrl: string;
+  ticketUrl?: string;
   recapTitle?: string;
   recapSummary?: string;
   scoreByPeriod?: GameScoreBreakdown[];
@@ -40,42 +41,34 @@ export type Game = {
 };
 
 const SCHEDULE_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
-const CHAMPIONSHIP_TICKETS_URL = 'https://premierlacrosseleague.com/championship-series/tickets';
-const ESPN_WATCH_URL = 'https://www.espn.com/watch/';
 
 export const CHAOS_SCHEDULE_2026: Game[] = [
   {
-    slug: '2026-championship-series-final-chaos-vs-archers',
+    slug: '2026-championship-series-final-chaos-vs-redwoods',
     dateLabel: 'Mar 8, Sun',
     sortDate: '2026-03-08',
     venue: 'Washington, D.C.',
     event: 'Championship Series Final',
     homeId: 'chaos',
-    awayId: 'archers',
+    awayId: 'redwoods',
     time: '3:00 PM ET',
     broadcast: 'ESPN+',
     status: 'final',
     score: '24-16',
-    ticketUrl: CHAMPIONSHIP_TICKETS_URL,
     recapTitle: 'Chaos capture the Championship Series crown',
-    recapSummary: 'Carolina closed its Championship Series run with a 24-16 win, powered by relentless transition offense and another starring performance in goal. The Chaos controlled the tempo late and separated with a dominant second half.',
+    recapSummary: 'Carolina closed its Championship Series run with a 24-16 win over California, jumping out to a 7-4 first-quarter lead and taking a 15-7 advantage into halftime before finishing the job.',
     scoreByPeriod: [
-      { label: 'Q1', away: 5, home: 6 },
-      { label: 'Q2', away: 4, home: 5 },
-      { label: 'Q3', away: 3, home: 6 },
-      { label: 'Q4', away: 4, home: 7 },
+      { label: 'Q1', away: 4, home: 7 },
+      { label: 'Q2', away: 3, home: 8 },
+      { label: '2H', away: 9, home: 9 },
     ],
     topScorers: [
-      { player: 'Shane Knobloch', teamId: 'chaos', goals: 5, assists: 2 },
-      { player: 'Blaze Riorden', teamId: 'chaos', goals: 0, assists: 1 },
-      { player: 'Connor Fields', teamId: 'archers', goals: 4, assists: 1 },
-      { player: 'Tom Schreiber', teamId: 'archers', goals: 3, assists: 2 },
+      { player: 'Shane Knobloch', teamId: 'chaos', goals: 6, assists: 1, note: '9 total points' },
+      { player: 'Andrew McAdorey', teamId: 'chaos', goals: 5, assists: 1, note: '7 total points' },
+      { player: 'Austin Kaut', teamId: 'chaos', goals: 0, assists: 0, note: '20 saves in goal' },
     ],
     media: [
       { label: 'PLL Championship Series Hub', href: 'https://premierlacrosseleague.com/championship-series', type: 'article' },
-      { label: 'PLL YouTube: Chaos Highlights', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Carolina%20Chaos%20Championship%20Series%20highlights', type: 'highlights' },
-      { label: 'Watch On ESPN+', href: ESPN_WATCH_URL, type: 'rewatch' },
-      { label: 'Tickets', href: CHAMPIONSHIP_TICKETS_URL, type: 'tickets' },
     ],
   },
   {
@@ -90,26 +83,13 @@ export const CHAOS_SCHEDULE_2026: Game[] = [
     broadcast: 'ESPN+',
     status: 'final',
     score: '23-22',
-    ticketUrl: CHAMPIONSHIP_TICKETS_URL,
     recapTitle: 'Chaos edge Outlaws in a one-goal semifinal thriller',
-    recapSummary: 'Carolina survived a back-and-forth semifinal by making the final defensive plays it needed and getting timely finishing in transition. The 23-22 win punched the Chaos ticket to the Championship Series title game.',
-    scoreByPeriod: [
-      { label: 'Q1', away: 6, home: 6 },
-      { label: 'Q2', away: 5, home: 5 },
-      { label: 'Q3', away: 6, home: 7 },
-      { label: 'Q4', away: 5, home: 5 },
-    ],
+    recapSummary: 'Carolina survived a back-and-forth semifinal and punched its ticket to the Championship Series title game when Cole Williams buried the late winner in a 23-22 victory.',
     topScorers: [
-      { player: 'Shane Knobloch', teamId: 'chaos', goals: 4, assists: 3 },
-      { player: 'Josh Zawada', teamId: 'chaos', goals: 3, assists: 2 },
-      { player: 'Brennan O’Neill', teamId: 'outlaws', goals: 5, assists: 1 },
-      { player: 'Lyle Thompson', teamId: 'outlaws', goals: 4, assists: 3 },
+      { player: 'Cole Williams', teamId: 'chaos', goals: 1, assists: 0, note: 'Game-winning goal with 47 seconds left' },
     ],
     media: [
-      { label: 'PLL Takeaways', href: 'https://premierlacrosseleague.com/articles/chaos-edge-outlaws-to-punch-ticket-to-championship-series-title-game-takeaways', type: 'article' },
-      { label: 'PLL YouTube: Chaos vs Outlaws Highlights', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Chaos%20Outlaws%20highlights', type: 'highlights' },
-      { label: 'Watch On ESPN+', href: ESPN_WATCH_URL, type: 'rewatch' },
-      { label: 'Tickets', href: CHAMPIONSHIP_TICKETS_URL, type: 'tickets' },
+      { label: 'PLL Championship Series Hub', href: 'https://premierlacrosseleague.com/championship-series', type: 'article' },
     ],
   },
   {

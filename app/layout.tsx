@@ -170,8 +170,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-        <title>LaxHub - PLL Lacrosse Fan Site</title>
-        <meta name="description" content="Your PLL lacrosse hub - news, rosters, schedules and more." />
+        <title>LaxHub - PLL and WLL Lacrosse Fan Site</title>
+        <meta name="description" content="Your PLL and WLL lacrosse hub - news, rosters, schedules and more." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
       <body>
@@ -227,7 +227,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 900, letterSpacing: '0.05em', lineHeight: 1 }}>LAXHUB</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.3em', color: 'var(--primary)', lineHeight: 1 }}>PLL FAN HUB</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.3em', color: 'var(--primary)', lineHeight: 1 }}>PLL + WLL HUB</div>
               </div>
             </Link>
 
@@ -281,7 +281,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     transition: 'background 0.2s',
                   }}
                 >
-                  <TeamLogo teamId={team.id} size={24} />
+                  <TeamLogo teamId={team.id} size={30} />
                   {team.full.toUpperCase()}
                   <span style={{ fontSize: '8px', opacity: 0.6 }}>v</span>
                 </button>
@@ -326,7 +326,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                             onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
                             onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
                           >
-                            <TeamLogo teamId={t.id} size={22} style={{ flexShrink: 0 }} />
+                            <TeamLogo teamId={t.id} size={28} style={{ flexShrink: 0 }} />
                             {t.full}
                             {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '10px' }}>OK</span>}
                           </button>
@@ -351,7 +351,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 900 }}>LAXHUB</span>
                 </div>
                 <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7, maxWidth: '280px' }}>
-                  Your ultimate source for PLL lacrosse news, stats, and team coverage. Fan-powered. Game-obsessed.
+                  Your ultimate source for PLL and WLL lacrosse news, stats, and team coverage. Fan-powered. Game-obsessed.
                 </p>
               </div>
 

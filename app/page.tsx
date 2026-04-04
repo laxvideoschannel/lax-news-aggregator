@@ -59,14 +59,14 @@ export default function HomePage() {
         <div className="container" style={{ position: 'relative', zIndex: 2, paddingTop: '60px', paddingBottom: '60px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
             <div>
-              <div className="section-tag fade-up fade-up-1" style={{ marginBottom: '20px' }}>2026 PLL CHAMPIONS</div>
+              <div className="section-tag fade-up fade-up-1" style={{ marginBottom: '20px' }}>PLL + WLL FAN COVERAGE</div>
               <h1 className="fade-up fade-up-2" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(56px, 8vw, 110px)', lineHeight: 0.9, letterSpacing: '-0.01em', marginBottom: '24px' }}>
                 <span style={{ display: 'block' }}>CAROLINA</span>
                 <span style={{ display: 'block', color: 'var(--primary)', WebkitTextStroke: '2px var(--primary)', WebkitTextFillColor: 'transparent' }}>CHAOS</span>
                 <span style={{ display: 'block', fontSize: '55%' }}>LACROSSE HUB</span>
               </h1>
               <p className="fade-up fade-up-3" style={{ color: '#999', fontSize: '15px', lineHeight: 1.7, marginBottom: '36px', maxWidth: '420px' }}>
-                Your home for PLL lacrosse — AI-powered player spotlights, live news, team stats, and schedules. Select your team to personalize.
+                Your home for PLL and WLL lacrosse - player spotlights, live news, team stats, and schedules. Select your team to personalize.
               </p>
               <div className="fade-up fade-up-4" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <Link href="/news" className="btn-primary">Latest News →</Link>

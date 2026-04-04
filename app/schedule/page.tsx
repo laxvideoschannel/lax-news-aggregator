@@ -13,14 +13,14 @@ function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: bo
         style={{
           width: '96px',
           height: '96px',
-          borderRadius: '18px',
+          borderRadius: '10px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           overflow: 'hidden',
-          border: isWinner ? '2px solid color-mix(in srgb, var(--primary) 75%, transparent)' : '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
-          boxShadow: isWinner ? '0 0 0 1px color-mix(in srgb, var(--primary) 24%, transparent), 0 16px 38px color-mix(in srgb, var(--primary) 14%, transparent)' : 'none',
-          background: isWinner ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 10%, transparent) 0%, transparent 100%)' : 'transparent',
+          border: isWinner ? '3px solid color-mix(in srgb, var(--primary) 82%, transparent)' : '1px solid color-mix(in srgb, var(--border) 70%, transparent)',
+          boxShadow: isWinner ? '0 0 0 1px color-mix(in srgb, var(--primary) 28%, transparent), 0 18px 42px color-mix(in srgb, var(--primary) 14%, transparent)' : 'none',
+          background: 'transparent',
         }}
       >
         <TeamLogo teamId={teamId} size={90} />
@@ -175,16 +175,25 @@ export default function SchedulePage() {
                   <div
                     style={{
                       position: 'absolute',
-                      right: '-28px',
-                      bottom: '-36px',
+                      right: '-12px',
+                      bottom: '24px',
                       transform: 'rotate(-14deg)',
-                      opacity: 0.12,
+                      opacity: 0.08,
                       pointerEvents: 'none',
-                      filter: 'grayscale(0.08) saturate(1.05) contrast(1.08)',
-                      mixBlendMode: 'multiply',
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: '30px',
+                      fontWeight: 700,
+                      letterSpacing: '0.16em',
+                      textTransform: 'uppercase',
+                      color: 'var(--text)',
+                      whiteSpace: 'nowrap',
                     }}
                   >
-                    <TeamLogo teamId={winnerTeamId} size={190} />
+                    {[...Array(4)].map((_, index) => (
+                      <div key={index} style={{ marginBottom: '8px' }}>
+                        {`${getTeam(winnerTeamId).full} + ${getTeam(winnerTeamId).full} +`}
+                      </div>
+                    ))}
                   </div>
                 ) : null}
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%)' }} />
@@ -195,7 +204,7 @@ export default function SchedulePage() {
                   </div>
 
                   <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '26px' }}>
-                    {game.venue} • {game.time} • <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
+                    {game.venue} | {game.time} | <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '16px', alignItems: 'center', marginBottom: '22px' }}>

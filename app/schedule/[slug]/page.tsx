@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: Props) {
 
   return {
     title: `${home.full} vs ${away.full} Recap | LaxHub`,
-    description: `${game.event} recap with score breakdown, top scorers, highlights, and watch links.`,
+    description: `${game.event} recap with score breakdown, standout performers, and official league links.`,
   };
 }
 
 export function generateStaticParams() {
-  return ['2026-championship-series-final-chaos-vs-archers', '2026-championship-series-semifinal-chaos-vs-outlaws'].map((slug) => ({ slug }));
+  return ['2026-championship-series-final-chaos-vs-redwoods', '2026-championship-series-semifinal-chaos-vs-outlaws'].map((slug) => ({ slug }));
 }
 
 export default async function ScheduleGamePage({ params }: Props) {
@@ -90,7 +90,7 @@ export default async function ScheduleGamePage({ params }: Props) {
 
             <div style={{ marginTop: '28px', paddingTop: '24px', borderTop: '1px solid var(--border)', color: 'var(--text-muted)', lineHeight: 1.7 }}>
               <div>{game.venue}</div>
-              <div>{game.time} • {game.broadcast}</div>
+              <div>{game.time} | {game.broadcast}</div>
             </div>
           </div>
 
@@ -103,13 +103,16 @@ export default async function ScheduleGamePage({ params }: Props) {
                   href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={item.type === 'highlights' || item.type === 'rewatch' ? 'btn-primary' : 'btn-outline'}
+                  className="btn-outline"
                   style={{ justifyContent: 'space-between' }}
                 >
                   <span>{item.label}</span>
-                  <span>→</span>
+                  <span>-></span>
                 </a>
               ))}
+              <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7, marginTop: '6px' }}>
+                Verified game-specific replay and highlight links were not available from official public sources, so those buttons have been removed instead of sending you somewhere inaccurate.
+              </div>
             </div>
           </div>
         </div>
@@ -120,7 +123,7 @@ export default async function ScheduleGamePage({ params }: Props) {
           <div className="card" style={{ padding: '28px' }}>
             <div className="section-tag" style={{ marginBottom: '18px' }}>Score By Period</div>
             <div style={{ display: 'grid', gap: '10px' }}>
-              {game.scoreByPeriod?.map((period) => (
+              {game.scoreByPeriod?.length ? game.scoreByPeriod.map((period) => (
                 <div
                   key={period.label}
                   style={{
@@ -136,14 +139,18 @@ export default async function ScheduleGamePage({ params }: Props) {
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', textAlign: 'center' }}>{period.away}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', textAlign: 'center', color: 'var(--primary)' }}>{period.home}</div>
                 </div>
-              ))}
+              )) : (
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7 }}>
+                  A verified period-by-period breakdown was not available from public official sources for this game.
+                </div>
+              )}
             </div>
           </div>
 
           <div className="card" style={{ padding: '28px' }}>
-            <div className="section-tag" style={{ marginBottom: '18px' }}>Top Scorers</div>
+            <div className="section-tag" style={{ marginBottom: '18px' }}>Standout Performers</div>
             <div style={{ display: 'grid', gap: '10px' }}>
-              {game.topScorers?.map((scorer) => {
+              {game.topScorers?.length ? game.topScorers.map((scorer) => {
                 const scorerTeam = getTeam(scorer.teamId);
                 return (
                   <div
@@ -165,11 +172,15 @@ export default async function ScheduleGamePage({ params }: Props) {
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '24px', color: 'var(--primary)' }}>{scorer.goals}G</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{scorer.assists ? `${scorer.assists}A` : '0A'}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{scorer.note || (scorer.assists ? `${scorer.assists}A` : '0A')}</div>
                     </div>
                   </div>
                 );
-              })}
+              }) : (
+                <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7 }}>
+                  Verified box-score leaders were not publicly available from official sources for this game.
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -181,8 +192,8 @@ export default async function ScheduleGamePage({ params }: Props) {
             <div className="section-tag" style={{ marginBottom: '18px' }}>Quick Links</div>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
               <Link href="/schedule" className="btn-outline">Back To Schedule</Link>
-              {game.media?.filter((item) => item.type === 'highlights' || item.type === 'rewatch').map((item) => (
-                <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="btn-primary">
+              {game.media?.map((item) => (
+                <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="btn-outline">
                   {item.label}
                 </a>
               ))}
