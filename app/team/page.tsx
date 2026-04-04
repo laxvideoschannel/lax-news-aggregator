@@ -21,6 +21,10 @@ const POS_COLORS: Record<string, string> = {
   G: '#CC0000', D: '#1a1a1a', A: '#333', M: '#222', LSM: '#1a1a1a', SSDM: '#2a2a2a',
 };
 
+function getPlayerImageSrc(imagePage: string) {
+  return `/api/player-image?url=${encodeURIComponent(imagePage)}`;
+}
+
 export default function TeamPage() {
   const [teamId, setTeamId] = useState('chaos');
   const [activePlayer, setActivePlayer] = useState(CHAOS_SPOTLIGHTS[0]);
@@ -100,14 +104,14 @@ export default function TeamPage() {
                 boxShadow: '0 30px 80px rgba(0,0,0,0.45)',
               }}>
                 <img
-                  src={activePlayer.image}
+                  src={getPlayerImageSrc(activePlayer.imagePage)}
                   alt={activePlayer.name}
                   style={{
                     width: '100%',
                     height: '100%',
                     objectFit: 'cover',
                     objectPosition: 'center top',
-                    filter: 'saturate(1.05) contrast(1.02)',
+                    filter: 'grayscale(1) contrast(1.08) brightness(0.82)',
                   }}
                 />
                 <div style={{
@@ -180,7 +184,7 @@ export default function TeamPage() {
                     gap: '8px',
                   }}>
                     <img
-                      src={p.image}
+                      src={getPlayerImageSrc(p.imagePage)}
                       alt={p.name}
                       style={{
                         width: '28px',
@@ -189,6 +193,7 @@ export default function TeamPage() {
                         objectFit: 'cover',
                         objectPosition: 'center top',
                         border: '1px solid rgba(255,255,255,0.15)',
+                        filter: 'grayscale(1) contrast(1.08) brightness(0.86)',
                       }}
                     />
                     <span>{p.name.split(' ')[1].toUpperCase()}</span>

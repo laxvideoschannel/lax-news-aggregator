@@ -37,7 +37,7 @@ export interface PlayerSpotlight {
   hometown: string;
   college: string;
   teamId: string;
-  image: string;
+  imagePage: string;
   stats: { label: string; value: string }[];
   quote: string;
   accolades: string[];
@@ -52,7 +52,7 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     hometown: 'Fairport, NY',
     college: 'University at Albany',
     teamId: 'chaos',
-    image: 'https://images.ctfassets.net/7lhcm73ukv5p/2KhcZ8P16XjjDzm4E6ffyc/90d6c5f5d6bdbf4eb78008815d280f8f/PLL21_Game37_CHAOS_RWD_NI_Sequence-16.jpg',
+    imagePage: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer',
     stats: [
       { label: 'Save %', value: '59.4%' },
       { label: 'PLL Record Saves', value: '25' },
@@ -70,7 +70,7 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     hometown: 'Chesapeake, VA',
     college: 'Duke University',
     teamId: 'chaos',
-    image: 'https://images.ctfassets.net/7lhcm73ukv5p/7LExYib9QANMdcZdKGTxBa/d1c7e09c458f4ac647bfc345de782a6c/10542897_final-128_jpg_Abby_Szlosek_20220718_004816.jpg',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse',
     stats: [
       { label: 'All-Star Selections', value: '3x' },
       { label: 'Position', value: 'Close D' },
@@ -88,7 +88,7 @@ export const CHAOS_SPOTLIGHTS: PlayerSpotlight[] = [
     hometown: 'Smithtown, NY',
     college: 'Cornell University',
     teamId: 'chaos',
-    image: 'https://images.ctfassets.net/7lhcm73ukv5p/3DZI6B4vW7gs4wQf8NLT3c/aac0fddeced375486dcc1842647f1235/Jarrod-Neumann-Lacrosse-Fastest-Shot.jpg',
+    imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
     stats: [
       { label: 'All-Star', value: '2024' },
       { label: 'Specialty', value: 'LH Attackmen' },
