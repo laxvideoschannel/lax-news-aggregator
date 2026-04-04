@@ -27,6 +27,14 @@ function TeamBadge({ teamId }: { teamId: string }) {
   );
 }
 
+function parseScore(score?: string) {
+  const [home = '0', away = '0'] = (score || '0-0').split('-');
+  return {
+    home: Number(home),
+    away: Number(away),
+  };
+}
+
 export default function SchedulePage() {
   const [filter, setFilter] = useState<'all' | 'results' | 'upcoming'>('all');
 
@@ -125,9 +133,31 @@ export default function SchedulePage() {
           {filtered.map((game) => {
             const home = getTeam(game.homeId);
             const away = getTeam(game.awayId);
+            const scoreParts = parseScore(game.score);
+            const leftScore = scoreParts.away;
+            const rightScore = scoreParts.home;
+            const winnerSide = game.status === 'final'
+              ? (rightScore > leftScore ? 'right' : leftScore > rightScore ? 'left' : null)
+              : null;
+            const winnerTeamId = winnerSide === 'right' ? game.homeId : winnerSide === 'left' ? game.awayId : null;
 
             const cardInner = (
               <div className="card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
+                {winnerTeamId ? (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      right: '-28px',
+                      bottom: '-36px',
+                      transform: 'rotate(-14deg)',
+                      opacity: 0.12,
+                      pointerEvents: 'none',
+                      filter: 'grayscale(0.1) saturate(1.1)',
+                    }}
+                  >
+                    <TeamLogo teamId={winnerTeamId} size={190} />
+                  </div>
+                ) : null}
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%)' }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
@@ -140,18 +170,64 @@ export default function SchedulePage() {
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '16px', alignItems: 'center', marginBottom: '22px' }}>
-                    <TeamBadge teamId={game.awayId} />
+                    <div
+                      style={{
+                        justifySelf: 'center',
+                        padding: winnerSide === 'left' ? '10px 12px 12px' : '10px 12px 12px',
+                        borderRadius: '20px',
+                        border: winnerSide === 'left' ? '1px solid color-mix(in srgb, var(--primary) 70%, transparent)' : '1px solid transparent',
+                        boxShadow: winnerSide === 'left' ? 'inset 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 44px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
+                        background: winnerSide === 'left' ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 100%)' : 'transparent',
+                      }}
+                    >
+                      <TeamBadge teamId={game.awayId} />
+                    </div>
                     <div style={{ textAlign: 'center' }}>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginBottom: '8px' }}>VS</div>
                       <div style={{ width: '42px', height: '2px', background: 'var(--border)', margin: '0 auto' }} />
                     </div>
-                    <TeamBadge teamId={game.homeId} />
+                    <div
+                      style={{
+                        justifySelf: 'center',
+                        padding: winnerSide === 'right' ? '10px 12px 12px' : '10px 12px 12px',
+                        borderRadius: '20px',
+                        border: winnerSide === 'right' ? '1px solid color-mix(in srgb, var(--primary) 70%, transparent)' : '1px solid transparent',
+                        boxShadow: winnerSide === 'right' ? 'inset 0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 44px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
+                        background: winnerSide === 'right' ? 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 100%)' : 'transparent',
+                      }}
+                    >
+                      <TeamBadge teamId={game.homeId} />
+                    </div>
                   </div>
 
                   <div style={{ textAlign: 'center', paddingTop: '18px', borderTop: '1px solid var(--border)' }}>
                     {game.status === 'final' ? (
                       <>
-                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '44px', color: '#22c55e', lineHeight: 1 }}>{game.score}</div>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px' }}>
+                          <div
+                            style={{
+                              fontFamily: 'var(--font-display)',
+                              fontWeight: 900,
+                              fontSize: '44px',
+                              lineHeight: 1,
+                              color: winnerSide === 'left' ? '#22c55e' : 'var(--text)',
+                            }}
+                          >
+                            {leftScore}
+                          </div>
+                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--text-muted)' }}>-</div>
+                          <div
+                            style={{
+                              fontFamily: 'var(--font-display)',
+                              fontWeight: 900,
+                              fontSize: '44px',
+                              lineHeight: 1,
+                              color: winnerSide === 'right' ? '#22c55e' : 'var(--text)',
+                            }}
+                          >
+                            {rightScore}
+                          </div>
+                        </div>
                         <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
                           FINAL SCORE
                         </div>
