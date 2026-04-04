@@ -1,80 +1,9 @@
 'use client';
+import Link from 'next/link';
 import { useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
-
-type Game = {
-  dateLabel: string;
-  sortDate: string;
-  venue: string;
-  event: string;
-  homeId: string;
-  awayId: string;
-  time: string;
-  broadcast: string;
-  status: 'final' | 'upcoming';
-  score?: string;
-};
-
-const CHAOS_SCHEDULE_2026: Game[] = [
-  {
-    dateLabel: 'Mar 8, Sun',
-    sortDate: '2026-03-08',
-    venue: 'Washington, D.C.',
-    event: 'Championship Series Final',
-    homeId: 'chaos',
-    awayId: 'archers',
-    time: '3:00 PM ET',
-    broadcast: 'ESPN+',
-    status: 'final',
-    score: '24-16',
-  },
-  {
-    dateLabel: 'Mar 7, Sat',
-    sortDate: '2026-03-07',
-    venue: 'Washington, D.C.',
-    event: 'Championship Series Semifinal',
-    homeId: 'chaos',
-    awayId: 'outlaws',
-    time: '7:00 PM ET',
-    broadcast: 'ESPN+',
-    status: 'final',
-    score: '23-22',
-  },
-  {
-    dateLabel: 'May 8, Fri',
-    sortDate: '2026-05-08',
-    venue: 'Salt Lake City, UT',
-    event: 'Archers Homecoming',
-    homeId: 'chaos',
-    awayId: 'atlas',
-    time: '10:30 PM ET',
-    broadcast: 'TBD',
-    status: 'upcoming',
-  },
-  {
-    dateLabel: 'Jun 5, Fri',
-    sortDate: '2026-06-05',
-    venue: 'Charlotte, NC',
-    event: 'Chaos Homecoming',
-    homeId: 'chaos',
-    awayId: 'archers',
-    time: '6:00 PM ET',
-    broadcast: 'TBD',
-    status: 'upcoming',
-  },
-  {
-    dateLabel: 'Jun 6, Sat',
-    sortDate: '2026-06-06',
-    venue: 'Charlotte, NC',
-    event: 'Chaos Homecoming',
-    homeId: 'chaos',
-    awayId: 'outlaws',
-    time: '5:30 PM ET',
-    broadcast: 'TBD',
-    status: 'upcoming',
-  },
-];
+import { CHAOS_SCHEDULE_2026 } from '@/lib/schedule';
 
 function TeamBadge({ teamId }: { teamId: string }) {
   const team = getTeam(teamId);
@@ -197,8 +126,8 @@ export default function SchedulePage() {
             const home = getTeam(game.homeId);
             const away = getTeam(game.awayId);
 
-            return (
-              <div key={`${game.sortDate}-${game.homeId}-${game.awayId}`} className="card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
+            const cardInner = (
+              <div className="card" style={{ padding: '28px', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%)' }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
@@ -207,7 +136,7 @@ export default function SchedulePage() {
                   </div>
 
                   <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '26px' }}>
-                    {game.venue} · {game.time} · <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
+                    {game.venue} • {game.time} • <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
                   </div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '16px', alignItems: 'center', marginBottom: '22px' }}>
@@ -240,7 +169,26 @@ export default function SchedulePage() {
                     )}
                   </div>
                 </div>
-              </div>
+            );
+
+            if (game.status === 'upcoming') {
+              return (
+                <a
+                  key={game.slug}
+                  href={game.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ display: 'block' }}
+                >
+                  {cardInner}
+                </a>
+              );
+            }
+
+            return (
+              <Link key={game.slug} href={`/schedule/${game.slug}`} style={{ display: 'block' }}>
+                {cardInner}
+              </Link>
             );
           })}
         </div>
