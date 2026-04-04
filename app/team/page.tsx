@@ -1,21 +1,8 @@
 'use client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { CHAOS_PLAYERS } from '@/lib/players';
 import { CHAOS_SPOTLIGHTS, getTeam } from '@/lib/teams';
-
-const CHAOS_ROSTER = [
-  { name: 'Blaze Riorden', number: '30', pos: 'G', hometown: 'Fairport, NY', college: 'Albany', years: '7', highlight: '5x Goalie of the Year' },
-  { name: 'Austin Kaut', number: '37', pos: 'G', hometown: 'Denver, CO', college: 'Denver', years: '4', highlight: 'Backup goalie & team backbone' },
-  { name: 'Jack Rowlett', number: '4', pos: 'D', hometown: 'Chesapeake, VA', college: 'Duke', years: '5', highlight: '3x All-Star close defender' },
-  { name: 'Jarrod Neumann', number: '22', pos: 'D', hometown: 'Smithtown, NY', college: 'Cornell', years: '5', highlight: '2024 All-Star' },
-  { name: 'Troy Reh', number: '14', pos: 'LSM', hometown: 'Glen Cove, NY', college: 'Albany', years: '6', highlight: 'Elite long-stick midfielder' },
-  { name: 'Shane Knobloch', number: '11', pos: 'A', hometown: 'Charlotte, NC', college: 'Duke', years: '3', highlight: '2026 Golden Stick Award - 30 pts' },
-  { name: 'Pat Resch', number: '17', pos: 'SSDM', hometown: 'Cazenovia, NY', college: 'Penn State', years: '10', highlight: '10-year PLL veteran' },
-  { name: 'Mark Glicini', number: '28', pos: 'SSDM', hometown: 'Commack, NY', college: 'Penn', years: '6', highlight: 'Team captain' },
-  { name: 'Owen Hiltz', number: '8', pos: 'A', hometown: 'Toronto, ON', college: 'Virginia', years: '1', highlight: '2025 Draft pick - lefty attack' },
-  { name: 'Josh Zawada', number: '5', pos: 'M', hometown: 'Orchard Park, NY', college: 'Michigan', years: '2', highlight: 'Rising star midfielder' },
-  { name: 'Carter Parlette', number: '33', pos: 'SSDM', hometown: 'Annapolis, MD', college: 'Maryland', years: '2', highlight: 'Defensive specialist' },
-  { name: 'Jack Posey', number: '44', pos: 'D', hometown: 'Medfield, MA', college: 'Princeton', years: '2', highlight: 'Emerging close defender' },
-];
 
 function getPlayerImageSrc(imagePage: string) {
   return `/api/player-image?url=${encodeURIComponent(imagePage)}`;
@@ -34,7 +21,7 @@ export default function TeamPage() {
   const team = getTeam(teamId);
   const conferenceShort = team.conference === 'Eastern' ? 'East' : 'West';
   const positions = ['All', 'G', 'D', 'LSM', 'SSDM', 'M', 'A'];
-  const filtered = filter === 'All' ? CHAOS_ROSTER : CHAOS_ROSTER.filter((player) => player.pos === filter);
+  const filtered = filter === 'All' ? CHAOS_PLAYERS : CHAOS_PLAYERS.filter((player) => player.pos === filter);
 
   return (
     <div>
@@ -311,10 +298,40 @@ export default function TeamPage() {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
-            {filtered.map((player, index) => (
-              <div key={index} className="card" style={{ overflow: 'hidden', cursor: 'default' }}>
+            {filtered.map((player) => (
+              <Link
+                key={player.slug}
+                href={`/team/${player.slug}`}
+                className="card"
+                style={{ overflow: 'hidden', cursor: 'pointer', position: 'relative', display: 'block' }}
+              >
+                {player.imagePage ? (
+                  <>
+                    <img
+                      src={getPlayerImageSrc(player.imagePage)}
+                      alt={player.name}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center top',
+                        filter: 'grayscale(1) contrast(1.05) brightness(0.7)',
+                        opacity: 0.2,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(180deg, rgba(10,10,10,0.18) 0%, rgba(10,10,10,0.78) 58%, rgba(10,10,10,0.96) 100%)',
+                      }}
+                    />
+                  </>
+                ) : null}
                 <div style={{ height: '4px', background: player.pos === 'G' ? 'var(--primary)' : 'var(--bg-card2)' }} />
-                <div style={{ padding: '24px' }}>
+                <div style={{ padding: '24px', position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.pos}</div>
@@ -330,7 +347,7 @@ export default function TeamPage() {
                     {player.highlight}
                   </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>

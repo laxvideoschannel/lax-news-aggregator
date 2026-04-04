@@ -1,0 +1,462 @@
+export interface PlayerMediaLink {
+  title: string;
+  href: string;
+  type: 'video' | 'article' | 'profile';
+}
+
+export interface PlayerProfileField {
+  label: string;
+  value: string;
+}
+
+export interface TeamPlayer {
+  slug: string;
+  name: string;
+  number: string;
+  pos: string;
+  fullPosition: string;
+  hometown: string;
+  college: string;
+  years: string;
+  highlight: string;
+  teamId: string;
+  imagePage?: string;
+  bio: string;
+  profile: PlayerProfileField[];
+  stats: PlayerProfileField[];
+  accolades: string[];
+  media: PlayerMediaLink[];
+  pllRosterUrl: string;
+  ticketsUrl: string;
+  shopUrl: string;
+}
+
+const CHAOS_ROSTER_URL = 'https://premierlacrosseleague.com/teams/chaos/roster';
+const PLL_SHOP_URL = 'https://shop.premierlacrosseleague.com/';
+const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
+
+export const CHAOS_PLAYERS: TeamPlayer[] = [
+  {
+    slug: 'blaze-riorden',
+    name: 'Blaze Riorden',
+    number: '30',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    hometown: 'Fairport, NY',
+    college: 'University at Albany',
+    years: '7',
+    highlight: '5x Goalie of the Year',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer',
+    bio: 'Blaze Riorden is the face of the Carolina Chaos defense and one of the defining goalies of the PLL era. His reflexes, outlet passing, and ability to take over elimination games have made him a perennial headline player for Carolina.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'Hometown', value: 'Fairport, NY' },
+      { label: 'College', value: 'University at Albany' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Save %', value: '59.4%' },
+      { label: 'Record Saves', value: '25' },
+      { label: 'GOY Awards', value: '5x' },
+      { label: 'GAA / Game', value: '11.0' },
+    ],
+    accolades: ['5x Oren Lyons Goalie of the Year', '2021 Jim Brown MVP', '2021 PLL Champion'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Blaze Riorden: Greatest Playoff Performer', href: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer', type: 'article' },
+      { title: 'Blaze Riorden Lights Fire Under Chaos', href: 'https://premierlacrosseleague.com/articles/blaze-riorden-lights-fire-under-chaos', type: 'article' },
+      { title: 'PLL YouTube Search: Blaze Riorden', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Blaze%20Riorden', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'austin-kaut',
+    name: 'Austin Kaut',
+    number: '37',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    hometown: 'Denver, CO',
+    college: 'Denver',
+    years: '4',
+    highlight: 'Backup goalie & team backbone',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-austin-kauts-energy-and-enthusiasm-make-chaos-better',
+    bio: 'Austin Kaut gives Carolina proven depth in goal and has consistently delivered steady minutes when called on. His experience and composure are a major part of why the Chaos can sustain their defensive identity over a full season.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'Hometown', value: 'Denver, CO' },
+      { label: 'College', value: 'Denver' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Veteran depth' },
+      { label: 'Seasons', value: '4' },
+      { label: 'Unit', value: 'Goalie room' },
+      { label: 'Conference', value: 'East' },
+    ],
+    accolades: ['Reliable reserve goalie', 'Championship-caliber depth piece'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'How Austin Kaut\'s Energy Makes Chaos Better', href: 'https://premierlacrosseleague.com/articles/how-austin-kauts-energy-and-enthusiasm-make-chaos-better', type: 'article' },
+      { title: 'PLL YouTube Search: Austin Kaut', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Austin%20Kaut', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'jack-rowlett',
+    name: 'Jack Rowlett',
+    number: '4',
+    pos: 'D',
+    fullPosition: 'Close Defense',
+    hometown: 'Chesapeake, VA',
+    college: 'Duke',
+    years: '5',
+    highlight: '3x All-Star close defender',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse',
+    bio: 'Jack Rowlett is one of the core pieces of Carolina\'s close defense, known for physical matchups, disciplined off-ball positioning, and the ability to erase top dodgers. He has been one of the league\'s defining one-on-one defenders for multiple seasons.',
+    profile: [
+      { label: 'Position', value: 'Close Defense' },
+      { label: 'Hometown', value: 'Chesapeake, VA' },
+      { label: 'College', value: 'Duke' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'All-Star', value: '3x' },
+      { label: 'Career-High CT', value: '14' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Seasons', value: '5' },
+    ],
+    accolades: ['3x PLL All-Star', '2021 PLL Champion', 'Top-rated close defender'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'How A Simple Question Inspired Jack Rowlett', href: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse', type: 'article' },
+      { title: 'Players Top 50: Jack Rowlett', href: 'https://premierlacrosseleague.com/articles/players-top-50-15-jack-rowlett', type: 'article' },
+      { title: 'PLL YouTube Search: Jack Rowlett', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jack%20Rowlett', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'jarrod-neumann',
+    name: 'Jarrod Neumann',
+    number: '22',
+    pos: 'D',
+    fullPosition: 'Close Defense',
+    hometown: 'Smithtown, NY',
+    college: 'Cornell',
+    years: '5',
+    highlight: '2024 All-Star',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
+    bio: 'Jarrod Neumann brings elite length, physicality, and matchup versatility to the Carolina back line. His stick work and ability to disrupt left-handed attackmen make him one of the most useful cover defenders in the Chaos system.',
+    profile: [
+      { label: 'Position', value: 'Close Defense' },
+      { label: 'Hometown', value: 'Smithtown, NY' },
+      { label: 'College', value: 'Cornell' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'All-Star', value: '2024' },
+      { label: 'Fastest Shot', value: '121 MPH' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Seasons', value: '5' },
+    ],
+    accolades: ['2024 PLL All-Star', '2021 PLL Champion', 'Elite cover defender'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Jarrod Neumann Records Fastest Shot', href: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history', type: 'article' },
+      { title: 'PLL YouTube Search: Jarrod Neumann', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jarrod%20Neumann', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'troy-reh',
+    name: 'Troy Reh',
+    number: '14',
+    pos: 'LSM',
+    fullPosition: 'Long-Stick Midfielder',
+    hometown: 'Glen Cove, NY',
+    college: 'Albany',
+    years: '6',
+    highlight: 'Elite long-stick midfielder',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-troy-rehs-off-ball-defense-binds-the-chaos-defense-together',
+    bio: 'Troy Reh is a transition-driving long-stick midfielder whose off-ball instincts fit perfectly in Carolina\'s defensive culture. He helps the Chaos close space quickly, recover on rotations, and push tempo after stops.',
+    profile: [
+      { label: 'Position', value: 'Long-Stick Midfielder' },
+      { label: 'Hometown', value: 'Glen Cove, NY' },
+      { label: 'College', value: 'Albany' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Seasons', value: '6' },
+      { label: 'Role', value: 'Transition pole' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Unit', value: 'Defensive midfield' },
+    ],
+    accolades: ['High-motor transition defender', 'Core piece in Chaos ride and clear game'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'How Troy Reh\'s Off-Ball Defense Binds The Chaos Together', href: 'https://premierlacrosseleague.com/articles/how-troy-rehs-off-ball-defense-binds-the-chaos-defense-together', type: 'article' },
+      { title: 'PLL YouTube Search: Troy Reh', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Troy%20Reh', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'shane-knobloch',
+    name: 'Shane Knobloch',
+    number: '11',
+    pos: 'A',
+    fullPosition: 'Attack',
+    hometown: 'Charlotte, NC',
+    college: 'Duke',
+    years: '3',
+    highlight: '2026 Golden Stick Award - 30 pts',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/shane-knobloch-breakout-game-carolina-chaos',
+    bio: 'Shane Knobloch gives the Chaos a downhill initiator with real burst and shot-making range. His ability to get underneath short sticks and finish through contact adds needed punch to Carolina\'s offense.',
+    profile: [
+      { label: 'Position', value: 'Attack' },
+      { label: 'Hometown', value: 'Charlotte, NC' },
+      { label: 'College', value: 'Duke' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Award', value: 'Golden Stick' },
+      { label: 'Points', value: '30' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Style', value: 'Downhill scorer' },
+    ],
+    accolades: ['High-upside offensive weapon', 'Breakout young scoring threat'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Shane Knobloch Breakout Game', href: 'https://premierlacrosseleague.com/articles/shane-knobloch-breakout-game-carolina-chaos', type: 'article' },
+      { title: '2024 Draft Prospect Profile: Shane Knobloch', href: 'https://premierlacrosseleague.com/articles/2024-college-draft-prospect-profile-shane-knobloch', type: 'article' },
+      { title: 'PLL YouTube Search: Shane Knobloch', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Shane%20Knobloch', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'pat-resch',
+    name: 'Pat Resch',
+    number: '17',
+    pos: 'SSDM',
+    fullPosition: 'Short-Stick Defensive Midfielder',
+    hometown: 'Cazenovia, NY',
+    college: 'Penn State',
+    years: '10',
+    highlight: '10-year PLL veteran',
+    teamId: 'chaos',
+    bio: 'Pat Resch brings veteran presence and matchup discipline to Carolina\'s short-stick defensive midfield group. His experience helps stabilize possessions and gives the Chaos another defender they trust in key moments.',
+    profile: [
+      { label: 'Position', value: 'Short-Stick Defensive Midfielder' },
+      { label: 'Hometown', value: 'Cazenovia, NY' },
+      { label: 'College', value: 'Penn State' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Experience', value: '10 years' },
+      { label: 'Role', value: 'Defensive midfield' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Unit', value: 'Chaos defense' },
+    ],
+    accolades: ['Longtime PLL veteran', 'Reliable defensive midfielder'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'PLL YouTube Search: Pat Resch', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Pat%20Resch', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'mark-glicini',
+    name: 'Mark Glicini',
+    number: '28',
+    pos: 'SSDM',
+    fullPosition: 'Short-Stick Defensive Midfielder',
+    hometown: 'Commack, NY',
+    college: 'Penn',
+    years: '6',
+    highlight: 'Team captain',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-mental-performance-coaching-has-made-mark-glicini-into-chaos-leader',
+    bio: 'Mark Glicini is one of Carolina\'s emotional tone-setters and a trusted short-stick defender. His leadership and mental toughness have made him a central voice in the Chaos locker room.',
+    profile: [
+      { label: 'Position', value: 'Short-Stick Defensive Midfielder' },
+      { label: 'Hometown', value: 'Commack, NY' },
+      { label: 'College', value: 'Penn' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Captaincy', value: 'Team leader' },
+      { label: 'Seasons', value: '6' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Role', value: 'SSDM' },
+    ],
+    accolades: ['Team captain', 'Locker-room leader'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Mental Performance Coaching Made Mark Glicini Into A Leader', href: 'https://premierlacrosseleague.com/articles/how-mental-performance-coaching-has-made-mark-glicini-into-chaos-leader', type: 'article' },
+      { title: 'PLL YouTube Search: Mark Glicini', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Mark%20Glicini', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'owen-hiltz',
+    name: 'Owen Hiltz',
+    number: '8',
+    pos: 'A',
+    fullPosition: 'Attack',
+    hometown: 'Toronto, ON',
+    college: 'Virginia',
+    years: '1',
+    highlight: '2025 Draft pick - lefty attack',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/film-study-how-owen-hiltz-will-bring-balance-to-chaos',
+    bio: 'Owen Hiltz arrives as a talented lefty attackman with vision, touch, and shooting range that can diversify Carolina\'s offense. He gives the Chaos another half-field creator and a young name for fans to follow closely.',
+    profile: [
+      { label: 'Position', value: 'Attack' },
+      { label: 'Hometown', value: 'Toronto, ON' },
+      { label: 'College', value: 'Virginia' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Draft Status', value: '2025 pick' },
+      { label: 'Hand', value: 'Left' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Role', value: 'Lefty attack' },
+    ],
+    accolades: ['Young offensive upside', 'Lefty scoring option'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Film Study: How Owen Hiltz Will Bring Balance To Chaos', href: 'https://premierlacrosseleague.com/articles/film-study-how-owen-hiltz-will-bring-balance-to-chaos', type: 'article' },
+      { title: 'PLL YouTube Search: Owen Hiltz', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Owen%20Hiltz', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'josh-zawada',
+    name: 'Josh Zawada',
+    number: '5',
+    pos: 'M',
+    fullPosition: 'Midfield',
+    hometown: 'Orchard Park, NY',
+    college: 'Michigan',
+    years: '2',
+    highlight: 'Rising star midfielder',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/chaos-bolster-offense-with-versatile-playmaker-josh-zawada',
+    bio: 'Josh Zawada gives Carolina a versatile midfield piece who can dodge, distribute, and stretch defenses as a scorer. His all-around offensive toolkit makes him an important connector in the Chaos attack.',
+    profile: [
+      { label: 'Position', value: 'Midfield' },
+      { label: 'Hometown', value: 'Orchard Park, NY' },
+      { label: 'College', value: 'Michigan' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Playmaker' },
+      { label: 'Seasons', value: '2' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Unit', value: 'Offense' },
+    ],
+    accolades: ['Versatile offensive midfielder', 'Rising playmaking threat'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'Chaos Bolster Offense With Josh Zawada', href: 'https://premierlacrosseleague.com/articles/chaos-bolster-offense-with-versatile-playmaker-josh-zawada', type: 'article' },
+      { title: 'PLL YouTube Search: Josh Zawada', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Josh%20Zawada', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'carter-parlette',
+    name: 'Carter Parlette',
+    number: '33',
+    pos: 'SSDM',
+    fullPosition: 'Short-Stick Defensive Midfielder',
+    hometown: 'Annapolis, MD',
+    college: 'Maryland',
+    years: '2',
+    highlight: 'Defensive specialist',
+    teamId: 'chaos',
+    imagePage: 'https://premierlacrosseleague.com/articles/how-will-carter-parlette-fit-in-with-chaos-after-trade-from-cannons',
+    bio: 'Carter Parlette adds athleticism and defensive bite to Carolina\'s short-stick midfield group. He fits the Chaos profile as a willing contact defender who can run in transition and handle tough assignments.',
+    profile: [
+      { label: 'Position', value: 'Short-Stick Defensive Midfielder' },
+      { label: 'Hometown', value: 'Annapolis, MD' },
+      { label: 'College', value: 'Maryland' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Defensive specialist' },
+      { label: 'Seasons', value: '2' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Unit', value: 'SSDM' },
+    ],
+    accolades: ['Defensive midfield depth', 'Physical coverage option'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'How Carter Parlette Fits In With Chaos', href: 'https://premierlacrosseleague.com/articles/how-will-carter-parlette-fit-in-with-chaos-after-trade-from-cannons', type: 'article' },
+      { title: 'PLL YouTube Search: Carter Parlette', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Carter%20Parlette', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+  {
+    slug: 'jack-posey',
+    name: 'Jack Posey',
+    number: '44',
+    pos: 'D',
+    fullPosition: 'Defense',
+    hometown: 'Medfield, MA',
+    college: 'Princeton',
+    years: '2',
+    highlight: 'Emerging close defender',
+    teamId: 'chaos',
+    bio: 'Jack Posey is part of the next wave of Carolina defenders, bringing size and developmental upside to the Chaos close unit. He profiles as another system fit in a defense-first culture.',
+    profile: [
+      { label: 'Position', value: 'Defense' },
+      { label: 'Hometown', value: 'Medfield, MA' },
+      { label: 'College', value: 'Princeton' },
+      { label: 'Team', value: 'Carolina Chaos' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Close defense depth' },
+      { label: 'Seasons', value: '2' },
+      { label: 'Conference', value: 'East' },
+      { label: 'Unit', value: 'Defense' },
+    ],
+    accolades: ['Emerging close defender', 'Young depth piece'],
+    media: [
+      { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
+      { title: 'PLL YouTube Search: Jack Posey', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jack%20Posey', type: 'video' },
+    ],
+    pllRosterUrl: CHAOS_ROSTER_URL,
+    ticketsUrl: PLL_TICKETS_URL,
+    shopUrl: PLL_SHOP_URL,
+  },
+];
+
+export function getChaosPlayer(slug: string) {
+  return CHAOS_PLAYERS.find((player) => player.slug === slug);
+}
