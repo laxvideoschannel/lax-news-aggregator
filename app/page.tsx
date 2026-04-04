@@ -2,7 +2,7 @@
 // TEST EDITED EMAIL
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getTeam } from '@/lib/teams';
+import { getTeam } from "../lib/teams";
 
 export default function HomePage() {
   const [teamId, setTeamId] = useState('chaos');
