@@ -1,6 +1,7 @@
 'use client';
 import { useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
+import { TeamLogo } from '@/lib/team-logo';
 
 type Game = {
   dateLabel: string;
@@ -75,51 +76,6 @@ const CHAOS_SCHEDULE_2026: Game[] = [
   },
 ];
 
-function TeamLogoMark({ teamId }: { teamId: string }) {
-  switch (teamId) {
-    case 'chaos':
-      return (
-        <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
-          <path d="M18 10 L26 8 L32 16 L38 8 L46 10 L42 20 L44 30 L38 24 L36 34 L40 46 L32 56 L24 46 L28 34 L26 24 L20 30 L22 20 Z" fill="#cc0000" stroke="#190000" strokeWidth="2" strokeLinejoin="round" />
-          <path d="M22 14 L18 6 L26 10 Z" fill="#0c0c0c" />
-          <path d="M42 14 L46 6 L38 10 Z" fill="#0c0c0c" />
-          <path d="M29 24 Q32 20 35 24" stroke="#0c0c0c" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-        </svg>
-      );
-    case 'archers':
-      return (
-        <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
-          <path d="M10 48 L32 12 L54 48 L43 48 L32 31 L21 48 Z" fill="#ffffff" stroke="#e26b2d" strokeWidth="2.5" strokeLinejoin="round" />
-          <path d="M23 48 L32 33 L41 48" fill="none" stroke="#1b3a6b" strokeWidth="2.5" strokeLinejoin="round" />
-          <path d="M32 14 L35 9 L38 12 L35 17 Z" fill="#e26b2d" />
-        </svg>
-      );
-    case 'outlaws':
-      return (
-        <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
-          <path d="M12 35 L30 28 L52 31 L38 36 L52 41 L30 44 Z" fill="#bf5a2a" stroke="#5b260f" strokeWidth="2.2" strokeLinejoin="round" />
-          <path d="M19 33 L13 26" stroke="#002868" strokeWidth="3" strokeLinecap="round" />
-          <path d="M21 41 L14 47" stroke="#002868" strokeWidth="3" strokeLinecap="round" />
-          <circle cx="35" cy="36" r="2.5" fill="#002868" />
-        </svg>
-      );
-    case 'atlas':
-      return (
-        <svg viewBox="0 0 64 64" width="54" height="54" aria-hidden="true">
-          <path d="M15 21 C18 13, 26 11, 32 18 C38 11, 46 13, 49 21" fill="none" stroke="#7aa8d8" strokeWidth="4" strokeLinecap="round" />
-          <path d="M22 24 Q32 16 42 24 L39 42 Q32 49 25 42 Z" fill="#ffffff" stroke="#003087" strokeWidth="2.5" strokeLinejoin="round" />
-          <path d="M28 33 Q32 28 36 33" stroke="#003087" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-        </svg>
-      );
-    default:
-      return (
-        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--text)' }}>
-          {getTeam(teamId).short}
-        </div>
-      );
-  }
-}
-
 function TeamBadge({ teamId }: { teamId: string }) {
   const team = getTeam(teamId);
   return (
@@ -129,7 +85,7 @@ function TeamBadge({ teamId }: { teamId: string }) {
           width: '72px',
           height: '72px',
           borderRadius: '22px',
-          background: 'color-mix(in srgb, var(--bg-card2) 88%, transparent)',
+          background: 'color-mix(in srgb, var(--team-surface-strong) 76%, transparent)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -137,7 +93,7 @@ function TeamBadge({ teamId }: { teamId: string }) {
           boxShadow: '0 16px 32px rgba(0,0,0,0.18)',
         }}
       >
-        <TeamLogoMark teamId={teamId} />
+        <TeamLogo teamId={teamId} size={54} />
       </div>
       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)', textAlign: 'center' }}>
         {team.city.toUpperCase()}

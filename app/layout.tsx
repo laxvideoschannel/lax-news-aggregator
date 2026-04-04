@@ -4,6 +4,86 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { ALL_TEAMS, getTeam } from '../lib/teams';
+import { TeamLogo } from '../lib/team-logo';
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function hexToRgb(hex: string) {
+  const normalized = hex.replace('#', '');
+  const value = normalized.length === 3
+    ? normalized.split('').map((part) => part + part).join('')
+    : normalized;
+
+  const parsed = Number.parseInt(value, 16);
+  return {
+    r: (parsed >> 16) & 255,
+    g: (parsed >> 8) & 255,
+    b: parsed & 255,
+  };
+}
+
+function rgbToHex(r: number, g: number, b: number) {
+  return `#${[r, g, b].map((value) => clamp(Math.round(value), 0, 255).toString(16).padStart(2, '0')).join('')}`;
+}
+
+function mixHex(base: string, target: string, amount: number) {
+  const a = hexToRgb(base);
+  const b = hexToRgb(target);
+  return rgbToHex(
+    a.r + (b.r - a.r) * amount,
+    a.g + (b.g - a.g) * amount,
+    a.b + (b.b - a.b) * amount,
+  );
+}
+
+function getLuminance(hex: string) {
+  const { r, g, b } = hexToRgb(hex);
+  const [rr, gg, bb] = [r, g, b].map((value) => {
+    const channel = value / 255;
+    return channel <= 0.03928 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+  });
+
+  return 0.2126 * rr + 0.7152 * gg + 0.0722 * bb;
+}
+
+function applyTeamTheme(teamId: string, theme: 'dark' | 'light') {
+  const selected = getTeam(teamId);
+  const darkTeam = getLuminance(selected.primary) < 0.08;
+  const surfaceBase = theme === 'dark'
+    ? mixHex(selected.primary, '#101214', darkTeam ? 0.62 : 0.74)
+    : mixHex(selected.primary, '#f1f1f1', 0.9);
+  const surfaceStrong = theme === 'dark'
+    ? mixHex(selected.primary, '#181b1f', darkTeam ? 0.48 : 0.62)
+    : mixHex(selected.primary, '#e7e7e7', 0.82);
+  const glow = theme === 'dark'
+    ? mixHex(selected.primary, '#ffffff', 0.18)
+    : mixHex(selected.primary, '#ffffff', 0.38);
+
+  document.documentElement.style.setProperty('--primary', selected.primary);
+  document.documentElement.style.setProperty('--secondary', selected.secondary);
+  document.documentElement.style.setProperty('--team-surface', surfaceBase);
+  document.documentElement.style.setProperty('--team-surface-strong', surfaceStrong);
+  document.documentElement.style.setProperty('--team-glow', glow);
+}
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.5" fill="currentColor" />
+      <path d="M12 1.5V4.5M12 19.5V22.5M4.57 4.57L6.7 6.7M17.3 17.3L19.43 19.43M1.5 12H4.5M19.5 12H22.5M4.57 19.43L6.7 17.3M17.3 6.7L19.43 4.57" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+      <path d="M19 15.2A8.7 8.7 0 0 1 8.8 5a8.9 8.9 0 1 0 10.2 10.2Z" fill="currentColor" />
+    </svg>
+  );
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -32,20 +112,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     setTeamId(id);
     localStorage.setItem('lax_team', id);
     setTeamPickerOpen(false);
-    const selected = getTeam(id);
-    document.documentElement.style.setProperty('--primary', selected.primary);
-    document.documentElement.style.setProperty('--secondary', selected.secondary);
+    window.dispatchEvent(new Event('lax-team-change'));
   };
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--primary', team.primary);
-    document.documentElement.style.setProperty('--secondary', team.secondary);
-  }, [teamId, team.primary, team.secondary]);
+    applyTeamTheme(teamId, theme);
+  }, [teamId, theme]);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('lax_theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const syncFromStorage = () => {
+      const savedTeam = localStorage.getItem('lax_team');
+      if (savedTeam) setTeamId(savedTeam);
+    };
+
+    window.addEventListener('storage', syncFromStorage);
+    window.addEventListener('lax-team-change', syncFromStorage);
+    return () => {
+      window.removeEventListener('storage', syncFromStorage);
+      window.removeEventListener('lax-team-change', syncFromStorage);
+    };
+  }, []);
 
   useEffect(() => {
     const move = (e: MouseEvent) => {
@@ -169,7 +260,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
               >
-                {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+                {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
               </button>
 
               <div style={{ position: 'relative' }}>
@@ -179,7 +270,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     display: 'flex',
                     alignItems: 'center',
                     gap: '10px',
-                    background: 'var(--bg-card)',
+                    background: 'var(--team-surface)',
                     border: '1px solid var(--primary)',
                     color: 'var(--text)',
                     padding: '8px 16px',
@@ -190,7 +281,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     transition: 'background 0.2s',
                   }}
                 >
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: team.primary, border: '1px solid rgba(255,255,255,0.3)' }} />
+                  <TeamLogo teamId={team.id} size={20} />
                   {team.full.toUpperCase()}
                   <span style={{ fontSize: '8px', opacity: 0.6 }}>v</span>
                 </button>
@@ -201,7 +292,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       position: 'absolute',
                       right: 0,
                       top: 'calc(100% + 8px)',
-                      background: 'var(--bg-card)',
+                      background: 'var(--team-surface)',
                       border: '1px solid var(--border)',
                       minWidth: '220px',
                       zIndex: 600,
@@ -232,10 +323,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               textAlign: 'left',
                               transition: 'background 0.15s',
                             }}
-                            onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'rgba(255,255,255,0.05)'; }}
+                            onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
                             onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
                           >
-                            <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: t.primary, flexShrink: 0 }} />
+                            <TeamLogo teamId={t.id} size={18} style={{ flexShrink: 0 }} />
                             {t.full}
                             {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '10px' }}>OK</span>}
                           </button>
