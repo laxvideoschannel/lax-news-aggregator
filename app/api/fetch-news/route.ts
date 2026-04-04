@@ -1,11 +1,17 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
+export const fetchCache = 'force-no-store';
+
+// This stops Next.js from ever trying to prerender this route
+export function generateStaticParams() {
+  return [];
+}
 
 export async function GET() {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  if (!url || !key || url.includes('placeholder') || key.includes('placeholder')) {
+  if (!url || !key || url.includes('placeholder') || url === 'undefined') {
     return new Response('OK', { status: 200 });
   }
 
@@ -15,10 +21,9 @@ export async function GET() {
     const supabase = createClient(url, key);
     const parser = new Parser();
 
-    const GOOGLE_NEWS_RSS =
-      'https://news.google.com/rss/search?q=lacrosse+news+when:24h&hl=en-US&gl=US&ceid=US:en';
-
-    const data = await parser.parseURL(GOOGLE_NEWS_RSS);
+    const data = await parser.parseURL(
+      'https://news.google.com/rss/search?q=lacrosse+news+when:24h&hl=en-US&gl=US&ceid=US:en'
+    );
     let count = 0;
 
     for (const item of data.items) {
@@ -34,7 +39,6 @@ export async function GET() {
         category = 'HS';
 
       const titleParts = item.title.split(' - ');
-
       const { error } = await supabase.from('lacrosse_news').upsert({
         title: titleParts[0],
         link: item.link,
