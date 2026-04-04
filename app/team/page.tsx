@@ -92,19 +92,40 @@ export default function TeamPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
             {/* Left: giant typographic player visual */}
             <div style={{ position: 'relative' }}>
-              {/* Circle backdrop */}
               <div style={{
                 width: '380px', height: '380px', borderRadius: '50%',
-                background: 'rgba(204,0,0,0.06)',
+                background: 'rgba(204,0,0,0.08)',
                 border: '1px solid rgba(204,0,0,0.2)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                position: 'relative', margin: '0 auto',
+                position: 'relative', margin: '0 auto', overflow: 'hidden',
+                boxShadow: '0 30px 80px rgba(0,0,0,0.45)',
               }}>
-                <div style={{ textAlign: 'center' }}>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '120px', color: 'var(--primary)', lineHeight: 1, opacity: 0.7 }}>#{activePlayer.number}</div>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: '#fff', letterSpacing: '0.05em' }}>{activePlayer.position.toUpperCase()}</div>
+                <img
+                  src={activePlayer.image}
+                  alt={activePlayer.name}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    objectPosition: 'center top',
+                    filter: 'saturate(1.05) contrast(1.02)',
+                  }}
+                />
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.2) 55%, rgba(10,0,0,0.9) 100%)',
+                }} />
+                <div style={{
+                  position: 'absolute',
+                  left: '50%',
+                  bottom: '18px',
+                  transform: 'translateX(-50%)',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  gap: '12px',
+                }}>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '84px', color: 'var(--primary)', lineHeight: 0.9, textShadow: '0 10px 30px rgba(0,0,0,0.45)' }}>#{activePlayer.number}</div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', color: '#fff', letterSpacing: '0.05em', marginBottom: '8px' }}>{activePlayer.position.toUpperCase()}</div>
                 </div>
-                {/* Rotating ring decoration */}
                 <div style={{
                   position: 'absolute', inset: '-16px',
                   border: '1px dashed rgba(204,0,0,0.3)',
@@ -146,7 +167,7 @@ export default function TeamPage() {
               <div style={{ display: 'flex', gap: '10px' }}>
                 {CHAOS_SPOTLIGHTS.map((p, i) => (
                   <button key={i} onClick={() => setActivePlayer(p)} style={{
-                    padding: '8px 16px',
+                    padding: '8px 10px 8px 8px',
                     background: activePlayer.name === p.name ? 'var(--primary)' : 'transparent',
                     border: '1px solid',
                     borderColor: activePlayer.name === p.name ? 'var(--primary)' : 'var(--border)',
@@ -154,7 +175,24 @@ export default function TeamPage() {
                     cursor: 'pointer',
                     fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em',
                     transition: 'all 0.2s',
-                  }}>{p.name.split(' ')[1].toUpperCase()}</button>
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                  }}>
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      style={{
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '50%',
+                        objectFit: 'cover',
+                        objectPosition: 'center top',
+                        border: '1px solid rgba(255,255,255,0.15)',
+                      }}
+                    />
+                    <span>{p.name.split(' ')[1].toUpperCase()}</span>
+                  </button>
                 ))}
               </div>
             </div>
