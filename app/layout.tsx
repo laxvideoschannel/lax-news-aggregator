@@ -169,7 +169,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {['Eastern', 'Western'].map(conf => (
                     <div key={conf}>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.2em', color: 'var(--primary)', padding: '10px 16px 6px', borderBottom: '1px solid var(--border)' }}>{conf.toUpperCase()} CONFERENCE</div>
-                      {PLL_TEAMS.filter(t => t.conference === conf).map(t => (
+                      {ALL_TEAMS.filter(t => t.conference === conf).map(t => (
                         <button key={t.id} onClick={() => selectTeam(t.id)} style={{
                           display: 'flex', alignItems: 'center', gap: '12px',
                           width: '100%', padding: '10px 16px', background: 'none',
