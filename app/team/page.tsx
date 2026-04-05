@@ -165,7 +165,7 @@ export default function TeamPage() {
               >
                 <TeamLogo
                   teamId={option.id}
-                  size={56}
+                  size={100%}
                   style={{
                     width: '100%',
                     height: '100%',
