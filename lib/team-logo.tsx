@@ -23,13 +23,15 @@ export const TEAM_LOGO_URLS: Record<string, string> = {
 
 export function TeamLogo({ teamId, size = 40, style }: Props) {
   const src = TEAM_LOGO_URLS[teamId];
+  const resolvedWidth = style?.width ?? size;
+  const resolvedHeight = style?.height ?? size;
 
   if (!src) {
     return (
       <div
         style={{
-          width: size,
-          height: size,
+          width: resolvedWidth,
+          height: resolvedHeight,
           borderRadius: size / 2,
           background: 'var(--team-surface-strong, var(--bg-card2))',
           border: '1px solid var(--border)',
@@ -47,8 +49,8 @@ export function TeamLogo({ teamId, size = 40, style }: Props) {
       width={size}
       height={size}
       style={{
-        width: size,
-        height: size,
+        width: resolvedWidth,
+        height: resolvedHeight,
         objectFit: 'contain',
         display: 'block',
         ...style,

@@ -5,7 +5,7 @@ import { ALL_TEAMS, getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
 import { getTeamPageContent, TeamRosterPlayer, TeamSpotlight } from '@/lib/team-content';
 import { ALL_PLAYERS, CHAOS_PLAYERS } from '@/lib/players';
-import { getTeamMerch } from '@/lib/team-merch';
+import { TeamMerchItem, getTeamMerch } from '@/lib/team-merch';
 
 function getPlayerImageSrc(imagePage?: string) {
   return imagePage ? `/api/player-image?url=${encodeURIComponent(imagePage)}` : '';
@@ -20,6 +20,7 @@ export default function TeamPage() {
   const [filter, setFilter] = useState('All');
   const content = getTeamPageContent(teamId);
   const [activePlayer, setActivePlayer] = useState<TeamSpotlight>(content.spotlights[0]);
+  const [gearItems, setGearItems] = useState<TeamMerchItem[]>([]);
   const team = getTeam(teamId);
   const positionOrder = ['G', 'D', 'LSM', 'SSDM', 'M', 'FO', 'A'];
   const roster: TeamRosterPlayer[] = useMemo(() => {
@@ -64,6 +65,27 @@ export default function TeamPage() {
   }, [teamId]);
 
   useEffect(() => {
+    let isMounted = true;
+
+    fetch(`/api/team-gear?teamId=${encodeURIComponent(teamId)}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (isMounted && Array.isArray(data.items)) {
+          setGearItems(data.items);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setGearItems([]);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [teamId]);
+
+  useEffect(() => {
     const syncFromStorage = () => {
       const saved = localStorage.getItem('lax_team') || 'chaos';
       setTeamId(saved);
@@ -91,7 +113,8 @@ export default function TeamPage() {
   const heroBackground = 'linear-gradient(135deg, var(--team-surface-strong) 0%, var(--bg) 58%, color-mix(in srgb, var(--team-surface) 82%, var(--bg)) 100%)';
   const spotlightBackground = 'linear-gradient(180deg, color-mix(in srgb, var(--team-surface) 86%, var(--bg)) 0%, var(--bg) 100%)';
   const merch = getTeamMerch(teamId);
-  const merchRail = [...merch.items, ...merch.items];
+  const merchItems = gearItems.length ? gearItems : merch.items;
+  const merchRail = [...merchItems, ...merchItems];
   const statItems = [
     { label: 'Championships', val: content.championships },
     { label: 'Roster Size', val: content.rosterSize },
@@ -165,7 +188,7 @@ export default function TeamPage() {
               >
                 <TeamLogo
                   teamId={option.id}
-                  size={100%}
+                  size={56}
                   style={{
                     width: '100%',
                     height: '100%',
@@ -683,7 +706,9 @@ export default function TeamPage() {
                           height: '144px',
                           border: '2px solid color-mix(in srgb, var(--primary) 56%, transparent)',
                           borderRadius: '24px',
-                          background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 18%, transparent) 0%, transparent 100%)',
+                          background: item.image
+                            ? 'color-mix(in srgb, white 94%, var(--team-surface))'
+                            : 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 18%, transparent) 0%, transparent 100%)',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -712,7 +737,22 @@ export default function TeamPage() {
                         >
                           {item.accent}
                         </div>
-                        <TeamLogo teamId={teamId} size={84} style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 16px 24px rgba(0,0,0,0.22))' }} />
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            style={{
+                              position: 'relative',
+                              zIndex: 1,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain',
+                              padding: '18px',
+                            }}
+                          />
+                        ) : (
+                          <TeamLogo teamId={teamId} size={84} style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 16px 24px rgba(0,0,0,0.22))' }} />
+                        )}
                       </div>
 
                       <div style={{ marginTop: '16px' }}>
@@ -720,7 +760,7 @@ export default function TeamPage() {
                           {item.title.toUpperCase()}
                         </div>
                         <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.65, marginTop: '8px' }}>
-                          {item.subtitle}
+                          {item.subtitle}{item.price ? ` • ${item.price}` : ''}
                         </div>
                       </div>
 

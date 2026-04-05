@@ -5,6 +5,8 @@ export interface TeamMerchItem {
   subtitle: string;
   href: string;
   accent: string;
+  image?: string;
+  price?: string;
 }
 
 export interface TeamMerchContent {
@@ -14,19 +16,73 @@ export interface TeamMerchContent {
   items: TeamMerchItem[];
 }
 
-const TEAM_COLLECTIONS: Record<string, string> = {
-  chaos: 'https://shop.premierlacrosseleague.com/collections/carolina-chaos',
-  archers: 'https://shop.premierlacrosseleague.com/collections/utah-archers',
-  outlaws: 'https://shop.premierlacrosseleague.com/search?q=Denver%20Outlaws',
-  redwoods: 'https://shop.premierlacrosseleague.com/search?q=California%20Redwoods',
-  cannons: 'https://shop.premierlacrosseleague.com/collections/boston-cannons',
-  whipsnakes: 'https://shop.premierlacrosseleague.com/search?q=Maryland%20Whipsnakes',
-  atlas: 'https://shop.premierlacrosseleague.com/search?q=New%20York%20Atlas',
-  waterdogs: 'https://shop.premierlacrosseleague.com/search?q=Philadelphia%20Waterdogs',
-  guard: 'https://wllshop.com/collections/guard',
-  palms: 'https://wllshop.com/collections/palms',
-  charm: 'https://wllshop.com/collections/charm',
-  charging: 'https://wllshop.com/collections/charging',
+export interface TeamMerchSource {
+  baseUrl: string;
+  collectionHandle?: string;
+  shopUrl: string;
+}
+
+export const TEAM_MERCH_SOURCES: Record<string, TeamMerchSource> = {
+  chaos: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'carolina-chaos',
+    shopUrl: 'https://shop.premierlacrosseleague.com/collections/carolina-chaos',
+  },
+  archers: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'utah-archers',
+    shopUrl: 'https://shop.premierlacrosseleague.com/collections/utah-archers',
+  },
+  outlaws: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'denver-outlaws',
+    shopUrl: 'https://shop.premierlacrosseleague.com/search?q=Denver%20Outlaws',
+  },
+  redwoods: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'california-redwoods',
+    shopUrl: 'https://shop.premierlacrosseleague.com/search?q=California%20Redwoods',
+  },
+  cannons: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'boston-cannons',
+    shopUrl: 'https://shop.premierlacrosseleague.com/collections/boston-cannons',
+  },
+  whipsnakes: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'maryland-whipsnakes',
+    shopUrl: 'https://shop.premierlacrosseleague.com/search?q=Maryland%20Whipsnakes',
+  },
+  atlas: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'new-york-atlas',
+    shopUrl: 'https://shop.premierlacrosseleague.com/search?q=New%20York%20Atlas',
+  },
+  waterdogs: {
+    baseUrl: 'https://shop.premierlacrosseleague.com',
+    collectionHandle: 'philadelphia-waterdogs',
+    shopUrl: 'https://shop.premierlacrosseleague.com/search?q=Philadelphia%20Waterdogs',
+  },
+  guard: {
+    baseUrl: 'https://wllshop.com',
+    collectionHandle: 'guard',
+    shopUrl: 'https://wllshop.com/collections/guard',
+  },
+  palms: {
+    baseUrl: 'https://wllshop.com',
+    collectionHandle: 'palms',
+    shopUrl: 'https://wllshop.com/collections/palms',
+  },
+  charm: {
+    baseUrl: 'https://wllshop.com',
+    collectionHandle: 'charm',
+    shopUrl: 'https://wllshop.com/collections/charm',
+  },
+  charging: {
+    baseUrl: 'https://wllshop.com',
+    collectionHandle: 'charging',
+    shopUrl: 'https://wllshop.com/collections/charging',
+  },
 };
 
 const CARD_LIBRARY: Record<'PLL' | 'WLL', { title: string; subtitle: string; accent: string }[]> = {
@@ -46,7 +102,8 @@ const CARD_LIBRARY: Record<'PLL' | 'WLL', { title: string; subtitle: string; acc
 
 export function getTeamMerch(teamId: string): TeamMerchContent {
   const team = getTeam(teamId);
-  const shopUrl = TEAM_COLLECTIONS[teamId] ?? (team.league === 'PLL'
+  const source = TEAM_MERCH_SOURCES[teamId];
+  const shopUrl = source?.shopUrl ?? (team.league === 'PLL'
     ? `https://shop.premierlacrosseleague.com/search?q=${encodeURIComponent(team.full)}`
     : `https://wllshop.com/search?q=${encodeURIComponent(team.full)}`);
 
