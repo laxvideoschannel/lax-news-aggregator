@@ -12,30 +12,37 @@ export interface PlayerProfileField {
 export interface TeamPlayer {
   slug: string;
   name: string;
-  number: string;
+  number?: string;
   pos: string;
   fullPosition: string;
-  hometown: string;
-  college: string;
-  years: string;
+  hometown?: string;
+  college?: string;
+  years?: string;
   highlight: string;
   teamId: string;
+  league: 'PLL' | 'WLL';
   imagePage?: string;
   bio: string;
   profile: PlayerProfileField[];
   stats: PlayerProfileField[];
   accolades: string[];
   media: PlayerMediaLink[];
-  pllRosterUrl: string;
+  officialUrl: string;
   ticketsUrl: string;
   shopUrl: string;
 }
 
 const CHAOS_ROSTER_URL = 'https://premierlacrosseleague.com/teams/chaos/roster';
 const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
+const WLL_HOME_URL = 'https://thewll.com/';
+const WLL_SCHEDULE_URL = 'https://thewll.com/schedule';
 
 function getPlayerMerchUrl(query: string) {
   return `https://shop.premierlacrosseleague.com/search?q=${encodeURIComponent(query)}&options%5Bprefix%5D=last`;
+}
+
+function getWllMerchUrl(query: string) {
+  return `https://wllshop.com/search?q=${encodeURIComponent(query)}`;
 }
 
 export const CHAOS_PLAYERS: TeamPlayer[] = [
@@ -50,6 +57,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '7',
     highlight: '5x Goalie of the Year',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer',
     bio: 'Blaze Riorden is the face of the Carolina Chaos defense and one of the defining goalies of the PLL era. His reflexes, outlet passing, and ability to take over elimination games have made him a perennial headline player for Carolina.',
     profile: [
@@ -71,7 +79,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Blaze Riorden Lights Fire Under Chaos', href: 'https://premierlacrosseleague.com/articles/blaze-riorden-lights-fire-under-chaos', type: 'article' },
       { title: 'PLL YouTube Search: Blaze Riorden', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Blaze%20Riorden', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Riorden Chaos jersey'),
   },
@@ -86,6 +94,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '4',
     highlight: 'Backup goalie & team backbone',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/how-austin-kauts-energy-and-enthusiasm-make-chaos-better',
     bio: 'Austin Kaut gives Carolina proven depth in goal and has consistently delivered steady minutes when called on. His experience and composure are a major part of why the Chaos can sustain their defensive identity over a full season.',
     profile: [
@@ -106,7 +115,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'How Austin Kaut\'s Energy Makes Chaos Better', href: 'https://premierlacrosseleague.com/articles/how-austin-kauts-energy-and-enthusiasm-make-chaos-better', type: 'article' },
       { title: 'PLL YouTube Search: Austin Kaut', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Austin%20Kaut', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Austin Kaut Chaos jersey'),
   },
@@ -121,6 +130,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '5',
     highlight: '3x All-Star close defender',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse',
     bio: 'Jack Rowlett is one of the core pieces of Carolina\'s close defense, known for physical matchups, disciplined off-ball positioning, and the ability to erase top dodgers. He has been one of the league\'s defining one-on-one defenders for multiple seasons.',
     profile: [
@@ -142,7 +152,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Players Top 50: Jack Rowlett', href: 'https://premierlacrosseleague.com/articles/players-top-50-15-jack-rowlett', type: 'article' },
       { title: 'PLL YouTube Search: Jack Rowlett', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jack%20Rowlett', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Jack Rowlett Chaos jersey'),
   },
@@ -157,6 +167,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '5',
     highlight: '2024 All-Star',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
     bio: 'Jarrod Neumann brings elite length, physicality, and matchup versatility to the Carolina back line. His stick work and ability to disrupt left-handed attackmen make him one of the most useful cover defenders in the Chaos system.',
     profile: [
@@ -177,7 +188,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Jarrod Neumann Records Fastest Shot', href: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history', type: 'article' },
       { title: 'PLL YouTube Search: Jarrod Neumann', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jarrod%20Neumann', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Jarrod Neumann Chaos jersey'),
   },
@@ -192,6 +203,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '6',
     highlight: 'Elite long-stick midfielder',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/how-troy-rehs-off-ball-defense-binds-the-chaos-defense-together',
     bio: 'Troy Reh is a transition-driving long-stick midfielder whose off-ball instincts fit perfectly in Carolina\'s defensive culture. He helps the Chaos close space quickly, recover on rotations, and push tempo after stops.',
     profile: [
@@ -212,7 +224,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'How Troy Reh\'s Off-Ball Defense Binds The Chaos Together', href: 'https://premierlacrosseleague.com/articles/how-troy-rehs-off-ball-defense-binds-the-chaos-defense-together', type: 'article' },
       { title: 'PLL YouTube Search: Troy Reh', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Troy%20Reh', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Troy Reh Chaos jersey'),
   },
@@ -227,6 +239,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '3',
     highlight: '2026 Golden Stick Award - 30 pts',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/shane-knobloch-breakout-game-carolina-chaos',
     bio: 'Shane Knobloch gives the Chaos a downhill initiator with real burst and shot-making range. His ability to get underneath short sticks and finish through contact adds needed punch to Carolina\'s offense.',
     profile: [
@@ -248,7 +261,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: '2024 Draft Prospect Profile: Shane Knobloch', href: 'https://premierlacrosseleague.com/articles/2024-college-draft-prospect-profile-shane-knobloch', type: 'article' },
       { title: 'PLL YouTube Search: Shane Knobloch', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Shane%20Knobloch', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Shane Knobloch Chaos jersey'),
   },
@@ -263,6 +276,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '10',
     highlight: '10-year PLL veteran',
     teamId: 'chaos',
+    league: 'PLL',
     bio: 'Pat Resch brings veteran presence and matchup discipline to Carolina\'s short-stick defensive midfield group. His experience helps stabilize possessions and gives the Chaos another defender they trust in key moments.',
     profile: [
       { label: 'Position', value: 'Short-Stick Defensive Midfielder' },
@@ -281,7 +295,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
       { title: 'PLL YouTube Search: Pat Resch', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Pat%20Resch', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Pat Resch Chaos jersey'),
   },
@@ -296,6 +310,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '6',
     highlight: 'Team captain',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/how-mental-performance-coaching-has-made-mark-glicini-into-chaos-leader',
     bio: 'Mark Glicini is one of Carolina\'s emotional tone-setters and a trusted short-stick defender. His leadership and mental toughness have made him a central voice in the Chaos locker room.',
     profile: [
@@ -316,7 +331,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Mental Performance Coaching Made Mark Glicini Into A Leader', href: 'https://premierlacrosseleague.com/articles/how-mental-performance-coaching-has-made-mark-glicini-into-chaos-leader', type: 'article' },
       { title: 'PLL YouTube Search: Mark Glicini', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Mark%20Glicini', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Mark Glicini Chaos jersey'),
   },
@@ -331,6 +346,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '1',
     highlight: '2025 Draft pick - lefty attack',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/film-study-how-owen-hiltz-will-bring-balance-to-chaos',
     bio: 'Owen Hiltz arrives as a talented lefty attackman with vision, touch, and shooting range that can diversify Carolina\'s offense. He gives the Chaos another half-field creator and a young name for fans to follow closely.',
     profile: [
@@ -351,7 +367,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Film Study: How Owen Hiltz Will Bring Balance To Chaos', href: 'https://premierlacrosseleague.com/articles/film-study-how-owen-hiltz-will-bring-balance-to-chaos', type: 'article' },
       { title: 'PLL YouTube Search: Owen Hiltz', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Owen%20Hiltz', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Owen Hiltz Chaos jersey'),
   },
@@ -366,6 +382,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '2',
     highlight: 'Rising star midfielder',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/chaos-bolster-offense-with-versatile-playmaker-josh-zawada',
     bio: 'Josh Zawada gives Carolina a versatile midfield piece who can dodge, distribute, and stretch defenses as a scorer. His all-around offensive toolkit makes him an important connector in the Chaos attack.',
     profile: [
@@ -386,7 +403,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'Chaos Bolster Offense With Josh Zawada', href: 'https://premierlacrosseleague.com/articles/chaos-bolster-offense-with-versatile-playmaker-josh-zawada', type: 'article' },
       { title: 'PLL YouTube Search: Josh Zawada', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Josh%20Zawada', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Josh Zawada Chaos jersey'),
   },
@@ -401,6 +418,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '2',
     highlight: 'Defensive specialist',
     teamId: 'chaos',
+    league: 'PLL',
     imagePage: 'https://premierlacrosseleague.com/articles/how-will-carter-parlette-fit-in-with-chaos-after-trade-from-cannons',
     bio: 'Carter Parlette adds athleticism and defensive bite to Carolina\'s short-stick midfield group. He fits the Chaos profile as a willing contact defender who can run in transition and handle tough assignments.',
     profile: [
@@ -421,7 +439,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'How Carter Parlette Fits In With Chaos', href: 'https://premierlacrosseleague.com/articles/how-will-carter-parlette-fit-in-with-chaos-after-trade-from-cannons', type: 'article' },
       { title: 'PLL YouTube Search: Carter Parlette', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Carter%20Parlette', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Carter Parlette Chaos jersey'),
   },
@@ -436,6 +454,7 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
     years: '2',
     highlight: 'Emerging close defender',
     teamId: 'chaos',
+    league: 'PLL',
     bio: 'Jack Posey is part of the next wave of Carolina defenders, bringing size and developmental upside to the Chaos close unit. He profiles as another system fit in a defense-first culture.',
     profile: [
       { label: 'Position', value: 'Defense' },
@@ -454,12 +473,409 @@ export const CHAOS_PLAYERS: TeamPlayer[] = [
       { title: 'PLL Profile And Roster Listing', href: CHAOS_ROSTER_URL, type: 'profile' },
       { title: 'PLL YouTube Search: Jack Posey', href: 'https://www.youtube.com/@PremierLacrosseLeague/search?query=Jack%20Posey', type: 'video' },
     ],
-    pllRosterUrl: CHAOS_ROSTER_URL,
+    officialUrl: CHAOS_ROSTER_URL,
     ticketsUrl: PLL_TICKETS_URL,
     shopUrl: getPlayerMerchUrl('Jack Posey Chaos jersey'),
   },
 ];
 
+export const WLL_PLAYERS: TeamPlayer[] = [
+  {
+    slug: 'charlotte-north',
+    name: 'Charlotte North',
+    pos: 'A',
+    fullPosition: 'Attack',
+    college: 'Boston College',
+    highlight: 'Golden Stick contender and 2025 WLL champion',
+    teamId: 'guard',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    bio: 'Charlotte North is the headline star for the Boston Guard and one of the defining faces of women\'s lacrosse. The Guard are built around her scoring gravity, range, and ability to finish possessions from anywhere above or below the arc.',
+    profile: [
+      { label: 'Position', value: 'Attack' },
+      { label: 'College', value: 'Boston College' },
+      { label: 'Team', value: 'Boston Guard' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'WLL Title', value: '2025' },
+      { label: 'Role', value: 'Captain' },
+      { label: 'Award Race', value: 'Golden Stick' },
+      { label: 'Style', value: 'Power Scorer' },
+    ],
+    accolades: ['2025 WLL champion', 'Two-time Tewaaraton Award winner', 'One of the top scorers in women\'s lacrosse'],
+    media: [
+      { title: 'Boston Guard roster reaction', href: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish', type: 'article' },
+      { title: 'World Lacrosse: Guard win first WLL title', href: 'https://worldlacrosse.sport/boston-guard-claim-first-ever-wll-title-over-new-york-charging/', type: 'article' },
+      { title: 'Charlotte North and the Boston Guard', href: 'https://www.charlottenorthlacrosse.com/appearances-highlights/v/we-are-the-boston-guard', type: 'video' },
+      { title: 'Official WLL shop search: Charlotte North', href: getWllMerchUrl('Charlotte North Boston Guard'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Charlotte North Boston Guard'),
+  },
+  {
+    slug: 'cassidy-weeks',
+    name: 'Cassidy Weeks',
+    pos: 'M',
+    fullPosition: 'Midfield',
+    college: 'Boston College',
+    highlight: 'High-motor two-way midfielder',
+    teamId: 'guard',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    bio: 'Cassidy Weeks gives the Guard relentless two-way energy and helps make Boston one of the deepest WLL teams through the middle of the field. Her motor, physicality, and off-ball feel fit the sixes format naturally.',
+    profile: [
+      { label: 'Position', value: 'Midfield' },
+      { label: 'College', value: 'Boston College' },
+      { label: 'Team', value: 'Boston Guard' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Two-Way Mid' },
+      { label: 'Team Status', value: 'Defending Champs' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Fit', value: 'Transition Game' },
+    ],
+    accolades: ['Core two-way midfielder for Boston', 'Part of 2025 WLL title team'],
+    media: [
+      { title: 'Boston Guard roster reaction', href: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish', type: 'article' },
+      { title: 'World Lacrosse: Guard win first WLL title', href: 'https://worldlacrosse.sport/boston-guard-claim-first-ever-wll-title-over-new-york-charging/', type: 'article' },
+      { title: 'Official WLL shop search: Cassidy Weeks', href: getWllMerchUrl('Cassidy Weeks Boston Guard'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Cassidy Weeks Boston Guard'),
+  },
+  {
+    slug: 'rachel-hall',
+    name: 'Rachel Hall',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    college: 'Boston College',
+    highlight: 'Veteran goalie presence',
+    teamId: 'guard',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    bio: 'Rachel Hall helps anchor the Guard with experienced goalie play and championship-level composure. In sixes, that steadiness matters even more because a short burst of stops can swing an entire game.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'College', value: 'Boston College' },
+      { label: 'Team', value: 'Boston Guard' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Team Status', value: 'Defending Champs' },
+      { label: 'Strength', value: 'Poise' },
+    ],
+    accolades: ['Veteran goalie option', 'Part of 2025 WLL title team'],
+    media: [
+      { title: 'Boston Guard roster reaction', href: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish', type: 'article' },
+      { title: 'Official WLL shop search: Rachel Hall', href: getWllMerchUrl('Rachel Hall Boston Guard'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Rachel Hall Boston Guard'),
+  },
+  {
+    slug: 'ally-mastroianni',
+    name: 'Ally Mastroianni',
+    pos: 'M',
+    fullPosition: 'Midfield',
+    college: 'North Carolina',
+    highlight: 'ESPN pick as a player who does it all',
+    teamId: 'palms',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    bio: 'Ally Mastroianni is the engine of the California Palms and one of the most complete midfielders in the WLL field. Her transition speed, two-way range, and late-game scoring touch make her central to California\'s identity.',
+    profile: [
+      { label: 'Position', value: 'Midfield' },
+      { label: 'College', value: 'North Carolina' },
+      { label: 'Team', value: 'California Palms' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Engine' },
+      { label: 'Style', value: 'Two-Way' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Impact', value: 'Elite' },
+    ],
+    accolades: ['One of the premier midfielders in the event', 'Captain-level presence for California'],
+    media: [
+      { title: 'California Palms roster reaction', href: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll', type: 'article' },
+      { title: 'Official WLL shop search: Ally Mastroianni', href: getWllMerchUrl('Ally Mastroianni California Palms'), type: 'profile' },
+      { title: 'Ally Mastroianni WLL shop tee', href: 'https://shop.app/products/9623389962520/wll-california-palms-mastroianni-n-n-tee', type: 'article' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Ally Mastroianni California Palms'),
+  },
+  {
+    slug: 'taylor-moreno',
+    name: 'Taylor Moreno',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    college: 'North Carolina',
+    highlight: 'Star goalie and transition starter',
+    teamId: 'palms',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    bio: 'Taylor Moreno gives California a marquee goalie with elite college pedigree and the ability to start fast transition. That blend is hugely valuable in the condensed rhythm of sixes.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'College', value: 'North Carolina' },
+      { label: 'Team', value: 'California Palms' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'Strength', value: 'Outlet Game' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Impact', value: 'High' },
+    ],
+    accolades: ['Star goalie pedigree', 'Key part of the California goalie room'],
+    media: [
+      { title: 'California Palms roster reaction', href: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll', type: 'article' },
+      { title: 'Official WLL shop search: Taylor Moreno', href: getWllMerchUrl('Taylor Moreno California Palms'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Taylor Moreno California Palms'),
+  },
+  {
+    slug: 'emily-nalls',
+    name: 'Emily Nalls',
+    pos: 'D',
+    fullPosition: 'Defense',
+    college: 'North Carolina',
+    highlight: 'Shutdown defender',
+    teamId: 'palms',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    bio: 'Emily Nalls gives the Palms a physical defender who can survive in space and help flip stops into transition. California\'s ceiling on the defensive end rises when Nalls is controlling tough matchups.',
+    profile: [
+      { label: 'Position', value: 'Defense' },
+      { label: 'College', value: 'North Carolina' },
+      { label: 'Team', value: 'California Palms' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Position', value: 'Defense' },
+      { label: 'Style', value: 'Physical' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Unit', value: 'Back Line' },
+    ],
+    accolades: ['Key stopper for California', 'Strong transition-defensive fit'],
+    media: [
+      { title: 'California Palms roster reaction', href: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll', type: 'article' },
+      { title: 'Official WLL shop search: Emily Nalls', href: getWllMerchUrl('Emily Nalls California Palms'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Emily Nalls California Palms'),
+  },
+  {
+    slug: 'ally-kennedy',
+    name: 'Ally Kennedy',
+    pos: 'M',
+    fullPosition: 'Midfield',
+    highlight: 'Team USA star making WLL debut',
+    teamId: 'charm',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    bio: 'Ally Kennedy arrives as one of the most intriguing players in the WLL field, bringing top-end two-way value and the kind of athletic profile that should translate beautifully to sixes.',
+    profile: [
+      { label: 'Position', value: 'Midfield' },
+      { label: 'Team', value: 'Maryland Charm' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Status', value: '2026 Debut' },
+    ],
+    stats: [
+      { label: 'Role', value: 'Two-Way Mid' },
+      { label: 'Debut', value: '2026' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Impact', value: 'Immediate' },
+    ],
+    accolades: ['One of the headline additions for Maryland', 'Premier two-way midfielder profile'],
+    media: [
+      { title: 'Maryland Charm roster reaction', href: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor', type: 'article' },
+      { title: 'Official WLL shop search: Ally Kennedy', href: getWllMerchUrl('Ally Kennedy Maryland Charm'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Ally Kennedy Maryland Charm'),
+  },
+  {
+    slug: 'ashley-humphrey',
+    name: 'Ashley Humphrey',
+    pos: 'A',
+    fullPosition: 'Attack',
+    college: 'North Carolina',
+    highlight: 'Record-setting passer joins the WLL',
+    teamId: 'charm',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    bio: 'Ashley Humphrey enters the WLL as one of the best pure creators in the player pool. Her vision and passing ability raise Maryland\'s ceiling whenever the Charm settle into half-field offense.',
+    profile: [
+      { label: 'Position', value: 'Attack' },
+      { label: 'College', value: 'North Carolina' },
+      { label: 'Team', value: 'Maryland Charm' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Calling Card', value: 'Playmaking' },
+      { label: 'Record', value: '90 Assists' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Role', value: 'Creator' },
+    ],
+    accolades: ['NCAA single-season assists record holder', 'Major playmaking addition for Maryland'],
+    media: [
+      { title: 'Maryland Charm roster reaction', href: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor', type: 'article' },
+      { title: 'Official WLL shop search: Ashley Humphrey', href: getWllMerchUrl('Ashley Humphrey Maryland Charm'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Ashley Humphrey Maryland Charm'),
+  },
+  {
+    slug: 'caylee-waters',
+    name: 'Caylee Waters',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    college: 'North Carolina',
+    highlight: 'Experienced goalie option',
+    teamId: 'charm',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    bio: 'Caylee Waters brings experienced goalie play to the Charm and gives Maryland a reliable last line in a format where short bursts in cage can change a whole game.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'College', value: 'North Carolina' },
+      { label: 'Team', value: 'Maryland Charm' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'Strength', value: 'Poise' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Unit', value: 'Charm Defense' },
+    ],
+    accolades: ['Experienced goalie presence', 'Important piece of Maryland\'s defensive floor'],
+    media: [
+      { title: 'Maryland Charm roster reaction', href: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor', type: 'article' },
+      { title: 'Official WLL shop search: Caylee Waters', href: getWllMerchUrl('Caylee Waters Maryland Charm'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Caylee Waters Maryland Charm'),
+  },
+  {
+    slug: 'emily-hawryschuk',
+    name: 'Emily Hawryschuk',
+    pos: 'M',
+    fullPosition: 'Midfield',
+    college: 'Syracuse',
+    highlight: 'Reigning Golden Stick winner',
+    teamId: 'charging',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    bio: 'Emily Hawryschuk gives New York proven star power and range scoring that can bend defenses above the two-point arc. Her familiarity with the format makes her one of the Charging\'s foundational names.',
+    profile: [
+      { label: 'Position', value: 'Midfield' },
+      { label: 'College', value: 'Syracuse' },
+      { label: 'Team', value: 'New York Charging' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Golden Stick', value: 'Winner' },
+      { label: 'Style', value: 'Range Scorer' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Impact', value: 'Elite' },
+    ],
+    accolades: ['Reigning Golden Stick winner', 'Top-end sixes scoring threat'],
+    media: [
+      { title: 'New York Charging roster reaction', href: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll', type: 'article' },
+      { title: 'Official WLL shop search: Emily Hawryschuk', href: getWllMerchUrl('Emily Hawryschuk New York Charging'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Emily Hawryschuk New York Charging'),
+  },
+  {
+    slug: 'izzy-scane',
+    name: 'Izzy Scane',
+    pos: 'A',
+    fullPosition: 'Attack',
+    college: 'Northwestern',
+    highlight: 'ESPN Golden Stick favorite',
+    teamId: 'charging',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    bio: 'Izzy Scane is the marquee scorer for the Charging and one of the most dangerous finishing threats in women\'s lacrosse. New York is built to put the ball in her hands in space and let her end possessions.',
+    profile: [
+      { label: 'Position', value: 'Attack' },
+      { label: 'College', value: 'Northwestern' },
+      { label: 'Team', value: 'New York Charging' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Award Race', value: 'Favorite' },
+      { label: 'Role', value: 'Primary Scorer' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Style', value: 'Downhill Finisher' },
+    ],
+    accolades: ['One of the biggest stars in the WLL field', 'Featured scoring centerpiece for New York'],
+    media: [
+      { title: 'New York Charging roster reaction', href: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll', type: 'article' },
+      { title: 'WLL shop: Izzy Scane tee', href: 'https://shop.app/products/9623389700376/wll-new-york-charging-scane-n-n-tee', type: 'article' },
+      { title: 'Official WLL shop search: Izzy Scane', href: getWllMerchUrl('Izzy Scane New York Charging'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Izzy Scane New York Charging'),
+  },
+  {
+    slug: 'madison-doucette',
+    name: 'Madison Doucette',
+    pos: 'G',
+    fullPosition: 'Goalie',
+    college: 'Johns Hopkins',
+    highlight: 'Part of elite goalie duo',
+    teamId: 'charging',
+    league: 'WLL',
+    imagePage: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    bio: 'Madison Doucette helps give the Charging one of the strongest goalie rooms in the WLL. In a format built on runs, that kind of crease stability can become a major separator.',
+    profile: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'College', value: 'Johns Hopkins' },
+      { label: 'Team', value: 'New York Charging' },
+      { label: 'League', value: 'WLL' },
+    ],
+    stats: [
+      { label: 'Position', value: 'Goalie' },
+      { label: 'Strength', value: 'Momentum Swings' },
+      { label: 'League', value: 'WLL' },
+      { label: 'Unit', value: 'Goalie Duo' },
+    ],
+    accolades: ['Key half of New York goalie duo', 'Important back-end stabilizer'],
+    media: [
+      { title: 'New York Charging roster reaction', href: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll', type: 'article' },
+      { title: 'Official WLL shop search: Madison Doucette', href: getWllMerchUrl('Madison Doucette New York Charging'), type: 'profile' },
+    ],
+    officialUrl: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+    ticketsUrl: WLL_SCHEDULE_URL,
+    shopUrl: getWllMerchUrl('Madison Doucette New York Charging'),
+  },
+];
+
+export const ALL_PLAYERS: TeamPlayer[] = [...CHAOS_PLAYERS, ...WLL_PLAYERS];
+
 export function getChaosPlayer(slug: string) {
   return CHAOS_PLAYERS.find((player) => player.slug === slug);
+}
+
+export function getPlayer(slug: string) {
+  return ALL_PLAYERS.find((player) => player.slug === slug);
 }

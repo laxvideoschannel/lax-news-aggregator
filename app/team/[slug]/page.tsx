@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
-import { CHAOS_PLAYERS, getChaosPlayer } from '@/lib/players';
+import { ALL_PLAYERS, getPlayer } from '@/lib/players';
 import { getTeam } from '@/lib/teams';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lax-news-aggregator.vercel.app';
@@ -11,18 +11,19 @@ function getPlayerImageSrc(imagePage?: string) {
 }
 
 export function generateStaticParams() {
-  return CHAOS_PLAYERS.map((player) => ({ slug: player.slug }));
+  return ALL_PLAYERS.map((player) => ({ slug: player.slug }));
 }
 
 export function generateMetadata({ params }: { params: { slug: string } }): Metadata {
-  const player = getChaosPlayer(params.slug);
+  const player = getPlayer(params.slug);
 
   if (!player) {
     return { title: 'Player Not Found | LaxHub' };
   }
 
-  const title = `${player.name} Bio, Stats, Highlights & Carolina Chaos Profile | LaxHub`;
-  const description = `${player.name} profile page with Carolina Chaos bio, position, hometown, college, stats, highlights, videos, and official PLL links.`;
+  const team = getTeam(player.teamId);
+  const title = `${player.name} Bio, Stats, Highlights & ${team.full} Profile | LaxHub`;
+  const description = `${player.name} profile page with ${team.full} bio, position, stats, highlights, videos, and official ${player.league} links.`;
   const image = getPlayerImageSrc(player.imagePage);
   const imageUrl = image ? `${SITE_URL}${image}` : undefined;
 
@@ -49,7 +50,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
 }
 
 export default function PlayerBioPage({ params }: { params: { slug: string } }) {
-  const player = getChaosPlayer(params.slug);
+  const player = getPlayer(params.slug);
 
   if (!player) {
     notFound();
@@ -59,6 +60,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
   const imageSrc = getPlayerImageSrc(player.imagePage);
   const videoMedia = player.media.filter((item) => item.type === 'video');
   const otherMedia = player.media.filter((item) => item.type !== 'video');
+  const officialLabel = player.league === 'PLL' ? 'Official PLL Roster' : 'Official WLL Coverage';
 
   const schema = {
     '@context': 'https://schema.org',
@@ -122,7 +124,23 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                       filter: 'grayscale(0.15) contrast(1.04) brightness(0.9)',
                     }}
                   />
-                ) : null}
+                ) : (
+                  <div
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 900,
+                      fontSize: '48px',
+                      color: 'color-mix(in srgb, var(--primary) 78%, white)',
+                    }}
+                  >
+                    {team.name.toUpperCase()}
+                  </div>
+                )}
               </div>
               <div
                 style={{
@@ -134,13 +152,15 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                   padding: '14px 18px',
                 }}
               >
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '58px', color: 'var(--primary)', lineHeight: 0.9 }}>#{player.number}</div>
+                {player.number ? (
+                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '58px', color: 'var(--primary)', lineHeight: 0.9 }}>#{player.number}</div>
+                ) : null}
                 <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', color: '#fff', marginTop: '4px' }}>{player.fullPosition.toUpperCase()}</div>
               </div>
             </div>
 
             <div>
-              <div className="section-tag" style={{ marginBottom: '16px' }}>{team.full.toUpperCase()}</div>
+              <div className="section-tag" style={{ marginBottom: '16px' }}>{`${team.full.toUpperCase()} • ${player.league}`}</div>
               <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(40px, 7vw, 88px)', lineHeight: 0.92, marginBottom: '16px' }}>
                 {player.name.toUpperCase()}
               </h1>
@@ -158,7 +178,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
               </div>
 
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                <a href={player.pllRosterUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">Official PLL Roster -&gt;</a>
+                <a href={player.officialUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">{officialLabel} -&gt;</a>
                 <a href={player.ticketsUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Tickets -&gt;</a>
                 <a href={player.shopUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Shop {player.name.split(' ')[0]} Merch -&gt;</a>
               </div>
@@ -280,11 +300,17 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 <div style={{ position: 'absolute', left: '14px', top: '74px', width: '26px', height: '92px', background: '#fff', border: '1px solid rgba(0,0,0,0.06)', transform: 'skewY(14deg)', borderTop: '4px solid var(--primary)' }} />
                 <div style={{ position: 'absolute', right: '14px', top: '74px', width: '26px', height: '92px', background: '#fff', border: '1px solid rgba(0,0,0,0.06)', transform: 'skewY(-14deg)', borderTop: '4px solid var(--primary)' }} />
                 <div style={{ position: 'absolute', top: '98px', left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '26px', color: '#111' }}>
-                  CHAOS
+                  {team.name.toUpperCase()}
                 </div>
-                <div style={{ position: 'absolute', top: '136px', left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '86px', lineHeight: 0.9, color: 'var(--primary)' }}>
-                  {player.number}
-                </div>
+                {player.number ? (
+                  <div style={{ position: 'absolute', top: '136px', left: 0, right: 0, textAlign: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '86px', lineHeight: 0.9, color: 'var(--primary)' }}>
+                    {player.number}
+                  </div>
+                ) : (
+                  <div style={{ position: 'absolute', top: '146px', left: '28px', right: '28px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: '#111' }}>
+                    OFFICIAL FAN SEARCH
+                  </div>
+                )}
                 <div style={{ position: 'absolute', bottom: '18px', left: '18px', right: '18px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: '#222' }}>
                   {player.name.toUpperCase()}
                 </div>
@@ -297,7 +323,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 SHOP {player.name.toUpperCase()}<br /><span style={{ color: 'var(--primary)' }}>JERSEY & MERCH</span>
               </h2>
               <p style={{ color: '#bdbdbd', fontSize: '15px', lineHeight: 1.8, maxWidth: '640px', marginBottom: '24px' }}>
-                Browse player-specific Carolina Chaos merch and jersey results on the official PLL shop.
+                Browse player-specific {team.full} merch results from the official league shop and partner storefronts.
               </p>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <a href={player.shopUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">

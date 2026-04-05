@@ -163,6 +163,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/news', label: 'News' },
+    { href: '/videos', label: 'Videos' },
     { href: '/team', label: 'Team' },
     { href: '/schedule', label: 'Schedule' },
   ];

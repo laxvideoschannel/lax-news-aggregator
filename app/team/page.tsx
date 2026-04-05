@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ALL_TEAMS, getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
 import { getTeamPageContent, TeamRosterPlayer, TeamSpotlight } from '@/lib/team-content';
-import { CHAOS_PLAYERS } from '@/lib/players';
+import { ALL_PLAYERS, CHAOS_PLAYERS } from '@/lib/players';
 
 function getPlayerImageSrc(imagePage?: string) {
   return imagePage ? `/api/player-image?url=${encodeURIComponent(imagePage)}` : '';
@@ -35,7 +35,15 @@ export default function TeamPage() {
       }));
     }
 
-    return content.roster;
+    return content.roster.map((player) => {
+      const enriched = ALL_PLAYERS.find((candidate) => candidate.teamId === teamId && candidate.name === player.name);
+      return enriched
+        ? {
+            ...player,
+            slug: enriched.slug,
+          }
+        : player;
+    });
   }, [content.roster, teamId]);
   const positions = useMemo(() => {
     const seen = new Set(roster.map((player) => player.pos));
