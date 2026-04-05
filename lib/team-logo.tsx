@@ -15,6 +15,10 @@ export const TEAM_LOGO_URLS: Record<string, string> = {
   whipsnakes: 'https://shop.premierlacrosseleague.com/cdn/shop/files/PLL-WHIPSNAKES-PRIM-STICKER_1.png?v=1730945125',
   waterdogs: 'https://shop.premierlacrosseleague.com/cdn/shop/files/PLL-WATERDOGS-PRIM-STICKER_1.png?v=1730945143',
   redwoods: 'https://shop.premierlacrosseleague.com/cdn/shop/files/PLL-REDWOODS-PRIM-STICKER_1.png?v=1730945052',
+  charging: 'https://img.premierlacrosseleague.com/Teams/2024/Logo/wll_new_york_charging_logo.png',
+  guard: 'https://img.premierlacrosseleague.com/Teams/2024/Logo/wll_boston_guard_logo.png',
+  charm: 'https://img.premierlacrosseleague.com/Teams/2024/Logo/wll_maryland_charm_logo.png',
+  palms: 'https://img.premierlacrosseleague.com/Teams/2024/Logo/wll_california_palms_logo.png',
 };
 
 export function TeamLogo({ teamId, size = 40, style }: Props) {

@@ -4,31 +4,40 @@ export interface Team {
   city: string;
   full: string;
   short: string;
+  league: 'PLL' | 'WLL';
+  group: string;
   primary: string;
   secondary: string;
   accent: string;
-  conference: 'Eastern' | 'Western';
+  conference: string;
   logo: string; // emoji fallback
 }
 
 export const PLL_TEAMS: Team[] = [
   // Eastern
-  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', short: 'CC', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'CC' },
+  { id: 'chaos', name: 'Chaos', city: 'Carolina', full: 'Carolina Chaos', short: 'CC', league: 'PLL', group: 'Eastern Conference', primary: '#CC0000', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'CC' },
   // Western
-  { id: 'archers', name: 'Archers', city: 'Utah', full: 'Utah Archers', short: 'UA', primary: '#1B3A6B', secondary: '#C8A951', accent: '#FFFFFF', conference: 'Western', logo: 'UA' },
-  { id: 'outlaws', name: 'Outlaws', city: 'Denver', full: 'Denver Outlaws', short: 'DO', primary: '#002868', secondary: '#BF0A30', accent: '#FFFFFF', conference: 'Western', logo: 'DO' },
-  { id: 'redwoods', name: 'Redwoods', city: 'California', full: 'California Redwoods', short: 'CR', primary: '#8B2500', secondary: '#228B22', accent: '#FFFFFF', conference: 'Western', logo: 'CR' },
-  { id: 'cannons', name: 'Cannons', city: 'Boston', full: 'Boston Cannons', short: 'BC', primary: '#002244', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'BC' },
-  { id: 'whipsnakes', name: 'Whipsnakes', city: 'Maryland', full: 'Maryland Whipsnakes', short: 'MW', primary: '#FFD700', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'MW' },
-  { id: 'atlas', name: 'Atlas', city: 'New York', full: 'New York Atlas', short: 'NY', primary: '#003087', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'NY' },
-  { id: 'waterdogs', name: 'Waterdogs', city: 'Philadelphia', full: 'Philadelphia Waterdogs', short: 'PW', primary: '#003087', secondary: '#009A44', accent: '#FFFFFF', conference: 'Eastern', logo: 'PW' },
+  { id: 'archers', name: 'Archers', city: 'Utah', full: 'Utah Archers', short: 'UA', league: 'PLL', group: 'Western Conference', primary: '#1B3A6B', secondary: '#C8A951', accent: '#FFFFFF', conference: 'Western', logo: 'UA' },
+  { id: 'outlaws', name: 'Outlaws', city: 'Denver', full: 'Denver Outlaws', short: 'DO', league: 'PLL', group: 'Western Conference', primary: '#002868', secondary: '#BF0A30', accent: '#FFFFFF', conference: 'Western', logo: 'DO' },
+  { id: 'redwoods', name: 'Redwoods', city: 'California', full: 'California Redwoods', short: 'CR', league: 'PLL', group: 'Western Conference', primary: '#8B2500', secondary: '#228B22', accent: '#FFFFFF', conference: 'Western', logo: 'CR' },
+  { id: 'cannons', name: 'Cannons', city: 'Boston', full: 'Boston Cannons', short: 'BC', league: 'PLL', group: 'Eastern Conference', primary: '#0E4D92', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'BC' },
+  { id: 'whipsnakes', name: 'Whipsnakes', city: 'Maryland', full: 'Maryland Whipsnakes', short: 'MW', league: 'PLL', group: 'Eastern Conference', primary: '#FFD700', secondary: '#000000', accent: '#FFFFFF', conference: 'Eastern', logo: 'MW' },
+  { id: 'atlas', name: 'Atlas', city: 'New York', full: 'New York Atlas', short: 'NY', league: 'PLL', group: 'Eastern Conference', primary: '#003087', secondary: '#C8102E', accent: '#FFFFFF', conference: 'Eastern', logo: 'NY' },
+  { id: 'waterdogs', name: 'Waterdogs', city: 'Philadelphia', full: 'Philadelphia Waterdogs', short: 'PW', league: 'PLL', group: 'Eastern Conference', primary: '#003087', secondary: '#009A44', accent: '#FFFFFF', conference: 'Eastern', logo: 'PW' },
+];
+
+export const WLL_TEAMS: Team[] = [
+  { id: 'guard', name: 'Guard', city: 'Boston', full: 'Boston Guard', short: 'BG', league: 'WLL', group: 'WLL Teams', primary: '#5E7F36', secondary: '#D64541', accent: '#FFFFFF', conference: 'WLL', logo: 'BG' },
+  { id: 'palms', name: 'Palms', city: 'California', full: 'California Palms', short: 'CP', league: 'WLL', group: 'WLL Teams', primary: '#E0B83A', secondary: '#2D7C5A', accent: '#FFFFFF', conference: 'WLL', logo: 'CP' },
+  { id: 'charm', name: 'Charm', city: 'Maryland', full: 'Maryland Charm', short: 'MC', league: 'WLL', group: 'WLL Teams', primary: '#9B3F67', secondary: '#F2A7C2', accent: '#FFFFFF', conference: 'WLL', logo: 'MC' },
+  { id: 'charging', name: 'Charging', city: 'New York', full: 'New York Charging', short: 'NC', league: 'WLL', group: 'WLL Teams', primary: '#244E9B', secondary: '#B7D9FF', accent: '#FFFFFF', conference: 'WLL', logo: 'NC' },
 ];
 
 export const DEFAULT_TEAM = PLL_TEAMS[0]; // Carolina Chaos
-export const ALL_TEAMS = PLL_TEAMS;
+export const ALL_TEAMS = [...PLL_TEAMS, ...WLL_TEAMS];
 
 export function getTeam(id: string): Team {
-  return PLL_TEAMS.find(t => t.id === id) ?? DEFAULT_TEAM;
+  return ALL_TEAMS.find(t => t.id === id) ?? DEFAULT_TEAM;
 }
 
 // Player spotlight data - seeded with real Chaos players

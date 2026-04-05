@@ -166,6 +166,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     { href: '/team', label: 'Team' },
     { href: '/schedule', label: 'Schedule' },
   ];
+  const teamGroups = Array.from(new Set(ALL_TEAMS.map((option) => option.group)));
 
   return (
     <html lang="en">
@@ -281,7 +282,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     transition: 'background 0.2s',
                   }}
                 >
-                  <TeamLogo teamId={team.id} size={30} />
+                  <TeamLogo teamId={team.id} size={38} />
                   {team.full.toUpperCase()}
                   <span style={{ fontSize: '8px', opacity: 0.6 }}>v</span>
                 </button>
@@ -299,12 +300,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
                     }}
                   >
-                    {['Eastern', 'Western'].map((conf) => (
-                      <div key={conf}>
+                    {teamGroups.map((group) => (
+                      <div key={group}>
                         <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.2em', color: 'var(--primary)', padding: '10px 16px 6px', borderBottom: '1px solid var(--border)' }}>
-                          {conf.toUpperCase()} CONFERENCE
+                          {group.toUpperCase()}
                         </div>
-                        {ALL_TEAMS.filter((t) => t.conference === conf).map((t) => (
+                        {ALL_TEAMS.filter((t) => t.group === group).map((t) => (
                           <button
                             key={t.id}
                             onClick={() => selectTeam(t.id)}
@@ -322,11 +323,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               fontSize: '13px',
                               textAlign: 'left',
                               transition: 'background 0.15s',
-                            }}
+                              }}
                             onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
                             onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
                           >
-                            <TeamLogo teamId={t.id} size={28} style={{ flexShrink: 0 }} />
+                            <TeamLogo teamId={t.id} size={36} style={{ flexShrink: 0 }} />
                             {t.full}
                             {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '10px' }}>OK</span>}
                           </button>

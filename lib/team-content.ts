@@ -1,20 +1,22 @@
+import { WLL_TEAM_PAGE_CONTENT } from './wll-content';
+
 export type TeamRosterPlayer = {
   slug?: string;
   name: string;
-  number: string;
+  number?: string;
   pos: string;
-  hometown: string;
-  college: string;
+  hometown?: string;
+  college?: string;
   highlight: string;
   imagePage?: string;
 };
 
 export type TeamSpotlight = {
   name: string;
-  number: string;
+  number?: string;
   position: string;
-  hometown: string;
-  college: string;
+  hometown?: string;
+  college?: string;
   imagePage?: string;
   description: string;
   quote: string;
@@ -170,6 +172,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
       { name: 'TD Ierlan', number: '55', position: 'Faceoff', hometown: 'Victor, NY', college: 'Denver', description: 'Ierlan changes the game before it starts, giving the Redwoods extra possessions and dictating rhythm from the stripe.', quote: 'Possession is a weapon if you stay consistent.', stats: [{ label: 'Role', value: 'Faceoff' }, { label: 'Position', value: 'FO' }, { label: 'College', value: 'Denver' }, { label: 'Conference', value: 'West' }] },
     ],
   },
+  ...WLL_TEAM_PAGE_CONTENT,
 };
 
 export function getTeamPageContent(teamId: string) {

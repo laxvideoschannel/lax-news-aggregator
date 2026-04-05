@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ALL_TEAMS, getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
 import { getTeamPageContent, TeamRosterPlayer, TeamSpotlight } from '@/lib/team-content';
+import { CHAOS_PLAYERS } from '@/lib/players';
 
 function getPlayerImageSrc(imagePage?: string) {
   return imagePage ? `/api/player-image?url=${encodeURIComponent(imagePage)}` : '';
@@ -19,7 +20,28 @@ export default function TeamPage() {
   const content = getTeamPageContent(teamId);
   const [activePlayer, setActivePlayer] = useState<TeamSpotlight>(content.spotlights[0]);
   const team = getTeam(teamId);
-  const positions = ['All', 'G', 'D', 'LSM', 'SSDM', 'M', 'A'];
+  const positionOrder = ['G', 'D', 'LSM', 'SSDM', 'M', 'FO', 'A'];
+  const roster: TeamRosterPlayer[] = useMemo(() => {
+    if (teamId === 'chaos') {
+      return CHAOS_PLAYERS.map((player) => ({
+        slug: player.slug,
+        name: player.name,
+        number: player.number,
+        pos: player.pos,
+        hometown: player.hometown,
+        college: player.college,
+        highlight: player.highlight,
+        imagePage: player.imagePage,
+      }));
+    }
+
+    return content.roster;
+  }, [content.roster, teamId]);
+  const positions = useMemo(() => {
+    const seen = new Set(roster.map((player) => player.pos));
+    const sorted = positionOrder.filter((position) => seen.has(position));
+    return ['All', ...sorted];
+  }, [roster]);
 
   useEffect(() => {
     const saved = localStorage.getItem('lax_team') || 'chaos';
@@ -47,9 +69,9 @@ export default function TeamPage() {
   }, []);
 
   const filteredRoster = useMemo(() => {
-    if (filter === 'All') return content.roster;
-    return content.roster.filter((player) => getPositionFilter(player.pos) === filter);
-  }, [content.roster, filter]);
+    if (filter === 'All') return roster;
+    return roster.filter((player) => getPositionFilter(player.pos) === filter);
+  }, [roster, filter]);
 
   const selectTeam = (id: string) => {
     setTeamId(id);
@@ -59,6 +81,12 @@ export default function TeamPage() {
 
   const heroBackground = 'linear-gradient(135deg, var(--team-surface-strong) 0%, var(--bg) 58%, color-mix(in srgb, var(--team-surface) 82%, var(--bg)) 100%)';
   const spotlightBackground = 'linear-gradient(180deg, color-mix(in srgb, var(--team-surface) 86%, var(--bg)) 0%, var(--bg) 100%)';
+  const statItems = [
+    { label: 'Championships', val: content.championships },
+    { label: 'Roster Size', val: content.rosterSize },
+    { label: team.league === 'PLL' ? 'Conference' : 'League', val: team.league === 'PLL' ? (team.conference === 'Eastern' ? 'East' : 'West') : 'WLL' },
+    { label: 'Founded', val: content.founded },
+  ];
 
   return (
     <div>
@@ -107,21 +135,24 @@ export default function TeamPage() {
                 key={option.id}
                 onClick={() => selectTeam(option.id)}
                 aria-label={`Show ${option.full}`}
+                className="team-selector-tile"
                 style={{
-                  width: '58px',
-                  height: '58px',
-                  borderRadius: '16px',
-                  border: `1px solid ${teamId === option.id ? 'var(--primary)' : 'var(--border)'}`,
-                  background: teamId === option.id ? 'color-mix(in srgb, var(--team-surface-strong) 84%, transparent)' : 'color-mix(in srgb, var(--bg-card) 88%, transparent)',
+                  width: '74px',
+                  height: '74px',
+                  borderRadius: '18px',
+                  border: `${teamId === option.id ? 3 : 2}px solid ${teamId === option.id ? 'var(--primary)' : 'color-mix(in srgb, var(--border) 82%, transparent)'}`,
+                  background: 'color-mix(in srgb, var(--bg-card) 90%, transparent)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  boxShadow: teamId === option.id ? '0 0 0 1px color-mix(in srgb, var(--primary) 24%, transparent)' : 'none',
+                  transition: 'transform 0.2s, opacity 0.2s, border-color 0.2s, box-shadow 0.2s',
+                  boxShadow: teamId === option.id ? '0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 40px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
+                  opacity: teamId === option.id ? 1 : 0.62,
+                  padding: 0,
                 }}
               >
-                <TeamLogo teamId={option.id} size={42} />
+                <TeamLogo teamId={option.id} size={56} style={{ borderRadius: '16px', transition: 'transform 0.2s, opacity 0.2s' }} />
               </button>
             ))}
           </div>
@@ -133,12 +164,7 @@ export default function TeamPage() {
           <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>{content.seasonNote}</p>
 
           <div style={{ display: 'flex', gap: '40px', marginTop: '40px', flexWrap: 'wrap' }}>
-            {[
-              { label: 'Championships', val: content.championships },
-              { label: 'Roster Size', val: content.rosterSize },
-              { label: 'Conference', val: team.conference === 'Eastern' ? 'East' : 'West' },
-              { label: 'Founded', val: content.founded },
-            ].map((stat) => (
+            {statItems.map((stat) => (
               <div key={stat.label}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{stat.val}</div>
                 <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
@@ -233,18 +259,20 @@ export default function TeamPage() {
                   pointerEvents: 'none',
                 }}
               >
-                <div
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 900,
-                    fontSize: '76px',
-                    color: 'var(--primary)',
-                    lineHeight: 0.9,
-                    textShadow: '0 10px 30px rgba(0,0,0,0.45)',
-                  }}
-                >
-                  #{activePlayer.number}
-                </div>
+                {activePlayer.number ? (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 900,
+                      fontSize: '76px',
+                      color: 'var(--primary)',
+                      lineHeight: 0.9,
+                      textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                    }}
+                  >
+                    #{activePlayer.number}
+                  </div>
+                ) : null}
                 <div
                   style={{
                     fontFamily: 'var(--font-display)',
@@ -263,9 +291,11 @@ export default function TeamPage() {
 
               <div style={{ textAlign: 'center', marginTop: '24px' }}>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '48px', lineHeight: 0.95 }}>{activePlayer.name.toUpperCase()}</h2>
-                <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--text-muted)', marginTop: '8px' }}>
-                  {activePlayer.hometown} - {activePlayer.college}
-                </div>
+                {activePlayer.hometown || activePlayer.college ? (
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                    {[activePlayer.hometown, activePlayer.college].filter(Boolean).join(' - ')}
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -346,7 +376,7 @@ export default function TeamPage() {
         <div className="container">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', gap: '24px', flexWrap: 'wrap' }}>
             <div>
-              <div className="section-tag" style={{ marginBottom: '12px' }}>2026 ROSTER</div>
+              <div className="section-tag" style={{ marginBottom: '12px' }}>{`2026 ${team.league} ROSTER`}</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)' }}>
                 MEET THE<br /><span style={{ color: 'var(--primary)' }}>TEAM</span>
               </h2>
@@ -410,12 +440,20 @@ export default function TeamPage() {
                         <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.pos}</div>
                         <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1 }}>{player.name}</h3>
                       </div>
-                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: player.pos === 'G' ? 'var(--primary)' : 'color-mix(in srgb, var(--text) 12%, transparent)', lineHeight: 1 }}>
-                        #{player.number}
-                      </div>
+                      {player.number ? (
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: player.pos === 'G' ? 'var(--primary)' : 'color-mix(in srgb, var(--text) 12%, transparent)', lineHeight: 1 }}>
+                          #{player.number}
+                        </div>
+                      ) : null}
                     </div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.hometown}</div>
-                    <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px' }}>{player.college}</div>
+                    {player.hometown ? (
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: player.college ? '4px' : '0' }}>{player.hometown}</div>
+                    ) : null}
+                    {player.college ? (
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px' }}>{player.college}</div>
+                    ) : (
+                      <div style={{ marginBottom: '16px' }} />
+                    )}
                     <div style={{ padding: '8px 12px', background: 'color-mix(in srgb, var(--primary) 10%, transparent)', borderLeft: '2px solid var(--primary)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.4 }}>
                       {player.highlight}
                     </div>
@@ -449,6 +487,18 @@ export default function TeamPage() {
           </div>
         </div>
       </section>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .team-selector-tile:hover {
+          opacity: 1 !important;
+          transform: translateY(-2px) scale(1.05);
+          border-color: var(--primary) !important;
+        }
+        .team-selector-tile:hover img {
+          opacity: 1 !important;
+          transform: scale(1.08);
+        }
+      `}</style>
     </div>
   );
 }
