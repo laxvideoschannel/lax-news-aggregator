@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { ALL_TEAMS, getTeam } from '@/lib/teams';
@@ -541,144 +541,60 @@ export default function TeamPage() {
         <div className="container">
           <div
             style={{
-              border: '1px solid color-mix(in srgb, var(--border) 88%, transparent)',
-              background: 'linear-gradient(135deg, color-mix(in srgb, var(--team-surface) 84%, var(--bg-card)) 0%, color-mix(in srgb, var(--bg-card) 86%, var(--bg)) 100%)',
-              padding: '36px',
+              borderTop: '1px solid color-mix(in srgb, var(--border) 88%, transparent)',
+              borderBottom: '1px solid color-mix(in srgb, var(--border) 88%, transparent)',
+              padding: '24px 0 18px',
               position: 'relative',
               overflow: 'hidden',
             }}
           >
             <div
               style={{
-                position: 'absolute',
-                right: '-110px',
-                top: '-90px',
-                width: '320px',
-                height: '320px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, color-mix(in srgb, var(--primary) 18%, transparent) 0%, transparent 70%)',
-                pointerEvents: 'none',
-              }}
-            />
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(280px, 0.88fr) minmax(0, 1.12fr)',
-                gap: '36px',
-                alignItems: 'center',
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+                gap: '20px',
                 position: 'relative',
                 zIndex: 1,
+                flexWrap: 'wrap',
               }}
             >
               <div>
-                <div className="section-tag" style={{ marginBottom: '14px' }}>
+                <div className="section-tag" style={{ marginBottom: '12px' }}>
                   SHOP {team.full.toUpperCase()} GEAR
                 </div>
-                <h2
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontWeight: 900,
-                    fontSize: 'clamp(28px, 4vw, 54px)',
-                    lineHeight: 0.92,
-                    marginBottom: '16px',
-                  }}
-                >
-                  OFFICIAL {team.city.toUpperCase()}<br />
-                  <span style={{ color: 'var(--primary)' }}>{team.name.toUpperCase()} GEAR</span>
-                </h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.75, marginBottom: '24px', maxWidth: '520px' }}>
-                  {merch.featuredSubtitle}
+                <p style={{ color: '#fff', fontSize: '15px', lineHeight: 1.7, margin: 0, maxWidth: '760px' }}>
+                  Official team gear from the {team.league} shop. Jerseys, sideline apparel, hats, and fan essentials for {team.full}.
                 </p>
-                <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                  <a
-                    href={merch.shopUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      minHeight: '56px',
-                      padding: '0 24px',
-                      background: 'var(--primary)',
-                      color: '#fff',
-                      fontFamily: 'var(--font-accent)',
-                      fontSize: '13px',
-                      letterSpacing: '0.12em',
-                      textDecoration: 'none',
-                      clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 0 0)',
-                    }}
-                  >
-                    SHOP {team.name.toUpperCase()} GEAR
-                  </a>
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '110px 1fr',
-                      gap: '16px',
-                      alignItems: 'center',
-                      minWidth: 'min(100%, 360px)',
-                    }}
-                  >
-                    <div
-                      style={{
-                        aspectRatio: '0.82',
-                        borderRadius: '28px 28px 18px 18px',
-                        border: '2px solid color-mix(in srgb, var(--primary) 72%, white)',
-                        background: `linear-gradient(180deg, color-mix(in srgb, var(--primary) 86%, white) 0%, color-mix(in srgb, var(--primary) 68%, var(--secondary)) 100%)`,
-                        boxShadow: '0 18px 42px rgba(0,0,0,0.26)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        position: 'relative',
-                        overflow: 'hidden',
-                      }}
-                    >
-                      <div
-                        style={{
-                          position: 'absolute',
-                          left: '50%',
-                          top: '-2px',
-                          transform: 'translateX(-50%)',
-                          width: '42%',
-                          height: '18%',
-                          borderBottomLeftRadius: '16px',
-                          borderBottomRightRadius: '16px',
-                          background: 'color-mix(in srgb, var(--bg) 82%, transparent)',
-                          borderLeft: '2px solid color-mix(in srgb, var(--primary) 72%, white)',
-                          borderRight: '2px solid color-mix(in srgb, var(--primary) 72%, white)',
-                          borderBottom: '2px solid color-mix(in srgb, var(--primary) 72%, white)',
-                        }}
-                      />
-                      <div
-                        style={{
-                          position: 'absolute',
-                          inset: '14px',
-                          borderRadius: '22px 22px 14px 14px',
-                          border: '1px solid color-mix(in srgb, white 22%, transparent)',
-                          opacity: 0.6,
-                        }}
-                      />
-                      <TeamLogo teamId={teamId} size={58} style={{ mixBlendMode: 'multiply' }} />
-                    </div>
-                    <div>
-                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', lineHeight: 0.95 }}>
-                        {merch.featuredTitle.toUpperCase()}
-                      </div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.65, marginTop: '8px' }}>
-                        Jerseys, sideline apparel, fan gear, and everyday essentials for {team.full}.
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
+              <a
+                href={merch.shopUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '52px',
+                  padding: '0 22px',
+                  background: 'var(--primary)',
+                  color: '#fff',
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: '13px',
+                  letterSpacing: '0.12em',
+                  textDecoration: 'none',
+                  clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 0 0)',
+                }}
+              >
+                SHOP {team.name.toUpperCase()} GEAR
+              </a>
 
-              <div style={{ overflow: 'hidden', maskImage: 'linear-gradient(90deg, transparent, black 10%, black 90%, transparent)' }}>
+              <div style={{ overflow: 'hidden', maskImage: 'linear-gradient(90deg, transparent, black 4%, black 96%, transparent)', width: '100%', flexBasis: '100%' }}>
                 <div
                   className="team-gear-rail"
                   style={{
                     display: 'flex',
-                    gap: '16px',
+                    gap: '26px',
                     width: 'max-content',
                   }}
                 >
@@ -689,26 +605,17 @@ export default function TeamPage() {
                       target="_blank"
                       rel="noreferrer"
                       style={{
-                        width: '240px',
-                        minHeight: '250px',
-                        padding: '18px',
+                        width: '360px',
+                        minHeight: '432px',
                         textDecoration: 'none',
                         color: 'inherit',
-                        border: '1px solid color-mix(in srgb, var(--border) 86%, transparent)',
-                        background: 'linear-gradient(180deg, color-mix(in srgb, var(--bg-card) 92%, var(--team-surface)) 0%, color-mix(in srgb, var(--team-surface) 68%, var(--bg)) 100%)',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between',
                       }}
                     >
                       <div
                         style={{
-                          height: '144px',
-                          border: '2px solid color-mix(in srgb, var(--primary) 56%, transparent)',
-                          borderRadius: '24px',
-                          background: item.image
-                            ? 'color-mix(in srgb, white 94%, var(--team-surface))'
-                            : 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 18%, transparent) 0%, transparent 100%)',
+                          height: '300px',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
@@ -719,20 +626,20 @@ export default function TeamPage() {
                         <div
                           style={{
                             position: 'absolute',
-                            inset: 0,
-                            background: `repeating-linear-gradient(-32deg, transparent 0 22px, color-mix(in srgb, var(--primary) 10%, transparent) 22px 40px)`,
-                            opacity: 0.9,
+                            inset: '16px 24px 0',
+                            background: 'radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 68%)',
+                            pointerEvents: 'none',
                           }}
                         />
                         <div
                           style={{
                             position: 'absolute',
                             top: '12px',
-                            left: '12px',
+                            left: '8px',
                             fontFamily: 'var(--font-accent)',
                             fontSize: '10px',
                             letterSpacing: '0.16em',
-                            color: 'var(--text-muted)',
+                            color: 'rgba(255,255,255,0.8)',
                           }}
                         >
                           {item.accent}
@@ -747,19 +654,18 @@ export default function TeamPage() {
                               width: '100%',
                               height: '100%',
                               objectFit: 'contain',
-                              padding: '18px',
                             }}
                           />
                         ) : (
-                          <TeamLogo teamId={teamId} size={84} style={{ position: 'relative', zIndex: 1, filter: 'drop-shadow(0 16px 24px rgba(0,0,0,0.22))' }} />
+                          <TeamLogo teamId={teamId} size={220} style={{ position: 'relative', zIndex: 1, width: '220px', height: '220px', filter: 'drop-shadow(0 22px 36px rgba(0,0,0,0.26))' }} />
                         )}
                       </div>
 
-                      <div style={{ marginTop: '16px' }}>
-                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', lineHeight: 0.95 }}>
-                          {item.title.toUpperCase()}
+                      <div style={{ marginTop: '8px', padding: '0 8px' }}>
+                        <div style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '15px', lineHeight: 1.4, color: '#fff', letterSpacing: '0.01em' }}>
+                          {item.title}
                         </div>
-                        <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.65, marginTop: '8px' }}>
+                        <div style={{ color: '#fff', fontSize: '14px', lineHeight: 1.6, marginTop: '10px', opacity: 0.92 }}>
                           {item.subtitle}{item.price ? ` • ${item.price}` : ''}
                         </div>
                       </div>
@@ -779,7 +685,7 @@ export default function TeamPage() {
         @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         @keyframes teamGearMarquee {
           from { transform: translateX(0); }
-          to { transform: translateX(calc(-50% - 8px)); }
+          to { transform: translateX(calc(-50% - 13px)); }
         }
         .team-selector-tile:hover {
           opacity: 1 !important;
@@ -791,7 +697,7 @@ export default function TeamPage() {
           transform: scale(1.08);
         }
         .team-gear-rail {
-          animation: teamGearMarquee 26s linear infinite;
+          animation: teamGearMarquee 42s linear infinite;
         }
         .team-gear-rail:hover {
           animation-play-state: paused;
@@ -800,3 +706,5 @@ export default function TeamPage() {
     </div>
   );
 }
+
+
