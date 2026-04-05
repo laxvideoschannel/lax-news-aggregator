@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { getTeam } from '@/lib/teams';
 
 type VideoLeague = 'PLL' | 'WLL' | 'CUSTOM';
 
@@ -21,7 +22,22 @@ type VideoItem = {
 export default function VideosPage() {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<'ALL' | VideoLeague>('ALL');
+  const [teamId, setTeamId] = useState('chaos');
+  const [filter, setFilter] = useState<'TEAM' | 'ALL' | VideoLeague>('TEAM');
+
+  useEffect(() => {
+    const syncTeam = () => {
+      setTeamId(localStorage.getItem('lax_team') || 'chaos');
+    };
+
+    syncTeam();
+    window.addEventListener('storage', syncTeam);
+    window.addEventListener('lax-team-change', syncTeam);
+    return () => {
+      window.removeEventListener('storage', syncTeam);
+      window.removeEventListener('lax-team-change', syncTeam);
+    };
+  }, []);
 
   useEffect(() => {
     fetch('/api/videos')
@@ -33,10 +49,29 @@ export default function VideosPage() {
       .catch(() => setLoading(false));
   }, []);
 
+  const selectedTeam = getTeam(teamId);
+  const teamKeywords = useMemo(() => {
+    const combined = [
+      selectedTeam.full,
+      selectedTeam.city,
+      selectedTeam.name,
+      selectedTeam.id.replace(/-/g, ' '),
+    ].join(' ').toLowerCase();
+
+    return combined.split(/\s+/).filter(Boolean);
+  }, [selectedTeam]);
+
   const filteredVideos = useMemo(() => {
     if (filter === 'ALL') return videos;
+    if (filter === 'TEAM') {
+      const exactTeamMatches = videos.filter((video) => {
+        const haystack = `${video.title} ${video.description || ''} ${video.channelName}`.toLowerCase();
+        return teamKeywords.some((keyword) => haystack.includes(keyword));
+      });
+      return exactTeamMatches.length ? exactTeamMatches : videos.filter((video) => video.league === selectedTeam.league);
+    }
     return videos.filter((video) => video.league === filter);
-  }, [filter, videos]);
+  }, [filter, selectedTeam.league, teamKeywords, videos]);
 
   const featuredVideo = filteredVideos.find((video) => video.featured) ?? filteredVideos[0];
 
@@ -65,11 +100,11 @@ export default function VideosPage() {
             LACROSSE<br /><span style={{ color: 'var(--primary)' }}>VIDEOS</span>
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, maxWidth: '760px', marginBottom: '30px' }}>
-            Watch the latest YouTube videos from the official PLL and WLL channels, plus backend-curated drops from any channel you decide to feature.
+            Watch the latest YouTube videos from the official PLL and WLL channels, plus LAX Videos you add privately from any channel you want to feature.
           </p>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-            {(['ALL', 'PLL', 'WLL', 'CUSTOM'] as const).map((value) => (
+            {(['TEAM', 'ALL', 'PLL', 'WLL', 'CUSTOM'] as const).map((value) => (
               <button
                 key={value}
                 onClick={() => setFilter(value)}
@@ -84,7 +119,7 @@ export default function VideosPage() {
                   letterSpacing: '0.14em',
                 }}
               >
-                {value === 'ALL' ? 'ALL VIDEOS' : value}
+                {value === 'TEAM' ? `${selectedTeam.name.toUpperCase()} VIDEOS` : value === 'ALL' ? 'ALL VIDEOS' : value === 'CUSTOM' ? 'LAX VIDEOS' : value}
               </button>
             ))}
           </div>
@@ -93,10 +128,10 @@ export default function VideosPage() {
 
       <section style={{ padding: '40px 0 24px' }}>
         <div className="container">
-          <div className="card" style={{ padding: '20px 24px', background: 'color-mix(in srgb, var(--team-surface) 72%, var(--bg-card))' }}>
+            <div className="card" style={{ padding: '20px 24px', background: 'color-mix(in srgb, var(--team-surface) 72%, var(--bg-card))' }}>
             <div className="section-tag" style={{ marginBottom: '10px' }}>ADMIN ONLY</div>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8 }}>
-              Add custom videos through the backend with a secret-protected POST to <code>/api/admin/videos</code>. Regular users cannot submit videos from the frontend.
+              Add LAX Videos through the backend with a secret-protected POST to <code>/api/admin/videos</code>. Regular users cannot submit videos from the frontend.
             </p>
           </div>
         </div>
@@ -135,7 +170,7 @@ export default function VideosPage() {
                   <div className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
                       <div className="section-tag" style={{ marginBottom: '14px' }}>
-                        {featuredVideo.source === 'custom' ? 'BACKEND CURATED' : `${featuredVideo.league} OFFICIAL`}
+                        {featuredVideo.source === 'custom' ? 'LAX VIDEOS' : `${featuredVideo.league} OFFICIAL`}
                       </div>
                       <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 46px)', lineHeight: 0.94, marginBottom: '16px' }}>
                         {featuredVideo.title.toUpperCase()}
@@ -202,7 +237,7 @@ export default function VideosPage() {
                     <div style={{ padding: '20px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center', marginBottom: '12px' }}>
                         <span className="news-pill" style={{ background: video.league === 'PLL' ? 'var(--primary)' : video.league === 'WLL' ? 'var(--secondary)' : 'color-mix(in srgb, var(--primary) 55%, var(--secondary))' }}>
-                          {video.league}
+                          {video.league === 'CUSTOM' ? 'LAX VIDEOS' : video.league}
                         </span>
                         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                           {video.publishedAt ? new Date(video.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : video.source.toUpperCase()}

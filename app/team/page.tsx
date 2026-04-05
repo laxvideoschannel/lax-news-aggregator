@@ -631,19 +631,6 @@ export default function TeamPage() {
                             pointerEvents: 'none',
                           }}
                         />
-                        <div
-                          style={{
-                            position: 'absolute',
-                            top: '12px',
-                            left: '8px',
-                            fontFamily: 'var(--font-accent)',
-                            fontSize: '10px',
-                            letterSpacing: '0.16em',
-                            color: 'rgba(255,255,255,0.8)',
-                          }}
-                        >
-                          {item.accent}
-                        </div>
                         {item.image ? (
                           <img
                             src={item.image}
