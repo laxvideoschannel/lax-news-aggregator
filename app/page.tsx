@@ -84,7 +84,7 @@ export default function HomePage() {
                   <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
                   <div className="stat-num">{stat.value}</div>
                   <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>{stat.label.toUpperCase()}</div>
-                  <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{stat.sub}</div>
+                  <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>{stat.sub}</div>
                 </div>
               ))}
             </div>
