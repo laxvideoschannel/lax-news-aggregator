@@ -73,6 +73,7 @@ export const DEFAULT_VIDEO_SOURCES: VideoSource[] = [
     handleUrl: 'https://www.youtube.com/@WomensLacrosseLeague',
     league: 'WLL',
     channelName: "Women's Lacrosse League",
+    channelId: 'UCQ0oNhh5uQcmjS5kQBP8qkg',
     pullMode: 'all',
     active: true,
     official: true,

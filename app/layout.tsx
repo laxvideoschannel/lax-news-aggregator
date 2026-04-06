@@ -164,6 +164,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     { href: '/', label: 'Home' },
     { href: '/news', label: 'News' },
     { href: '/videos', label: 'Videos' },
+    { href: '/college', label: 'College' },
     { href: '/team', label: 'Team' },
     { href: '/schedule', label: 'Schedule' },
   ];
@@ -358,7 +359,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
 
               {[
-                { title: 'Navigate', links: ['Home', 'News', 'Team', 'Schedule'] },
+                { title: 'Navigate', links: ['Home', 'News', 'Videos', 'College', 'Team', 'Schedule'] },
                 { title: 'Teams', links: ['Carolina Chaos', 'Utah Archers', 'Denver Outlaws', 'Boston Cannons'] },
                 { title: 'More', links: ['PLL Official', 'Stats', 'Player Bios', 'About'] },
               ].map((col) => (

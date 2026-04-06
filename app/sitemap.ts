@@ -1,10 +1,11 @@
 import type { MetadataRoute } from 'next';
 import { ALL_PLAYERS } from '@/lib/players';
+import { COLLEGE_TEAMS } from '@/lib/college';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://lax-news-aggregator.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const staticPages = ['', '/news', '/videos', '/schedule', '/team'].map((path) => ({
+  const staticPages = ['', '/news', '/videos', '/college', '/college/scoreboard', '/college/standings', '/college/rankings', '/schedule', '/team'].map((path) => ({
     url: `${SITE_URL}${path}`,
     lastModified: new Date(),
     changeFrequency: 'daily' as const,
@@ -18,5 +19,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.7,
   }));
 
-  return [...staticPages, ...playerPages];
+  const collegeTeamPages = COLLEGE_TEAMS.map((team) => ({
+    url: `${SITE_URL}/college/teams/${team.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...playerPages, ...collegeTeamPages];
 }
