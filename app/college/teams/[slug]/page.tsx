@@ -121,7 +121,7 @@ export default async function CollegeTeamPage({ params }: Props) {
                     <div>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '24px', lineHeight: 1 }}>{player.name}</div>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: team.primary, marginTop: '6px' }}>
-                        {player.position} • {player.classYear}
+                        {player.position} - {player.classYear}
                       </div>
                     </div>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '34px', color: 'var(--primary)' }}>#{player.number}</div>
@@ -163,7 +163,7 @@ export default async function CollegeTeamPage({ params }: Props) {
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1, marginBottom: '8px' }}>
                     {game.location === 'home' ? 'VS' : game.location === 'away' ? '@' : 'VS'} {game.opponent.toUpperCase()}
                   </div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '8px' }}>{game.venue} • {game.broadcast}</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '8px' }}>{game.venue} - {game.broadcast}</div>
                   <div style={{ color: 'var(--text)', fontSize: '14px', lineHeight: 1.6 }}>{game.notes}</div>
                 </a>
               ))}

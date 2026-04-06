@@ -1,35 +1,39 @@
 # Next Task
 
 ## Current objective
-Generalize the site from a PLL/WLL-only experience into a broader hub structure without breaking current functionality.
+Deepen the new college layer without disrupting the working PLL, WLL, video, admin, and merch flows.
 
 ## Immediate task
-Refactor the content model and top-level messaging so college content can be added cleanly.
+Build college player profile pages and the first pass of college game detail pages so the new school hubs connect to deeper, searchable destinations.
 
 ## Why this matters
-The current site already supports:
-- official pro video feeds
-- custom videos
-- schedules
-- team pages
-- merch links
+The college foundation is now live:
+- college landing page
+- conference-filtered school directory
+- school hub pages
+- scoreboard
+- standings
+- rankings
 
-But the current structure is too tied to PLL/WLL-specific assumptions. College should be the next expansion, and training should come after that. We need a cleaner shared model first.
+The next weak point is depth. Right now school pages can introduce programs, but they do not yet branch into dedicated player pages or game-specific destination pages the way a real college lacrosse hub should.
 
 ## Requirements
 - keep current PLL/WLL flows working
-- reduce homepage/team-shell overemphasis on Carolina Chaos
-- prepare for college support without shipping a giant college portal yet
-- do not add training yet unless needed for data-model design
+- keep `/videos`, `/admin`, `/team`, and `/schedule` stable
+- reuse shared entities and helper patterns where possible
+- add college depth without inventing a huge live-data system yet
+- prefer official school / broadcast / replay destinations over made-up internal data
 
 ## Acceptance criteria
-- the top-level site language is hub-first, not single-team-first
-- data/types are ready for adding college teams/schools/events
-- no existing video/admin routes are broken
+- at least one reusable college player profile route exists
+- college school pages can link into player detail pages where data exists
+- at least one reusable college game detail route exists
+- scoreboard / school schedule cards can link into those game pages where data exists
 - docs are updated after implementation
 
 ## Out of scope
-- full training marketplace
-- full NCAA scoreboard clone
+- full NCAA-wide live stat sync
+- full recruiting marketplace
+- player self-service editing
+- training marketplace
 - custom commerce system
-- live sync for every team or school

@@ -77,7 +77,7 @@ export default function CollegePage() {
                       <span style={{ color: 'var(--primary)' }}>VS</span> {game.homeSchool.toUpperCase()}
                     </div>
                     <div style={{ color: 'var(--text-muted)', fontSize: '14px' }}>
-                      {game.status === 'final' ? `Final: ${game.score}` : `Upcoming • ${game.venue}`}
+                      {game.status === 'final' ? `Final: ${game.score}` : `Upcoming - ${game.venue}`}
                     </div>
                   </Link>
                 ))}
@@ -95,7 +95,7 @@ export default function CollegePage() {
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '30px', color: 'var(--primary)' }}>{row.rank}</div>
                     <div>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '24px', lineHeight: 1 }}>{row.school.toUpperCase()}</div>
-                      <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{row.conference} • {row.record}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{row.conference} - {row.record}</div>
                     </div>
                     {row.slug ? (
                       <Link href={`/college/teams/${row.slug}`} style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)' }}>

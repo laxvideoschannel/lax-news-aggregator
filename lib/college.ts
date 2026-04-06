@@ -326,7 +326,7 @@ export const COLLEGE_RANKINGS: CollegeRankingRow[] = [
   { rank: 4, school: 'Notre Dame', slug: 'notre-dame', conference: 'ACC', record: '6-0', note: 'Championship-caliber floor every week.' },
   { rank: 5, school: 'North Carolina', conference: 'ACC', record: '8-1', note: 'High-end talent and a strong spring profile.' },
   { rank: 6, school: 'Johns Hopkins', conference: 'Big Ten', record: '6-2', note: 'Big Ten contender with strong top-line metrics.' },
-  { rank: 7, school: 'Harvard', conference: 'Ivy League', record: '8-0', note: 'One of the country’s best early-season records.' },
+  { rank: 7, school: 'Harvard', conference: 'Ivy League', record: '8-0', note: 'One of the country\'s best early-season records.' },
   { rank: 8, school: 'Duke', slug: 'duke', conference: 'ACC', record: '8-0', note: 'National contender with premium ACC schedule ahead.' },
   { rank: 9, school: 'Cornell', conference: 'Ivy League', record: '5-2', note: 'Dangerous offense in a loaded Ivy race.' },
   { rank: 10, school: 'Georgetown', conference: 'Patriot League', record: '3-4', note: 'Still dangerous despite a rocky start.' },

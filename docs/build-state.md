@@ -9,12 +9,18 @@
   - official PLL YouTube
   - official WLL YouTube
   - custom admin-added YouTube videos
+  - official pro and college team / school links
 - Styling: app-level CSS / custom styling
 
 ## Current routes
 - `/`
 - `/news`
 - `/videos`
+- `/college`
+- `/college/scoreboard`
+- `/college/standings`
+- `/college/rankings`
+- `/college/teams/[slug]`
 - `/schedule`
 - `/schedule/[slug]`
 - `/team`
@@ -44,41 +50,52 @@
 - `lib/players.ts`
 - `lib/wll-content.ts`
 - `lib/admin-auth.ts`
+- `lib/college.ts`
 
 ## What currently works
 - official PLL and WLL video aggregation
 - custom video ingestion via admin endpoint + Supabase
 - video library page
-- schedule section
-- team listing and team detail pages
+- pro schedule section and game recap pages
+- pro team listing and player detail pages
 - merch/shop linking
-- news section
+- news section with fallback feed behavior
 - admin surface for video management
+- college landing page
+- college school directory with conference filtering
+- college school hub pages with roster watch and featured schedule cards
+- college scoreboard, standings, and rankings snapshot pages
 
 ## Current constraints / technical debt
-- league model is still narrow (`PLL | WLL | CUSTOM`)
-- college is not yet modeled as a first-class content type
+- league model is still narrow (`PLL | WLL | CUSTOM`) even though college content now exists
+- college data is still curated/static, not a live synced feed
+- college pages use text-based school marks, not official school logo assets
 - training is not yet modeled
-- some schedule/team content is still hardcoded
-- homepage branding/story currently leans too heavily toward Carolina Chaos
-- page architecture is stronger for pro teams than for a broader lacrosse hub
+- some pro schedule/team content is still hardcoded
+- homepage branding/story still leans heavily toward team-themed presentation
+- recruiting flows, player-owned profiles, and coach uploads are still roadmap items
 
 ## Current product identity
 Right now the app behaves like:
 - PLL/WLL media + team hub
-with some custom video capability
+- early-stage college lacrosse hub layer
+- admin-managed video library
 
 Target identity:
 - video-first lacrosse hub for pro + college first
-- training added after the content model is generalized
+- recruiting layer after college entities are deeper
+- training added after the content model is generalized further
 
 ## What is missing
-- explicit school/college entity model
+- explicit shared school/player/event model across pro and college
+- college player profile pages
+- college game detail / recap pages
+- recruiting profile workflow for players and coaches
 - training provider model
 - training event model
 - better cross-linking between videos, teams, schools, and events
-- clearer “why this site exists” messaging on the homepage
+- clearer "why this site exists" messaging on the homepage
 - more neutral top-level brand framing
 
 ## Last reviewed
-- Update this date whenever this file is edited.
+- 2026-04-06
