@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://lax-news-aggregator.vercel.app
+Sitemap: https://lax-news-aggregator.vercel.app/sitemap.xml

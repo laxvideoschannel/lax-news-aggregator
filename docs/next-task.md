@@ -3,6 +3,9 @@
 ## Current objective
 Deepen the new college layer without disrupting the working PLL, WLL, video, admin, and merch flows.
 
+## Recently completed (context)
+Home (`/`) now listens for `lax-team-change` like `/videos` and `/schedule`, and hero/stat blocks pull from the selected team plus `getTeamPageContent` so the page updates in-place when the user picks a new team in the header.
+
 ## Immediate task
 Build college player profile pages and the first pass of college game detail pages so the new school hubs connect to deeper, searchable destinations.
 

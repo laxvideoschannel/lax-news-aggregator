@@ -53,6 +53,7 @@
 - `lib/college.ts`
 
 ## What currently works
+- homepage hero and quick stats follow the header-selected team (same-tab sync via `lax-team-change`, content from `lib/teams` + `lib/team-content`)
 - official PLL and WLL video aggregation
 - custom video ingestion via admin endpoint + Supabase
 - video library page
@@ -72,7 +73,7 @@
 - college pages use text-based school marks, not official school logo assets
 - training is not yet modeled
 - some pro schedule/team content is still hardcoded
-- homepage branding/story still leans heavily toward team-themed presentation
+- homepage is team-personalizable for copy/stats but the top ticker strip in `layout` is still static Chaos-oriented text
 - recruiting flows, player-owned profiles, and coach uploads are still roadmap items
 
 ## Current product identity

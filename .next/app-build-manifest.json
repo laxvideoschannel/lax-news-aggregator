@@ -1,0 +1,122 @@
+{
+  "pages": {
+    "/_not-found/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/app/_not-found/page-5051dd5f56024753.js"
+    ],
+    "/layout": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/css/d7c76af4b4b867c1.css",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/layout-e3e3aaf324ce8a01.js"
+    ],
+    "/admin/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/app/admin/page-b2542f104cefd536.js"
+    ],
+    "/college/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/college/page-38433beb477b4aa4.js"
+    ],
+    "/college/standings/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/college/standings/page-cb481bce7032f351.js"
+    ],
+    "/college/rankings/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/college/rankings/page-400f3c9546a2a481.js"
+    ],
+    "/college/scoreboard/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/app/college/scoreboard/page-79acd296cb7204d7.js"
+    ],
+    "/news/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/app/news/page-ec4423fa2cd9cd1d.js"
+    ],
+    "/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/513-386565fb72ef38cc.js",
+      "static/chunks/app/page-a405c91aebcae34c.js"
+    ],
+    "/schedule/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/schedule/page-808a50c294956c33.js"
+    ],
+    "/team/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/513-386565fb72ef38cc.js",
+      "static/chunks/app/team/page-d482360df52352d6.js"
+    ],
+    "/videos/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/app/videos/page-1452c69a8da58764.js"
+    ],
+    "/college/teams/[slug]/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/college/teams/[slug]/page-adc6ede93c75911a.js"
+    ],
+    "/schedule/[slug]/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/schedule/[slug]/page-d0896d85b5f9ea3b.js"
+    ],
+    "/team/[slug]/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-2101cfcffec2d45c.js",
+      "static/chunks/117-d8c889994f85e543.js",
+      "static/chunks/main-app-f473d82e1a92361f.js",
+      "static/chunks/972-b4d7ba6b558ee718.js",
+      "static/chunks/app/team/[slug]/page-9caf8ab50abbfe98.js"
+    ]
+  }
+}

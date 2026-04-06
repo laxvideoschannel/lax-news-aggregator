@@ -38,6 +38,34 @@ Why this task was chosen.
 2026-04-06
 
 ### Task
+Homepage team sync and dynamic hero/stats for the selected club.
+
+### Why
+The root layout updated theme CSS on team pick, but `/` only listened for the `storage` event (other tabs). Same-tab picks did not refresh React state, so spotlight and copy lagged behind the new colors.
+
+### Files changed
+- `app/page.tsx`
+- `docs/build-state.md`
+- `docs/next-task.md`
+- `docs/codex-log.md`
+
+### What changed
+- subscribe to `lax-team-change` (and `storage`) so `teamId` stays in sync with the header picker
+- drive hero headline, intro copy, hero stat cards, and the stats bar from `getTeam(teamId)` and `getTeamPageContent(teamId)`
+
+### Assumptions
+- `TEAM_PAGE_CONTENT` remains the source of per-team narrative stats; unknown ids still fall back like `getTeamPageContent` already does
+
+### Follow-up
+- optional: make the layout ticker messages team- or league-aware
+- continue planned college player / game detail work per `next-task.md`
+
+---
+
+### Date
+2026-04-06
+
+### Task
 Ship the first college foundation and reconcile project docs to the new build state.
 
 ### Why

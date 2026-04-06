@@ -1,8 +1,9 @@
 'use client';
 // TEST RENEW
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
-import { getTeam } from "../lib/teams";
+import { getTeam } from '@/lib/teams';
+import { getTeamPageContent } from '@/lib/team-content';
 
 export default function HomePage() {
   const [teamId, setTeamId] = useState('chaos');
@@ -13,15 +14,17 @@ export default function HomePage() {
   const [loadingNews, setLoadingNews] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem('lax_team') || 'chaos';
-    setTeamId(saved);
-    // Listen for team changes from nav
-    const handler = () => {
-      const t = localStorage.getItem('lax_team') || 'chaos';
-      setTeamId(t);
+    const syncTeam = () => {
+      setTeamId(localStorage.getItem('lax_team') || 'chaos');
     };
-    window.addEventListener('storage', handler);
-    return () => window.removeEventListener('storage', handler);
+
+    syncTeam();
+    window.addEventListener('storage', syncTeam);
+    window.addEventListener('lax-team-change', syncTeam);
+    return () => {
+      window.removeEventListener('storage', syncTeam);
+      window.removeEventListener('lax-team-change', syncTeam);
+    };
   }, []);
 
   const loadSpotlight = (team: string, idx?: number) => {
@@ -43,6 +46,34 @@ export default function HomePage() {
   }, []);
 
   const team = getTeam(teamId);
+  const pageContent = useMemo(() => getTeamPageContent(teamId), [teamId]);
+
+  const heroStatCards = useMemo(
+    () => {
+      const leagueTitles = team.league === 'WLL' ? 'WLL titles' : 'PLL titles';
+      const note =
+        pageContent.seasonNote.length > 72
+          ? `${pageContent.seasonNote.slice(0, 69)}…`
+          : pageContent.seasonNote;
+      return [
+        { label: 'Championships', value: pageContent.championships, sub: leagueTitles },
+        { label: 'Active roster', value: pageContent.rosterSize, sub: 'PLL/WLL roster spots' },
+        { label: 'Founded', value: pageContent.founded, sub: `${team.league} club era` },
+        { label: 'Identity', value: pageContent.titleTag, sub: note },
+      ];
+    },
+    [pageContent, team.league],
+  );
+
+  const statsBarItems = useMemo(
+    () => [
+      { icon: '🏆', label: 'Conference', value: team.conference },
+      { icon: '🎽', label: 'League', value: team.league },
+      { icon: '👥', label: 'Roster size', value: pageContent.rosterSize },
+      { icon: '🏅', label: 'Titles', value: pageContent.championships },
+    ],
+    [pageContent.championships, pageContent.rosterSize, team.conference, team.league],
+  );
 
   return (
     <div>
@@ -59,14 +90,14 @@ export default function HomePage() {
         <div className="container" style={{ position: 'relative', zIndex: 2, paddingTop: '60px', paddingBottom: '60px' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
             <div>
-              <div className="section-tag fade-up fade-up-1" style={{ marginBottom: '20px' }}>PLL + WLL FAN COVERAGE</div>
+              <div className="section-tag fade-up fade-up-1" style={{ marginBottom: '20px' }}>{team.league} · FAN HUB</div>
               <h1 className="fade-up fade-up-2" style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(56px, 8vw, 110px)', lineHeight: 0.9, letterSpacing: '-0.01em', marginBottom: '24px' }}>
-                <span style={{ display: 'block' }}>CAROLINA</span>
-                <span style={{ display: 'block', color: 'var(--primary)', WebkitTextStroke: '2px var(--primary)', WebkitTextFillColor: 'transparent' }}>CHAOS</span>
+                <span style={{ display: 'block' }}>{team.city.toUpperCase()}</span>
+                <span style={{ display: 'block', color: 'var(--primary)', WebkitTextStroke: '2px var(--primary)', WebkitTextFillColor: 'transparent' }}>{team.name.toUpperCase()}</span>
                 <span style={{ display: 'block', fontSize: '55%' }}>LACROSSE HUB</span>
               </h1>
               <p className="fade-up fade-up-3" style={{ color: '#999', fontSize: '15px', lineHeight: 1.7, marginBottom: '36px', maxWidth: '420px' }}>
-                Your home for PLL and WLL lacrosse - player spotlights, live news, team stats, and schedules. Select your team to personalize.
+                Your home for {team.full} and the wider {team.league} world — spotlights, news, rosters, and schedules. Pick any club from the header to re-theme the site.
               </p>
               <div className="fade-up fade-up-4" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
                 <Link href="/news" className="btn-primary">Latest News →</Link>
@@ -74,12 +105,7 @@ export default function HomePage() {
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {[
-                { label: 'PLL Championships', value: '2', sub: '2021 & 2026' },
-                { label: 'Record Saves / Game', value: '25', sub: 'Riorden vs Denver 2025' },
-                { label: 'Goals Allowed / Game', value: '11.0', sub: 'Best in PLL 2025' },
-                { label: 'Goalie of the Year', value: '5×', sub: 'Oren Lyons Award' },
-              ].map((stat, i) => (
+              {heroStatCards.map((stat, i) => (
                 <div key={i} className={`card fade-up fade-up-${(i % 4) + 1}`} style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
                   <div className="stat-num">{stat.value}</div>
@@ -96,12 +122,7 @@ export default function HomePage() {
       <div style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: 'var(--border)' }}>
-            {[
-              { icon: '🏆', label: 'Conference', value: 'Western' },
-              { icon: '🥅', label: 'Saves / Game', value: '14.2' },
-              { icon: '⚡', label: 'Goals Allowed', value: '11.0' },
-              { icon: '🎯', label: '2025 Record', value: '6–4' },
-            ].map((item, i) => (
+            {statsBarItems.map((item, i) => (
               <div key={i} style={{ background: 'var(--bg-card)', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '28px' }}>{item.icon}</span>
                 <div>
