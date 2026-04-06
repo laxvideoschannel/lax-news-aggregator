@@ -1,17 +1,18 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
-import { createYouTubeThumbnailUrl, getYouTubeVideoId } from '@/lib/videos';
 import { isAuthorizedAdminRequest } from '@/lib/admin-auth';
+import { DEFAULT_VIDEO_SOURCES } from '@/lib/videos';
 
-type CreateVideoPayload = {
+type CreateSourcePayload = {
   title: string;
-  youtubeUrl: string;
-  league?: 'PLL' | 'WLL' | 'CUSTOM';
+  handleUrl: string;
   channelName?: string;
-  description?: string;
-  featured?: boolean;
-  publishedAt?: string;
+  channelId?: string;
+  league?: 'PLL' | 'WLL' | 'CUSTOM';
+  pullMode?: 'all' | 'select';
+  teamId?: string;
+  active?: boolean;
 };
 
 function unauthorized() {
@@ -38,16 +39,16 @@ export async function GET(request: Request) {
   try {
     const supabase = await getSupabaseClient();
     const { data, error } = await supabase
-      .from('lacrosse_videos')
+      .from('lacrosse_video_sources')
       .select('*')
-      .order('published_at', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(100);
 
     if (error) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
-    return Response.json({ videos: data ?? [] });
+    return Response.json({ defaults: DEFAULT_VIDEO_SOURCES, sources: data ?? [] });
   } catch (error: any) {
     return Response.json({ error: error.message || 'Unexpected server error.' }, { status: 500 });
   }
@@ -58,35 +59,30 @@ export async function POST(request: Request) {
     return unauthorized();
   }
 
-  let payload: CreateVideoPayload;
+  let payload: CreateSourcePayload;
   try {
     payload = await request.json();
   } catch {
     return Response.json({ error: 'Invalid JSON body.' }, { status: 400 });
   }
 
-  const videoId = getYouTubeVideoId(payload.youtubeUrl ?? '');
-  if (!payload.title || !payload.youtubeUrl || !videoId) {
-    return Response.json(
-      { error: 'title and a valid youtubeUrl are required.' },
-      { status: 400 },
-    );
+  if (!payload.title || !payload.handleUrl) {
+    return Response.json({ error: 'title and handleUrl are required.' }, { status: 400 });
   }
 
   try {
     const supabase = await getSupabaseClient();
-
     const { data, error } = await supabase
-      .from('lacrosse_videos')
+      .from('lacrosse_video_sources')
       .insert({
         title: payload.title,
-        youtube_url: payload.youtubeUrl,
-        channel_name: payload.channelName || 'Custom channel',
+        handle_url: payload.handleUrl,
+        channel_name: payload.channelName || payload.title,
+        channel_id: payload.channelId || null,
         league: payload.league || 'CUSTOM',
-        description: payload.description || '',
-        featured: Boolean(payload.featured),
-        thumbnail_url: createYouTubeThumbnailUrl(payload.youtubeUrl),
-        published_at: payload.publishedAt || new Date().toISOString(),
+        pull_mode: payload.pullMode || 'select',
+        team_id: payload.teamId || null,
+        active: payload.active !== false,
       })
       .select('*')
       .single();
@@ -95,7 +91,7 @@ export async function POST(request: Request) {
       return Response.json({ error: error.message }, { status: 500 });
     }
 
-    return Response.json({ ok: true, video: data });
+    return Response.json({ ok: true, source: data });
   } catch (error: any) {
     return Response.json({ error: error.message || 'Unexpected server error.' }, { status: 500 });
   }

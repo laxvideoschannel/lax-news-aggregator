@@ -1,9 +1,9 @@
 'use client';
 import Link from 'next/link';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
-import { CHAOS_SCHEDULE_2026 } from '@/lib/schedule';
+import { ALL_PLL_SCHEDULE_2026, getTeamSchedule } from '@/lib/schedule';
 
 function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: boolean }) {
   const team = getTeam(teamId);
@@ -41,17 +41,41 @@ function parseScore(score?: string) {
 }
 
 export default function SchedulePage() {
-  const [filter, setFilter] = useState<'all' | 'results' | 'upcoming'>('all');
+  const [teamId, setTeamId] = useState('chaos');
+  const [filter, setFilter] = useState<'team' | 'all' | 'results' | 'upcoming'>('team');
+
+  useEffect(() => {
+    const syncTeam = () => {
+      setTeamId(localStorage.getItem('lax_team') || 'chaos');
+    };
+
+    syncTeam();
+    window.addEventListener('storage', syncTeam);
+    window.addEventListener('lax-team-change', syncTeam);
+    return () => {
+      window.removeEventListener('storage', syncTeam);
+      window.removeEventListener('lax-team-change', syncTeam);
+    };
+  }, []);
+
+  const selectedTeam = getTeam(teamId);
+  const teamSchedule = useMemo(() => getTeamSchedule(teamId), [teamId]);
 
   const filtered = useMemo(() => {
-    if (filter === 'results') return CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final');
-    if (filter === 'upcoming') return CHAOS_SCHEDULE_2026.filter((game) => game.status === 'upcoming');
-    return CHAOS_SCHEDULE_2026;
-  }, [filter]);
+    if (filter === 'team') return teamSchedule;
+    if (filter === 'results') return ALL_PLL_SCHEDULE_2026.filter((game) => game.status === 'final');
+    if (filter === 'upcoming') return ALL_PLL_SCHEDULE_2026.filter((game) => game.status === 'upcoming');
+    return ALL_PLL_SCHEDULE_2026;
+  }, [filter, teamSchedule]);
 
-  const upcoming = CHAOS_SCHEDULE_2026.find((game) => game.status === 'upcoming');
-  const completedGames = CHAOS_SCHEDULE_2026.filter((game) => game.status === 'final');
-  const wins = completedGames.filter((game) => game.homeId === 'chaos').length;
+  const upcoming = teamSchedule.find((game) => game.status === 'upcoming');
+  const completedGames = teamSchedule.filter((game) => game.status === 'final');
+  const wins = completedGames.filter((game) => {
+    const score = parseScore(game.score);
+    if (game.homeId === teamId) return score.home > score.away;
+    if (game.awayId === teamId) return score.away > score.home;
+    return false;
+  }).length;
   const losses = completedGames.length - wins;
 
   return (
@@ -74,7 +98,7 @@ export default function SchedulePage() {
           }}
         />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <div className="section-tag" style={{ marginBottom: '16px' }}>CAROLINA CHAOS</div>
+          <div className="section-tag" style={{ marginBottom: '16px' }}>{selectedTeam.full.toUpperCase()}</div>
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
             2026<br /><span style={{ color: 'var(--primary)' }}>SCHEDULE</span>
           </h1>
@@ -107,13 +131,14 @@ export default function SchedulePage() {
       <div style={{ background: 'var(--bg-card)', borderBottom: '1px solid var(--border)', position: 'sticky', top: '70px', zIndex: 100 }}>
         <div className="container" style={{ display: 'flex', gap: '0', height: '52px', alignItems: 'center' }}>
           {[
+            ['team', `${selectedTeam.name} Games`],
             ['all', 'All Games'],
             ['results', 'Results'],
             ['upcoming', 'Upcoming'],
           ].map(([value, label]) => (
             <button
               key={value}
-              onClick={() => setFilter(value as 'all' | 'results' | 'upcoming')}
+              onClick={() => setFilter(value as 'team' | 'all' | 'results' | 'upcoming')}
               style={{
                 height: '100%',
                 padding: '0 24px',
@@ -291,7 +316,7 @@ export default function SchedulePage() {
         </div>
 
         <div style={{ marginTop: '28px', color: 'var(--text-muted)', fontSize: '12px', lineHeight: 1.7 }}>
-          Schedule note: this page now reflects the official June 5-6 Charlotte "Chaos Homecoming" slate shown on the PLL 2026 schedule screenshot you shared, plus the 2026 Championship Series results already on the site. Additional regular-season weekends should be filled in from the official PLL schedule once confirmed.
+          Schedule note: the default view shows the selected team's schedule. The ALL GAMES tab shows the broader PLL slate currently loaded on the site, including non-selected-team matchups from the official 2026 schedule weekends shared earlier.
         </div>
       </div>
       <style>{`

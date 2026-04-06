@@ -42,7 +42,7 @@ export type Game = {
 
 const SCHEDULE_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
 
-export const CHAOS_SCHEDULE_2026: Game[] = [
+export const ALL_PLL_SCHEDULE_2026: Game[] = [
   {
     slug: '2026-championship-series-final-chaos-vs-redwoods',
     dateLabel: 'Mar 8, Sun',
@@ -106,6 +106,45 @@ export const CHAOS_SCHEDULE_2026: Game[] = [
     ticketUrl: SCHEDULE_TICKETS_URL,
   },
   {
+    slug: '2026-05-08-redwoods-vs-archers',
+    dateLabel: 'May 8, Fri',
+    sortDate: '2026-05-08',
+    venue: 'Salt Lake City, UT',
+    event: 'Archers Homecoming',
+    homeId: 'archers',
+    awayId: 'redwoods',
+    time: '8:00 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+    ticketUrl: SCHEDULE_TICKETS_URL,
+  },
+  {
+    slug: '2026-05-09-outlaws-vs-archers',
+    dateLabel: 'May 9, Sat',
+    sortDate: '2026-05-09',
+    venue: 'Salt Lake City, UT',
+    event: 'Archers Homecoming',
+    homeId: 'archers',
+    awayId: 'outlaws',
+    time: '5:00 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+    ticketUrl: SCHEDULE_TICKETS_URL,
+  },
+  {
+    slug: '2026-05-09-waterdogs-vs-whipsnakes',
+    dateLabel: 'May 9, Sat',
+    sortDate: '2026-05-09',
+    venue: 'Salt Lake City, UT',
+    event: 'Opening Weekend',
+    homeId: 'whipsnakes',
+    awayId: 'waterdogs',
+    time: '7:30 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+    ticketUrl: SCHEDULE_TICKETS_URL,
+  },
+  {
     slug: '2026-06-05-archers-vs-chaos',
     dateLabel: 'Jun 5, Fri',
     sortDate: '2026-06-05',
@@ -114,6 +153,19 @@ export const CHAOS_SCHEDULE_2026: Game[] = [
     homeId: 'chaos',
     awayId: 'archers',
     time: '6:00 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+    ticketUrl: SCHEDULE_TICKETS_URL,
+  },
+  {
+    slug: '2026-06-05-redwoods-vs-atlas',
+    dateLabel: 'Jun 5, Fri',
+    sortDate: '2026-06-05',
+    venue: 'Charlotte, NC',
+    event: 'Chaos Homecoming',
+    homeId: 'atlas',
+    awayId: 'redwoods',
+    time: '8:30 PM ET',
     broadcast: 'TBD',
     status: 'upcoming',
     ticketUrl: SCHEDULE_TICKETS_URL,
@@ -131,8 +183,29 @@ export const CHAOS_SCHEDULE_2026: Game[] = [
     status: 'upcoming',
     ticketUrl: SCHEDULE_TICKETS_URL,
   },
+  {
+    slug: '2026-06-06-cannons-vs-waterdogs',
+    dateLabel: 'Jun 6, Sat',
+    sortDate: '2026-06-06',
+    venue: 'Charlotte, NC',
+    event: 'Chaos Homecoming',
+    homeId: 'waterdogs',
+    awayId: 'cannons',
+    time: '8:00 PM ET',
+    broadcast: 'TBD',
+    status: 'upcoming',
+    ticketUrl: SCHEDULE_TICKETS_URL,
+  },
 ];
 
+export const CHAOS_SCHEDULE_2026 = ALL_PLL_SCHEDULE_2026.filter(
+  (game) => game.homeId === 'chaos' || game.awayId === 'chaos',
+);
+
+export function getTeamSchedule(teamId: string) {
+  return ALL_PLL_SCHEDULE_2026.filter((game) => game.homeId === teamId || game.awayId === teamId);
+}
+
 export function getScheduleGame(slug: string) {
-  return CHAOS_SCHEDULE_2026.find((game) => game.slug === slug);
+  return ALL_PLL_SCHEDULE_2026.find((game) => game.slug === slug);
 }

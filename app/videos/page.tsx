@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
@@ -17,6 +17,7 @@ type VideoItem = {
   publishedAt?: string;
   description?: string;
   featured?: boolean;
+  teamId?: string | null;
 };
 
 export default function VideosPage() {
@@ -65,15 +66,19 @@ export default function VideosPage() {
     if (filter === 'ALL') return videos;
     if (filter === 'TEAM') {
       const exactTeamMatches = videos.filter((video) => {
+        if (video.teamId) {
+          return video.teamId === teamId;
+        }
         const haystack = `${video.title} ${video.description || ''} ${video.channelName}`.toLowerCase();
         return teamKeywords.some((keyword) => haystack.includes(keyword));
       });
       return exactTeamMatches.length ? exactTeamMatches : videos.filter((video) => video.league === selectedTeam.league);
     }
     return videos.filter((video) => video.league === filter);
-  }, [filter, selectedTeam.league, teamKeywords, videos]);
+  }, [filter, selectedTeam.league, teamId, teamKeywords, videos]);
 
   const featuredVideo = filteredVideos.find((video) => video.featured) ?? filteredVideos[0];
+  const featuredIsEmbeddable = Boolean(featuredVideo?.embedUrl && !featuredVideo.embedUrl.includes('listType='));
 
   return (
     <div>
@@ -100,7 +105,7 @@ export default function VideosPage() {
             LACROSSE<br /><span style={{ color: 'var(--primary)' }}>VIDEOS</span>
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, maxWidth: '760px', marginBottom: '30px' }}>
-            Watch the latest YouTube videos from the official PLL and WLL channels, plus LAX Videos you add privately from any channel you want to feature.
+            Watch the latest YouTube videos from the official PLL and WLL channels, plus playlist videos you add privately from any channel you want to feature.
           </p>
 
           <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -119,25 +124,14 @@ export default function VideosPage() {
                   letterSpacing: '0.14em',
                 }}
               >
-                {value === 'TEAM' ? `${selectedTeam.name.toUpperCase()} VIDEOS` : value === 'ALL' ? 'ALL VIDEOS' : value === 'CUSTOM' ? 'LAX VIDEOS' : value}
+                {value === 'TEAM' ? `${selectedTeam.name.toUpperCase()} VIDEOS` : value === 'ALL' ? 'ALL VIDEOS' : value === 'CUSTOM' ? 'PLAYLIST' : value}
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <section style={{ padding: '40px 0 24px' }}>
-        <div className="container">
-            <div className="card" style={{ padding: '20px 24px', background: 'color-mix(in srgb, var(--team-surface) 72%, var(--bg-card))' }}>
-            <div className="section-tag" style={{ marginBottom: '10px' }}>ADMIN ONLY</div>
-            <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8 }}>
-              Add LAX Videos through the backend with a secret-protected POST to <code>/api/admin/videos</code>. Regular users cannot submit videos from the frontend.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section style={{ padding: '24px 0 80px' }}>
+      <section style={{ padding: '40px 0 80px' }}>
         <div className="container">
           {loading ? (
             <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: '20px' }}>
@@ -159,18 +153,48 @@ export default function VideosPage() {
               {featuredVideo ? (
                 <div style={{ display: 'grid', gridTemplateColumns: '1.25fr 0.75fr', gap: '20px', marginBottom: '24px' }}>
                   <div className="card" style={{ overflow: 'hidden' }}>
-                    <iframe
-                      src={featuredVideo.embedUrl}
-                      title={featuredVideo.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                      style={{ width: '100%', aspectRatio: '16 / 9', border: 'none', display: 'block' }}
-                    />
+                    {featuredIsEmbeddable ? (
+                      <iframe
+                        src={featuredVideo.embedUrl}
+                        title={featuredVideo.title}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                        style={{ width: '100%', aspectRatio: '16 / 9', border: 'none', display: 'block' }}
+                      />
+                    ) : (
+                      <a href={featuredVideo.youtubeUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'block', position: 'relative' }}>
+                        <img
+                          src={featuredVideo.thumbnailUrl}
+                          alt={featuredVideo.title}
+                          style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }}
+                        />
+                        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, rgba(0,0,0,0.66) 100%)' }} />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: '22px',
+                            left: '22px',
+                            width: '72px',
+                            height: '72px',
+                            borderRadius: '50%',
+                            background: 'rgba(0,0,0,0.7)',
+                            border: '2px solid rgba(255,255,255,0.9)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '28px',
+                            color: '#fff',
+                          }}
+                        >
+                          ▶
+                        </div>
+                      </a>
+                    )}
                   </div>
                   <div className="card" style={{ padding: '28px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                     <div>
                       <div className="section-tag" style={{ marginBottom: '14px' }}>
-                        {featuredVideo.source === 'custom' ? 'LAX VIDEOS' : `${featuredVideo.league} OFFICIAL`}
+                        {featuredVideo.source === 'custom' ? 'PLAYLIST' : `${featuredVideo.league} OFFICIAL`}
                       </div>
                       <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 46px)', lineHeight: 0.94, marginBottom: '16px' }}>
                         {featuredVideo.title.toUpperCase()}
@@ -237,7 +261,7 @@ export default function VideosPage() {
                     <div style={{ padding: '20px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', alignItems: 'center', marginBottom: '12px' }}>
                         <span className="news-pill" style={{ background: video.league === 'PLL' ? 'var(--primary)' : video.league === 'WLL' ? 'var(--secondary)' : 'color-mix(in srgb, var(--primary) 55%, var(--secondary))' }}>
-                          {video.league === 'CUSTOM' ? 'LAX VIDEOS' : video.league}
+                          {video.league === 'CUSTOM' ? 'PLAYLIST' : video.league}
                         </span>
                         <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
                           {video.publishedAt ? new Date(video.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : video.source.toUpperCase()}
@@ -261,3 +285,4 @@ export default function VideosPage() {
     </div>
   );
 }
+
