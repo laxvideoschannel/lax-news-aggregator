@@ -25,7 +25,7 @@ function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: bo
       >
         <TeamLogo teamId={teamId} size={90} />
       </div>
-      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--text-muted)', textAlign: 'center' }}>
+      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)', textAlign: 'center' }}>
         {team.city.toUpperCase()}
       </div>
     </div>
@@ -120,8 +120,8 @@ export default function SchedulePage() {
             ].map((item) => (
               <div key={item.label} style={{ borderLeft: '2px solid var(--primary)', paddingLeft: '16px' }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.val}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--text)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-muted)', marginTop: '2px' }}>{item.sub}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
+                <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '2px' }}>{item.sub}</div>
               </div>
             ))}
           </div>
@@ -143,7 +143,7 @@ export default function SchedulePage() {
                 height: '100%',
                 padding: '0 24px',
                 fontFamily: 'var(--font-accent)',
-                fontSize: '11px',
+                fontSize: '14px',
                 letterSpacing: '0.15em',
                 border: 'none',
                 cursor: 'pointer',
@@ -183,7 +183,7 @@ export default function SchedulePage() {
                     border: '1px solid color-mix(in srgb, var(--primary) 42%, transparent)',
                     color: '#fff',
                     fontFamily: 'var(--font-accent)',
-                    fontSize: '10px',
+                    fontSize: '14px',
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
                     opacity: 0,
@@ -225,10 +225,10 @@ export default function SchedulePage() {
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
                     <div className="section-tag">{game.event}</div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{game.dateLabel.toUpperCase()}</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{game.dateLabel.toUpperCase()}</div>
                   </div>
 
-                  <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '26px' }}>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '26px' }}>
                     {game.venue} | {game.time} | <span style={{ color: 'var(--text)' }}>{game.broadcast}</span>
                   </div>
 
@@ -237,7 +237,7 @@ export default function SchedulePage() {
                       <TeamBadge teamId={game.awayId} isWinner={winnerSide === 'left'} />
                     </div>
                     <div style={{ textAlign: 'center' }}>
-                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginBottom: '8px' }}>VS</div>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginBottom: '8px' }}>VS</div>
                       <div style={{ width: '42px', height: '2px', background: 'var(--border)', margin: '0 auto' }} />
                     </div>
                     <div style={{ justifySelf: 'center' }}>
@@ -273,17 +273,17 @@ export default function SchedulePage() {
                             {rightScore}
                           </div>
                         </div>
-                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
                           FINAL SCORE
                         </div>
-                        <div style={{ color: 'var(--text-muted)', fontSize: '12px', marginTop: '8px' }}>
+                        <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px' }}>
                           {home.full} vs {away.full}
                         </div>
                       </>
                     ) : (
                       <>
                         <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '36px', color: 'var(--text)', lineHeight: 1 }}>{game.time}</div>
-                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: 'var(--text-muted)', marginTop: '6px' }}>
                           NEXT FACEOFF
                         </div>
                       </>
@@ -315,7 +315,7 @@ export default function SchedulePage() {
           })}
         </div>
 
-        <div style={{ marginTop: '28px', color: 'var(--text-muted)', fontSize: '12px', lineHeight: 1.7 }}>
+        <div style={{ marginTop: '28px', color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7 }}>
           Schedule note: the default view shows the selected team's schedule. The ALL GAMES tab shows the broader PLL slate currently loaded on the site, including non-selected-team matchups from the official 2026 schedule weekends shared earlier.
         </div>
       </div>

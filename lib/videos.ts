@@ -59,9 +59,10 @@ export const DEFAULT_VIDEO_SOURCES: VideoSource[] = [
   {
     id: 'official-pll',
     title: 'Official PLL Feed',
-    handleUrl: 'https://www.youtube.com/@PremierLacrosseLeague',
+    handleUrl: 'https://www.youtube.com/@pll',
     league: 'PLL',
     channelName: 'Premier Lacrosse League',
+    channelId: 'UCNUOJo_m8-w2yPSIC5DLK1g',
     pullMode: 'all',
     active: true,
     official: true,
@@ -69,7 +70,7 @@ export const DEFAULT_VIDEO_SOURCES: VideoSource[] = [
   {
     id: 'official-wll',
     title: 'Official WLL Feed',
-    handleUrl: 'https://www.youtube.com/@wlacrosseleague',
+    handleUrl: 'https://www.youtube.com/@WomensLacrosseLeague',
     league: 'WLL',
     channelName: "Women's Lacrosse League",
     pullMode: 'all',
@@ -95,7 +96,7 @@ const FALLBACK_VIDEOS: VideoItem[] = [
   {
     id: 'pll-official-feed',
     title: 'Official PLL YouTube Channel',
-    youtubeUrl: 'https://www.youtube.com/@PremierLacrosseLeague/videos',
+    youtubeUrl: 'https://www.youtube.com/@pll/videos',
     embedUrl: '',
     thumbnailUrl: 'https://i.ytimg.com/vi/9XEmE2BVuNQ/hqdefault.jpg',
     channelName: 'Premier Lacrosse League',

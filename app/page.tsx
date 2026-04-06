@@ -83,7 +83,7 @@ export default function HomePage() {
                 <div key={i} className={`card fade-up fade-up-${(i % 4) + 1}`} style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
                   <div className="stat-num">{stat.value}</div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>{stat.label.toUpperCase()}</div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>{stat.label.toUpperCase()}</div>
                   <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>{stat.sub}</div>
                 </div>
               ))}
@@ -106,7 +106,7 @@ export default function HomePage() {
                 <span style={{ fontSize: '28px' }}>{item.icon}</span>
                 <div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
                 </div>
               </div>
             ))}
@@ -127,7 +127,7 @@ export default function HomePage() {
             </div>
             {spotlight && (
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-                <span style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginRight: '4px' }}>SWITCH</span>
+                <span style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginRight: '4px' }}>SWITCH</span>
                 {Array.from({ length: spotlight.totalPlayers || 3 }, (_, i) => (
                   <button key={i} onClick={() => loadSpotlight(teamId, i)} style={{
                     width: i === spotlightIndex ? '32px' : '10px', height: '4px',
@@ -155,9 +155,9 @@ export default function HomePage() {
                 <div style={{ position: 'relative', zIndex: 1, border: '1px solid rgba(204,0,0,0.25)', background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(10px)', padding: '36px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
                     <div>
-                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '8px' }}>{spotlight.position?.toUpperCase()}</div>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '8px' }}>{spotlight.position?.toUpperCase()}</div>
                       <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: 1 }}>{spotlight.name}</h3>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginTop: '6px' }}>{spotlight.hometown} · {spotlight.college}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>{spotlight.hometown} · {spotlight.college}</div>
                     </div>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '64px', color: 'var(--primary)', lineHeight: 1, opacity: 0.7 }}>#{spotlight.number}</div>
                   </div>
@@ -166,13 +166,13 @@ export default function HomePage() {
                       {spotlight.stats.slice(0, 4).map((s: any, i: number) => (
                         <div key={i} style={{ background: 'rgba(0,0,0,0.6)', padding: '14px 16px' }}>
                           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{s.value}</div>
-                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label?.toUpperCase()}</div>
+                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label?.toUpperCase()}</div>
                         </div>
                       ))}
                     </div>
                   )}
                   {spotlight.quote && (
-                    <blockquote style={{ borderLeft: '3px solid var(--primary)', paddingLeft: '16px', fontStyle: 'italic', color: '#bbb', fontSize: '13px', lineHeight: 1.65 }}>
+                    <blockquote style={{ borderLeft: '3px solid var(--primary)', paddingLeft: '16px', fontStyle: 'italic', color: '#bbb', fontSize: '14px', lineHeight: 1.65 }}>
                       "{spotlight.quote}"
                     </blockquote>
                   )}
@@ -181,15 +181,15 @@ export default function HomePage() {
 
               <div>
                 {spotlight.headline && <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 52px)', lineHeight: 0.95, marginBottom: '16px' }}>{spotlight.headline.toUpperCase()}</h3>}
-                {spotlight.tagline && <p style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '24px', textTransform: 'uppercase' }}>{spotlight.tagline}</p>}
+                {spotlight.tagline && <p style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '24px', textTransform: 'uppercase' }}>{spotlight.tagline}</p>}
                 {spotlight.description && <p style={{ color: '#999', fontSize: '15px', lineHeight: 1.8, marginBottom: '36px' }}>{spotlight.description}</p>}
                 {spotlight.accolades?.length > 0 && (
                   <div style={{ marginBottom: '36px' }}>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '16px' }}>CAREER HIGHLIGHTS</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '16px' }}>CAREER HIGHLIGHTS</div>
                     {spotlight.accolades.map((a: string, i: number) => (
                       <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
                         <div style={{ width: '6px', height: '6px', background: 'var(--primary)', borderRadius: '50%', flexShrink: 0 }} />
-                        <span style={{ fontSize: '13px', color: '#ccc' }}>{a}</span>
+                        <span style={{ fontSize: '14px', color: '#ccc' }}>{a}</span>
                       </div>
                     ))}
                   </div>
@@ -230,13 +230,13 @@ export default function HomePage() {
                   <div style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                       <span className="news-pill">{item.category || 'General'}</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</span>
+                      <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</span>
                     </div>
                     <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', lineHeight: 1.2, marginBottom: '12px' }}>{item.title}</h3>
-                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.summary}</p>
+                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.summary}</p>
                   </div>
                   <div style={{ padding: '12px 24px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{item.source}</span>
+                    <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.source}</span>
                     <span style={{ color: 'var(--primary)' }}>→</span>
                   </div>
                 </a>
@@ -256,11 +256,11 @@ export default function HomePage() {
       <section style={{ background: 'var(--primary)', padding: '70px 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'repeating-linear-gradient(45deg, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 2px, transparent 2px, transparent 20px)' }} />
         <div className="container" style={{ position: 'relative', zIndex: 2, textAlign: 'center' }}>
-          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.6)', marginBottom: '16px' }}>PICK YOUR TEAM</div>
+          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.3em', color: 'rgba(255,255,255,0.6)', marginBottom: '16px' }}>PICK YOUR TEAM</div>
           <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 6vw, 72px)', color: '#fff', marginBottom: '32px' }}>REPRESENTING {team.full.toUpperCase()}</h2>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Link href="/team" style={{ background: '#000', color: '#fff', padding: '14px 36px', fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.15em', display: 'inline-block' }}>VIEW ROSTER</Link>
-            <Link href="/schedule" style={{ border: '2px solid rgba(255,255,255,0.5)', color: '#fff', padding: '12px 34px', fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.15em', display: 'inline-block' }}>SCHEDULE</Link>
+            <Link href="/team" style={{ background: '#000', color: '#fff', padding: '14px 36px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>VIEW ROSTER</Link>
+            <Link href="/schedule" style={{ border: '2px solid rgba(255,255,255,0.5)', color: '#fff', padding: '12px 34px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>SCHEDULE</Link>
           </div>
         </div>
       </section>

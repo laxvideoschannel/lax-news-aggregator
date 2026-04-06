@@ -371,7 +371,7 @@ export default function AdminPage() {
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '22px', lineHeight: 1 }}>
                         {source.title || source.channel_name}
                       </div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px' }}>
                         {source.league === 'CUSTOM' ? 'PLAYLIST' : source.league} • {(source.pull_mode || 'all').toUpperCase()} • {source.channel_name || 'Feed source'}
                       </div>
                     </div>
@@ -413,7 +413,7 @@ export default function AdminPage() {
                     <img src={video.thumbnailUrl} alt={video.title} style={{ width: '120px', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block' }} />
                     <div>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '20px', lineHeight: 1.05 }}>{video.title}</div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px' }}>
                         {video.channelName}{video.publishedAt ? ` • ${new Date(video.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}` : ''}
                       </div>
                     </div>
@@ -432,10 +432,10 @@ export default function AdminPage() {
                 videos.map((video) => (
                   <div key={String(video.id)} style={{ border: '1px solid var(--border)', padding: '14px 16px', background: 'color-mix(in srgb, var(--team-surface) 50%, var(--bg-card2))' }}>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '22px', lineHeight: 1 }}>{video.title}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginTop: '8px' }}>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px' }}>
                       {(video.league === 'CUSTOM' ? 'PLAYLIST' : video.league) || 'PLAYLIST'} • {video.channel_name || 'LaxHub'}
                     </div>
-                    <a href={video.youtube_url} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontSize: '13px', marginTop: '10px', display: 'inline-block' }}>
+                    <a href={video.youtube_url} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontSize: '14px', marginTop: '10px', display: 'inline-block' }}>
                       Open source video
                     </a>
                   </div>

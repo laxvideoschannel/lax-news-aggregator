@@ -70,11 +70,11 @@ export default async function ScheduleGamePage({ params }: Props) {
                   <TeamLogo teamId={away.id} size={96} />
                 </div>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px' }}>{awayScore}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: '4px' }}>{away.full.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: '4px' }}>{away.full.toUpperCase()}</div>
               </div>
 
               <div style={{ textAlign: 'center' }}>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'var(--text-muted)' }}>{game.dateLabel.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: 'var(--text-muted)' }}>{game.dateLabel.toUpperCase()}</div>
                 <div style={{ width: '54px', height: '2px', background: 'var(--border)', margin: '14px auto' }} />
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', color: 'var(--primary)' }}>FINAL</div>
               </div>
@@ -84,7 +84,7 @@ export default async function ScheduleGamePage({ params }: Props) {
                   <TeamLogo teamId={home.id} size={96} />
                 </div>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px' }}>{homeScore}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: '4px' }}>{home.full.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: '4px' }}>{home.full.toUpperCase()}</div>
               </div>
             </div>
 
@@ -110,7 +110,7 @@ export default async function ScheduleGamePage({ params }: Props) {
                   <span>-></span>
                 </a>
               ))}
-              <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7, marginTop: '6px' }}>
+              <div style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7, marginTop: '6px' }}>
                 Verified game-specific replay and highlight links were not available from official public sources, so those buttons have been removed instead of sending you somewhere inaccurate.
               </div>
             </div>
@@ -135,12 +135,12 @@ export default async function ScheduleGamePage({ params }: Props) {
                     border: '1px solid var(--border)',
                   }}
                 >
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>{period.label}</div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>{period.label}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', textAlign: 'center' }}>{period.away}</div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', textAlign: 'center', color: 'var(--primary)' }}>{period.home}</div>
                 </div>
               )) : (
-                <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7 }}>
+                <div style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7 }}>
                   A verified period-by-period breakdown was not available from public official sources for this game.
                 </div>
               )}
@@ -168,16 +168,16 @@ export default async function ScheduleGamePage({ params }: Props) {
                     <TeamLogo teamId={scorerTeam.id} size={36} />
                     <div>
                       <div style={{ fontWeight: 700 }}>{scorer.player}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{scorerTeam.full}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{scorerTeam.full}</div>
                     </div>
                     <div style={{ textAlign: 'right' }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '24px', color: 'var(--primary)' }}>{scorer.goals}G</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{scorer.note || (scorer.assists ? `${scorer.assists}A` : '0A')}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{scorer.note || (scorer.assists ? `${scorer.assists}A` : '0A')}</div>
                     </div>
                   </div>
                 );
               }) : (
-                <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7 }}>
+                <div style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7 }}>
                   Verified box-score leaders were not publicly available from official sources for this game.
                 </div>
               )}

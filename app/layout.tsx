@@ -182,12 +182,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <div style={{ background: 'var(--primary)', overflow: 'hidden', height: '36px', display: 'flex', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '0 16px', flexShrink: 0, borderRight: '1px solid rgba(255,255,255,0.2)', marginRight: '16px' }}>
-            <span style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: '#fff', whiteSpace: 'nowrap' }}>LIVE UPDATES</span>
+            <span style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: '#fff', whiteSpace: 'nowrap' }}>LIVE UPDATES</span>
           </div>
           <div style={{ overflow: 'hidden', flex: 1 }}>
             <div className="ticker-track" style={{ gap: '60px' }}>
               {[...Array(2)].map((_, i) => (
-                <span key={i} style={{ display: 'flex', gap: '60px', fontFamily: 'var(--font-accent)', fontSize: '11px', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.1em' }}>
+                <span key={i} style={{ display: 'flex', gap: '60px', fontFamily: 'var(--font-accent)', fontSize: '14px', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.1em' }}>
                   <span>CAROLINA CHAOS WIN THE 2026 PLL CHAMPIONSHIP SERIES 24-16</span>
                   <span>BLAZE RIORDEN - PLL ALL-TIME SAVE RECORD HOLDER (25 SAVES)</span>
                   <span>2026 CHAMPIONSHIP SERIES RETURNS TO D.C. - FEB 27 TO MAR 8</span>
@@ -229,7 +229,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '22px', fontWeight: 900, letterSpacing: '0.05em', lineHeight: 1 }}>LAXHUB</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.3em', color: 'var(--primary)', lineHeight: 1 }}>PLL + WLL HUB</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.3em', color: 'var(--primary)', lineHeight: 1 }}>PLL + WLL HUB</div>
               </div>
             </Link>
 
@@ -240,7 +240,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   href={link.href}
                   style={{
                     fontFamily: 'var(--font-accent)',
-                    fontSize: '12px',
+                    fontSize: '14px',
                     letterSpacing: '0.15em',
                     textTransform: 'uppercase',
                     padding: '8px 18px',
@@ -278,14 +278,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     padding: '8px 16px',
                     cursor: 'pointer',
                     fontFamily: 'var(--font-accent)',
-                    fontSize: '11px',
+                    fontSize: '14px',
                     letterSpacing: '0.1em',
                     transition: 'background 0.2s',
                   }}
                 >
                   <TeamLogo teamId={team.id} size={38} />
                   {team.full.toUpperCase()}
-                  <span style={{ fontSize: '8px', opacity: 0.6 }}>v</span>
+                  <span style={{ fontSize: '14px', opacity: 0.6 }}>v</span>
                 </button>
 
                 {teamPickerOpen && (
@@ -303,7 +303,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   >
                     {teamGroups.map((group) => (
                       <div key={group}>
-                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.2em', color: 'var(--primary)', padding: '10px 16px 6px', borderBottom: '1px solid var(--border)' }}>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', padding: '10px 16px 6px', borderBottom: '1px solid var(--border)' }}>
                           {group.toUpperCase()}
                         </div>
                         {ALL_TEAMS.filter((t) => t.group === group).map((t) => (
@@ -321,7 +321,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               color: teamId === t.id ? 'var(--primary)' : 'var(--text-muted)',
                               cursor: 'pointer',
                               fontFamily: 'var(--font-body)',
-                              fontSize: '13px',
+                              fontSize: '14px',
                               textAlign: 'left',
                               transition: 'background 0.15s',
                               }}
@@ -330,7 +330,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                           >
                             <TeamLogo teamId={t.id} size={36} style={{ flexShrink: 0 }} />
                             {t.full}
-                            {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '10px' }}>OK</span>}
+                            {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '14px' }}>OK</span>}
                           </button>
                         ))}
                       </div>
@@ -349,10 +349,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '40px', marginBottom: '60px' }}>
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '20px' }}>
-                  <div style={{ width: '32px', height: '32px', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', fontSize: '13px', color: '#fff' }}>LX</div>
+                  <div style={{ width: '32px', height: '32px', background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', clipPath: 'polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)', fontSize: '14px', color: '#fff' }}>LX</div>
                   <span style={{ fontFamily: 'var(--font-display)', fontSize: '20px', fontWeight: 900 }}>LAXHUB</span>
                 </div>
-                <p style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.7, maxWidth: '280px' }}>
+                <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7, maxWidth: '280px' }}>
                   Your ultimate source for PLL and WLL lacrosse news, stats, and team coverage. Fan-powered. Game-obsessed.
                 </p>
               </div>
@@ -363,9 +363,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 { title: 'More', links: ['PLL Official', 'Stats', 'Player Bios', 'About'] },
               ].map((col) => (
                 <div key={col.title}>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '20px' }}>{col.title.toUpperCase()}</div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '20px' }}>{col.title.toUpperCase()}</div>
                   {col.links.map((label) => (
-                    <a key={label} href="#" style={{ display: 'block', color: 'var(--text-muted)', fontSize: '13px', marginBottom: '12px' }}>
+                    <a key={label} href="#" style={{ display: 'block', color: 'var(--text-muted)', fontSize: '14px', marginBottom: '12px' }}>
                       {label}
                     </a>
                   ))}
@@ -374,10 +374,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
 
             <div style={{ borderTop: '1px solid var(--border)', padding: '24px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontFamily: 'var(--font-body)', fontSize: '12px', color: 'var(--text-muted)' }}>
+              <span style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-muted)' }}>
                 Copyright 2026 LaxHub. Fan site - not affiliated with the PLL.
               </span>
-              <span style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: 'var(--primary)' }}>BUILT FOR THE FANS</span>
+              <span style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)' }}>BUILT FOR THE FANS</span>
             </div>
           </div>
         </footer>

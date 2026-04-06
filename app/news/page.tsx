@@ -53,7 +53,7 @@ export default function NewsPage() {
           <div style={{ display: 'flex', gap: '4px' }}>
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setActiveCategory(cat)} style={{
-                fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.15em',
+                fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em',
                 padding: '6px 16px', border: 'none', cursor: 'pointer', transition: 'all 0.2s',
                 background: activeCategory === cat ? 'var(--primary)' : 'transparent',
                 color: activeCategory === cat ? '#fff' : 'var(--text-muted)',
@@ -66,7 +66,7 @@ export default function NewsPage() {
             onChange={e => setSearch(e.target.value)}
             style={{
               background: 'rgba(255,255,255,0.05)', border: '1px solid var(--border)',
-              color: '#fff', padding: '8px 16px', fontSize: '13px', width: '240px',
+              color: '#fff', padding: '8px 16px', fontSize: '14px', width: '240px',
               fontFamily: 'var(--font-body)', outline: 'none',
             }}
           />
@@ -89,7 +89,7 @@ export default function NewsPage() {
           </div>
         ) : (
           <>
-            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.2em', color: 'var(--text-muted)', marginBottom: '24px' }}>
+            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--text-muted)', marginBottom: '24px' }}>
               {filtered.length} STORIES
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
@@ -98,20 +98,20 @@ export default function NewsPage() {
                   <div style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
                       <span className="news-pill">{item.category}</span>
-                      <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                      <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
                         {item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                       </span>
                     </div>
                     <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1.15, marginBottom: '12px', color: '#fff' }}>
                       {item.title}
                     </h3>
-                    <p style={{ fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                       {item.summary}
                     </p>
                   </div>
                   <div style={{ borderTop: '1px solid var(--border)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{item.source}</span>
-                    <span style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em' }}>READ →</span>
+                    <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.source}</span>
+                    <span style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em' }}>READ →</span>
                   </div>
                 </a>
               ))}

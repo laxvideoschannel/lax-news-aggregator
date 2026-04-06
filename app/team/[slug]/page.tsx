@@ -94,7 +94,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
         />
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '70px', paddingBottom: '70px' }}>
           <div style={{ marginBottom: '20px' }}>
-            <Link href="/team" style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
+            <Link href="/team" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
               {'<-'} BACK TO TEAM
             </Link>
           </div>
@@ -155,7 +155,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 {player.number ? (
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '58px', color: 'var(--primary)', lineHeight: 0.9 }}>#{player.number}</div>
                 ) : null}
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', color: '#fff', marginTop: '4px' }}>{player.fullPosition.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: '#fff', marginTop: '4px' }}>{player.fullPosition.toUpperCase()}</div>
               </div>
             </div>
 
@@ -170,7 +170,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 {player.stats.map((stat) => (
                   <div key={stat.label} className="card" style={{ padding: '18px' }}>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '34px', color: 'var(--primary)', lineHeight: 1 }}>{stat.value}</div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '6px' }}>
                       {stat.label.toUpperCase()}
                     </div>
                   </div>
@@ -196,7 +196,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 {player.profile.map((field) => (
                   <div key={field.label} style={{ paddingBottom: '12px', borderBottom: '1px solid var(--border)' }}>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '24px', lineHeight: 1.1 }}>{field.value}</div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '6px' }}>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)', marginTop: '6px' }}>
                       {field.label.toUpperCase()}
                     </div>
                   </div>
@@ -245,13 +245,13 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                   <div style={{ width: '62px', height: '62px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', marginBottom: '18px' }}>
                     ▶
                   </div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
                     WATCH
                   </div>
                   <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1.05, marginBottom: '16px' }}>
                     {item.title}
                   </div>
-                  <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Open player videos -&gt;</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Open player videos -&gt;</div>
                 </div>
               </a>
             ))}
@@ -267,13 +267,13 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 className="card"
                 style={{ padding: '22px', display: 'block' }}
               >
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
                   {item.type === 'article' ? 'READ' : 'FOLLOW'}
                 </div>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1.05, marginBottom: '16px' }}>
                   {item.title}
                 </div>
-                <div style={{ color: 'var(--text-muted)', fontSize: '13px' }}>Open official source -&gt;</div>
+                <div style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Open official source -&gt;</div>
               </a>
             ))}
           </div>
@@ -307,11 +307,11 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                     {player.number}
                   </div>
                 ) : (
-                  <div style={{ position: 'absolute', top: '146px', left: '28px', right: '28px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: '#111' }}>
+                  <div style={{ position: 'absolute', top: '146px', left: '28px', right: '28px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: '#111' }}>
                     OFFICIAL FAN SEARCH
                   </div>
                 )}
-                <div style={{ position: 'absolute', bottom: '18px', left: '18px', right: '18px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: '#222' }}>
+                <div style={{ position: 'absolute', bottom: '18px', left: '18px', right: '18px', textAlign: 'center', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.18em', color: '#222' }}>
                   {player.name.toUpperCase()}
                 </div>
               </div>

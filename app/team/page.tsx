@@ -211,7 +211,7 @@ export default function TeamPage() {
             {statItems.map((stat) => (
               <div key={stat.label}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{stat.val}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
               </div>
             ))}
           </div>
@@ -336,7 +336,7 @@ export default function TeamPage() {
               <div style={{ textAlign: 'center', marginTop: '24px' }}>
                 <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '48px', lineHeight: 0.95 }}>{activePlayer.name.toUpperCase()}</h2>
                 {activePlayer.hometown || activePlayer.college ? (
-                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '13px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-muted)', marginTop: '8px' }}>
                     {[activePlayer.hometown, activePlayer.college].filter(Boolean).join(' - ')}
                   </div>
                 ) : null}
@@ -359,7 +359,7 @@ export default function TeamPage() {
                     }}
                   >
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '36px', color: 'var(--primary)', lineHeight: 1 }}>{stat.value}</div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
                   </div>
                 ))}
               </div>
@@ -381,7 +381,7 @@ export default function TeamPage() {
                       color: activePlayer.name === player.name ? '#fff' : 'var(--text-muted)',
                       cursor: 'pointer',
                       fontFamily: 'var(--font-accent)',
-                      fontSize: '11px',
+                      fontSize: '14px',
                       letterSpacing: '0.1em',
                       transition: 'all 0.2s',
                       display: 'flex',
@@ -432,7 +432,7 @@ export default function TeamPage() {
                   onClick={() => setFilter(position)}
                   style={{
                     fontFamily: 'var(--font-accent)',
-                    fontSize: '11px',
+                    fontSize: '14px',
                     letterSpacing: '0.1em',
                     padding: '6px 14px',
                     border: 'none',
@@ -481,7 +481,7 @@ export default function TeamPage() {
                   <div style={{ padding: '24px', position: 'relative', zIndex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
                       <div>
-                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.pos}</div>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.pos}</div>
                         <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1 }}>{player.name}</h3>
                       </div>
                       {player.number ? (
@@ -491,14 +491,14 @@ export default function TeamPage() {
                       ) : null}
                     </div>
                     {player.hometown ? (
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: player.college ? '4px' : '0' }}>{player.hometown}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: player.college ? '4px' : '0' }}>{player.hometown}</div>
                     ) : null}
                     {player.college ? (
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '16px' }}>{player.college}</div>
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px' }}>{player.college}</div>
                     ) : (
                       <div style={{ marginBottom: '16px' }} />
                     )}
-                    <div style={{ padding: '8px 12px', background: 'color-mix(in srgb, var(--primary) 10%, transparent)', borderLeft: '2px solid var(--primary)', fontSize: '12px', color: 'var(--text)', lineHeight: 1.4 }}>
+                    <div style={{ padding: '8px 12px', background: 'color-mix(in srgb, var(--primary) 10%, transparent)', borderLeft: '2px solid var(--primary)', fontSize: '14px', color: 'var(--text)', lineHeight: 1.4 }}>
                       {player.highlight}
                     </div>
                   </div>
@@ -580,7 +580,7 @@ export default function TeamPage() {
                   background: 'var(--primary)',
                   color: '#fff',
                   fontFamily: 'var(--font-accent)',
-                  fontSize: '13px',
+                  fontSize: '14px',
                   letterSpacing: '0.12em',
                   textDecoration: 'none',
                   clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 0 0)',
@@ -657,7 +657,7 @@ export default function TeamPage() {
                         </div>
                       </div>
 
-                      <div style={{ marginTop: '16px', fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', color: 'var(--primary)' }}>
+                      <div style={{ marginTop: '16px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--primary)' }}>
                         VIEW IN OFFICIAL SHOP
                       </div>
                     </a>

@@ -120,7 +120,7 @@ export default function VideosPage() {
                   background: filter === value ? 'var(--primary)' : 'color-mix(in srgb, var(--team-surface) 70%, transparent)',
                   color: filter === value ? '#fff' : 'var(--text-muted)',
                   fontFamily: 'var(--font-accent)',
-                  fontSize: '11px',
+                  fontSize: '14px',
                   letterSpacing: '0.14em',
                 }}
               >
@@ -204,7 +204,7 @@ export default function VideosPage() {
                       </p>
                     </div>
                     <div>
-                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.14em', color: 'var(--primary)', marginBottom: '8px' }}>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--primary)', marginBottom: '8px' }}>
                         {featuredVideo.channelName.toUpperCase()}
                       </div>
                       <a href={featuredVideo.youtubeUrl} target="_blank" rel="noopener noreferrer" className="btn-primary">
@@ -263,15 +263,15 @@ export default function VideosPage() {
                         <span className="news-pill" style={{ background: video.league === 'PLL' ? 'var(--primary)' : video.league === 'WLL' ? 'var(--secondary)' : 'color-mix(in srgb, var(--primary) 55%, var(--secondary))' }}>
                           {video.league === 'CUSTOM' ? 'PLAYLIST' : video.league}
                         </span>
-                        <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                        <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
                           {video.publishedAt ? new Date(video.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : video.source.toUpperCase()}
                         </span>
                       </div>
                       <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '24px', lineHeight: 1.05, marginBottom: '12px' }}>
                         {video.title}
                       </h3>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '13px', marginBottom: '10px' }}>{video.channelName}</div>
-                      <div style={{ color: 'var(--text-muted)', fontSize: '13px', lineHeight: 1.6 }}>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginBottom: '10px' }}>{video.channelName}</div>
+                      <div style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.6 }}>
                         {(video.description || '').slice(0, 140)}
                       </div>
                     </div>
