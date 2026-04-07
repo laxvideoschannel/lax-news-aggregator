@@ -53,7 +53,7 @@
 - `lib/college.ts`
 
 ## What currently works
-- homepage hero and quick stats follow the header-selected team (same-tab sync via `lax-team-change`, content from `lib/teams` + `lib/team-content`)
+- homepage hero grid shows championships, star names from `getTeamPageContent`, 2026 W–L from `lib/schedule` finals, next game + ticket link (PLL schedule data + fallbacks); player spotlight includes dual-tone image via `/api/player-image` and official article/team URLs from `player-spotlight` API
 - official PLL and WLL video aggregation
 - custom video ingestion via admin endpoint + Supabase
 - video library page

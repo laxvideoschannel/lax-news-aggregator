@@ -38,6 +38,40 @@ Why this task was chosen.
 2026-04-06
 
 ### Task
+Homepage hero tiles (championships, stars, record, next game + tickets), remove stats divider, spotlight imagery.
+
+### Why
+Align the landing grid with what fans expect (titles, names, record, next matchup with tickets) and drop the duplicate stats bar; add a visual player treatment without rehosting arbitrary images (proxy existing league og images).
+
+### Files changed
+- `app/page.tsx`
+- `lib/schedule.ts`
+- `app/schedule/page.tsx`
+- `app/api/player-spotlight/route.ts`
+- `docs/build-state.md`
+- `docs/next-task.md`
+- `docs/codex-log.md`
+
+### What changed
+- exported `parseScore`, `getTeamSeasonRecord`, and `getNextUpcomingGameForTeam` from `lib/schedule` (schedule page imports `parseScore`)
+- hero four-card grid: titles, roster star names, 2026 W–L from loaded PLL finals, next game card with ticket CTA or league fallback links
+- removed the full-width stats strip between hero and spotlight
+- spotlight: removed the “AI-POWERED” ribbon, added split color/grayscale photo (`SpotlightPlayerPhoto`) using `/api/player-image` + `imagePage` / team hub fallbacks in the API
+
+### Assumptions
+- WLL clubs still use PLL schedule data only where IDs match; record/next-game fallbacks point users to the WLL site
+- ticket URLs continue to come from static schedule rows or PLL/WLL hub links
+
+### Follow-up
+- optional team-specific ticket deep links per game when available
+- richer WLL schedule parity if/when data lands in-repo
+
+---
+
+### Date
+2026-04-06
+
+### Task
 Homepage team sync and dynamic hero/stats for the selected club.
 
 ### Why

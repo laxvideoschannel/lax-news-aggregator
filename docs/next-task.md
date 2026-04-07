@@ -4,7 +4,7 @@
 Deepen the new college layer without disrupting the working PLL, WLL, video, admin, and merch flows.
 
 ## Recently completed (context)
-Home (`/`) now listens for `lax-team-change` like `/videos` and `/schedule`, and hero/stat blocks pull from the selected team plus `getTeamPageContent` so the page updates in-place when the user picks a new team in the header.
+Home (`/`) listens for `lax-team-change`, hero tiles use team content + schedule helpers (`getTeamSeasonRecord`, `getNextUpcomingGameForTeam`), the redundant four-column stats strip under the hero was removed, and the spotlight block shows a split color/grayscale photo treatment fed by `imagePage` on the spotlight API.
 
 ## Immediate task
 Build college player profile pages and the first pass of college game detail pages so the new school hubs connect to deeper, searchable destinations.

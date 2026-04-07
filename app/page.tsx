@@ -1,9 +1,110 @@
 'use client';
 // TEST RENEW
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, type CSSProperties } from 'react';
 import Link from 'next/link';
 import { getTeam } from '@/lib/teams';
 import { getTeamPageContent } from '@/lib/team-content';
+import { getNextUpcomingGameForTeam, getTeamSeasonRecord } from '@/lib/schedule';
+
+const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
+const WLL_TICKETS_URL = 'https://thewll.com/schedule';
+
+function SpotlightPlayerPhoto({
+  imagePage,
+  name,
+  number,
+}: {
+  imagePage?: string | null;
+  name: string;
+  number?: string;
+}) {
+  const [broken, setBroken] = useState(false);
+  const src =
+    imagePage && !broken
+      ? `/api/player-image?url=${encodeURIComponent(imagePage)}`
+      : '';
+
+  const sharedImg: CSSProperties = {
+    position: 'absolute',
+    left: '-4%',
+    bottom: 0,
+    height: '106%',
+    width: 'auto',
+    maxWidth: 'none',
+    objectFit: 'contain',
+    objectPosition: 'left bottom',
+    userSelect: 'none',
+  };
+
+  if (!src) {
+    return (
+      <div
+        style={{
+          position: 'relative',
+          minHeight: 400,
+          borderRadius: 12,
+          overflow: 'hidden',
+          background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 32%, #111), #080808)',
+          display: 'flex',
+          alignItems: 'flex-end',
+          padding: 32,
+          border: '1px solid color-mix(in srgb, var(--primary) 28%, transparent)',
+        }}
+      >
+        <div>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 10vw, 80px)', color: 'var(--primary)', lineHeight: 1 }}>#{number || '—'}</div>
+          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(22px, 4vw, 32px)', marginTop: 8 }}>{name}</div>
+          <div style={{ fontSize: 13, color: 'var(--text-muted)', marginTop: 10 }}>Photo loads from the player’s official PLL article when available.</div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        minHeight: 420,
+        borderRadius: 12,
+        overflow: 'hidden',
+        background: '#070707',
+        border: '1px solid color-mix(in srgb, var(--primary) 22%, transparent)',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: '55%',
+          background: 'linear-gradient(168deg, color-mix(in srgb, var(--primary) 55%, transparent), transparent)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
+      <img
+        src={src}
+        alt=""
+        onError={() => setBroken(true)}
+        style={{ ...sharedImg, clipPath: 'inset(0 40% 0 0)', zIndex: 2 }}
+      />
+      <img
+        src={src}
+        alt=""
+        aria-hidden
+        onError={() => setBroken(true)}
+        style={{
+          ...sharedImg,
+          clipPath: 'inset(0 0 0 60%)',
+          filter: 'grayscale(1) brightness(0.88)',
+          opacity: 0.9,
+          zIndex: 2,
+        }}
+      />
+    </div>
+  );
+}
 
 export default function HomePage() {
   const [teamId, setTeamId] = useState('chaos');
@@ -47,33 +148,29 @@ export default function HomePage() {
 
   const team = getTeam(teamId);
   const pageContent = useMemo(() => getTeamPageContent(teamId), [teamId]);
+  const seasonRecord = useMemo(() => getTeamSeasonRecord(teamId), [teamId]);
+  const nextGame = useMemo(() => getNextUpcomingGameForTeam(teamId), [teamId]);
 
-  const heroStatCards = useMemo(
-    () => {
-      const leagueTitles = team.league === 'WLL' ? 'WLL titles' : 'PLL titles';
-      const note =
-        pageContent.seasonNote.length > 72
-          ? `${pageContent.seasonNote.slice(0, 69)}…`
-          : pageContent.seasonNote;
-      return [
-        { label: 'Championships', value: pageContent.championships, sub: leagueTitles },
-        { label: 'Active roster', value: pageContent.rosterSize, sub: 'PLL/WLL roster spots' },
-        { label: 'Founded', value: pageContent.founded, sub: `${team.league} club era` },
-        { label: 'Identity', value: pageContent.titleTag, sub: note },
-      ];
-    },
-    [pageContent, team.league],
+  const titleCount = useMemo(() => {
+    const n = parseInt(pageContent.championships.replace(/\D/g, '') || '0', 10);
+    return Number.isFinite(n) ? n : 0;
+  }, [pageContent.championships]);
+
+  const starNames = useMemo(
+    () => pageContent.roster.slice(0, 4).map((p) => p.name),
+    [pageContent.roster],
   );
 
-  const statsBarItems = useMemo(
-    () => [
-      { icon: '🏆', label: 'Conference', value: team.conference },
-      { icon: '🎽', label: 'League', value: team.league },
-      { icon: '👥', label: 'Roster size', value: pageContent.rosterSize },
-      { icon: '🏅', label: 'Titles', value: pageContent.championships },
-    ],
-    [pageContent.championships, pageContent.rosterSize, team.conference, team.league],
-  );
+  const opponentTeam = useMemo(() => {
+    if (!nextGame) return null;
+    const oppId = nextGame.homeId === teamId ? nextGame.awayId : nextGame.homeId;
+    return getTeam(oppId);
+  }, [nextGame, teamId]);
+
+  const ticketHref = useMemo(() => {
+    if (nextGame?.ticketUrl) return nextGame.ticketUrl;
+    return team.league === 'WLL' ? WLL_TICKETS_URL : PLL_TICKETS_URL;
+  }, [nextGame, team.league]);
 
   return (
     <div>
@@ -105,46 +202,104 @@ export default function HomePage() {
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-              {heroStatCards.map((stat, i) => (
-                <div key={i} className={`card fade-up fade-up-${(i % 4) + 1}`} style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
-                  <div className="stat-num">{stat.value}</div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>{stat.label.toUpperCase()}</div>
-                  <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>{stat.sub}</div>
+              <div className="card fade-up fade-up-1" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
+                <div className="stat-num">{titleCount === 0 ? '0' : pageContent.championships}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>CHAMPIONSHIPS</div>
+                <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>
+                  {titleCount === 0 ? `No ${team.league} titles yet` : `${team.league} championship wins`}
                 </div>
-              ))}
+              </div>
+
+              <div className="card fade-up fade-up-2" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginBottom: '12px' }}>STAR PLAYERS</div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {starNames.length > 0 ? (
+                    starNames.map((n) => (
+                      <div key={n} style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(17px, 2.2vw, 22px)', lineHeight: 1.2 }}>{n}</div>
+                    ))
+                  ) : (
+                    <div style={{ color: 'var(--text-muted)', fontSize: '15px' }}>Roster highlights coming soon.</div>
+                  )}
+                </div>
+              </div>
+
+              <div className="card fade-up fade-up-3" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
+                <div className="stat-num">
+                  {team.league === 'WLL' && seasonRecord.played === 0 ? '—' : `${seasonRecord.wins}–${seasonRecord.losses}`}
+                </div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginTop: '6px', marginBottom: '4px' }}>2026 RECORD</div>
+                <div style={{ fontSize: '1rem', color: 'var(--text-muted)' }}>
+                  {team.league === 'WLL' && seasonRecord.played === 0
+                    ? 'PLL-style scores in this hub; follow WLL for league results'
+                    : `${seasonRecord.played} games in loaded ${team.league} schedule`}
+                </div>
+              </div>
+
+              <div className="card fade-up fade-up-4" style={{ padding: '24px', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', top: 0, left: 0, width: '3px', height: '100%', background: 'var(--primary)' }} />
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', marginBottom: '10px' }}>NEXT UP</div>
+                {nextGame && opponentTeam ? (
+                  <>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(20px, 2.8vw, 28px)', lineHeight: 1.15, marginBottom: '8px' }}>
+                      vs {opponentTeam.full}
+                    </div>
+                    <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>
+                      {nextGame.dateLabel} · {nextGame.time}
+                      <br />
+                      {nextGame.venue}
+                    </div>
+                    <a
+                      href={ticketHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-primary"
+                      style={{ display: 'inline-block', textAlign: 'center' }}
+                    >
+                      Get tickets →
+                    </a>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '20px', marginBottom: '10px', color: 'var(--text-muted)' }}>
+                      {team.league === 'WLL' ? 'WLL schedule' : 'Schedule & tickets'}
+                    </div>
+                    <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>
+                      {team.league === 'WLL'
+                        ? 'Pro women’s slate lives on the WLL site.'
+                        : 'No upcoming match loaded for this club in the current dataset.'}
+                    </div>
+                    <a
+                      href={ticketHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="btn-outline"
+                      style={{ display: 'inline-block', textAlign: 'center' }}
+                    >
+                      {team.league === 'WLL' ? 'WLL tickets & schedule →' : 'PLL tickets & schedule →'}
+                    </a>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* STATS BAR */}
-      <div style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: 'var(--border)' }}>
-            {statsBarItems.map((item, i) => (
-              <div key={i} style={{ background: 'var(--bg-card)', padding: '20px 24px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{ fontSize: '28px' }}>{item.icon}</span>
-                <div>
-                  <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '2px' }}>{item.label.toUpperCase()}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* AI PLAYER SPOTLIGHT */}
+      {/* PLAYER SPOTLIGHT */}
       <section style={{ position: 'relative', overflow: 'hidden', background: 'linear-gradient(180deg, var(--bg) 0%, #0d0000 50%, var(--bg) 100%)', padding: '100px 0' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 60% at 30% 50%, rgba(204,0,0,0.07) 0%, transparent 70%)' }} />
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px', flexWrap: 'wrap', gap: '20px' }}>
             <div>
-              <div className="section-tag" style={{ marginBottom: '12px' }}>AI-POWERED · UPDATES DAILY</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 60px)' }}>
                 PLAYER<br /><span style={{ color: 'var(--primary)' }}>SPOTLIGHT</span>
               </h2>
+              <p style={{ marginTop: 12, fontSize: 14, color: 'var(--text-muted)', maxWidth: 420 }}>
+                Feature refreshes daily when the AI writer is available; image is pulled from official league pages.
+              </p>
             </div>
             {spotlight && (
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -168,26 +323,29 @@ export default function HomePage() {
               </div>
             </div>
           ) : spotlight ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
-              <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', top: 0, left: 0, right: 0, fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(50px, 8vw, 110px)', lineHeight: 0.85, color: 'rgba(204,0,0,0.05)', textTransform: 'uppercase', userSelect: 'none', wordBreak: 'break-word' }}>
-                  {spotlight.name?.split(' ').map((w: string, i: number) => <div key={i}>{w}</div>)}
-                </div>
-                <div style={{ position: 'relative', zIndex: 1, border: '1px solid rgba(204,0,0,0.25)', background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(10px)', padding: '36px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                <SpotlightPlayerPhoto
+                  key={`${teamId}-${spotlightIndex}-${spotlight.name}`}
+                  imagePage={spotlight.imagePage}
+                  name={spotlight.name}
+                  number={spotlight.number}
+                />
+                <div style={{ border: '1px solid color-mix(in srgb, var(--primary) 28%, transparent)', background: 'rgba(0,0,0,0.88)', backdropFilter: 'blur(10px)', padding: '28px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
                     <div>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '8px' }}>{spotlight.position?.toUpperCase()}</div>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: 1 }}>{spotlight.name}</h3>
+                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(24px, 3.5vw, 40px)', lineHeight: 1 }}>{spotlight.name}</h3>
                       <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>{spotlight.hometown} · {spotlight.college}</div>
                     </div>
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '64px', color: 'var(--primary)', lineHeight: 1, opacity: 0.7 }}>#{spotlight.number}</div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '52px', color: 'var(--primary)', lineHeight: 1, opacity: 0.75 }}>#{spotlight.number}</div>
                   </div>
                   {spotlight.stats && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.06)', marginBottom: '24px' }}>
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1px', background: 'rgba(255,255,255,0.06)', marginBottom: '20px' }}>
                       {spotlight.stats.slice(0, 4).map((s: any, i: number) => (
-                        <div key={i} style={{ background: 'rgba(0,0,0,0.6)', padding: '14px 16px' }}>
-                          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{s.value}</div>
-                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label?.toUpperCase()}</div>
+                        <div key={i} style={{ background: 'rgba(0,0,0,0.6)', padding: '12px 14px' }}>
+                          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '24px', color: 'var(--primary)', lineHeight: 1 }}>{s.value}</div>
+                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label?.toUpperCase()}</div>
                         </div>
                       ))}
                     </div>

@@ -1,6 +1,26 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+/** Article or team hub URLs — `/api/player-image` pulls og:image for the spotlight visual. */
+const TEAM_SPOTLIGHT_IMAGE_PAGE: Record<string, string> = {
+  chaos: 'https://premierlacrosseleague.com/teams/carolina-chaos',
+  archers: 'https://premierlacrosseleague.com/teams/utah-archers',
+  outlaws: 'https://premierlacrosseleague.com/teams/denver-outlaws',
+  redwoods: 'https://premierlacrosseleague.com/teams/california-redwoods',
+  cannons: 'https://premierlacrosseleague.com/teams/boston-cannons',
+  whipsnakes: 'https://premierlacrosseleague.com/teams/maryland-whipsnakes',
+  atlas: 'https://premierlacrosseleague.com/teams/new-york-atlas',
+  waterdogs: 'https://premierlacrosseleague.com/teams/philadelphia-waterdogs',
+  guard: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
+  palms: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
+  charm: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
+  charging: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
+};
+
+function resolveImagePage(teamId: string, player: { imagePage?: string }) {
+  return player.imagePage || TEAM_SPOTLIGHT_IMAGE_PAGE[teamId] || TEAM_SPOTLIGHT_IMAGE_PAGE.chaos;
+}
+
 // Known player data seeded from real stats - Claude enriches and varies this
 const PLAYER_SEED_DATA: Record<string, any[]> = {
   chaos: [
@@ -10,6 +30,7 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
       position: 'Goalie',
       hometown: 'Fairport, NY',
       college: 'University at Albany',
+      imagePage: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer',
       facts: '5x Oren Lyons Goalie of the Year. 2021 PLL MVP and Champion. Set the PLL single-game save record with 25 saves on June 6 2025 vs Denver Outlaws. 59.4% save percentage in 2025. Widely called "once in a generation talent" by the PLL. Plays NLL forward for Philadelphia Wings. Known for butterfly style similar to hockey goalies. Made coast-to-coast goal vs Cornell in NCAA Tournament nominated for ESPY Best Play. Has 9 career 20+ save games — only 10 such games exist among all other PLL goalies combined.',
     },
     {
@@ -18,6 +39,7 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
       position: 'Close Defense',
       hometown: 'Chesapeake, VA',
       college: 'Duke University',
+      imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse',
       facts: '3x PLL All-Star. 2021 PLL Champion with Carolina Chaos. Considered one of the top close defenders in professional lacrosse. Teams with Jarrod Neumann to form arguably the best defensive tandem in the PLL. Known for his physicality and elite one-on-one defense.',
     },
     {
@@ -26,6 +48,7 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
       position: 'Close Defense',
       hometown: 'Smithtown, NY',
       college: 'Cornell University',
+      imagePage: 'https://premierlacrosseleague.com/articles/jarrod-neumann-records-fastest-shot-in-pll-history',
       facts: '2024 PLL All-Star. 2021 PLL Champion. Specialty is covering left-handed attackmen — considered the best in the league at this matchup. Alongside Rowlett forms a world-class close defense pairing. Key part of Carolina allowing only 11.0 goals per game in 2025, best in PLL.',
     },
     {
@@ -34,6 +57,7 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
       position: 'Attack',
       hometown: 'Charlotte, NC',
       college: 'Duke University',
+      imagePage: 'https://premierlacrosseleague.com/articles/shane-knobloch-breakout-game-carolina-chaos',
       facts: 'Won the 2026 PLL Golden Stick Award with 30 points in the Championship Series — the highest total in the competition. Local Charlotte product playing for his home city team. Key offensive weapon in Roy Colsey\'s new offensive system. Led the Chaos to their 2026 championship title.',
     },
     {
@@ -42,29 +66,30 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
       position: 'Long-Stick Midfielder',
       hometown: 'Glen Cove, NY',
       college: 'University at Albany',
+      imagePage: 'https://premierlacrosseleague.com/articles/how-troy-rehs-off-ball-defense-binds-the-chaos-defense-together',
       facts: 'Elite long-stick midfielder who has anchored the Carolina defensive midfield for 6 seasons. Albany teammate of Blaze Riorden. Key piece of the Chaos defensive system that allowed the fewest goals per game in the PLL in 2025. Known for his ability to cover elite midfielders and contribute in transition.',
     },
   ],
   archers: [
-    { name: 'Tom Schreiber', number: '7', position: 'Attack', hometown: 'Huntington, NY', college: 'Princeton', facts: 'One of the most prolific scorers in PLL history. Multiple All-Star selections. Elite dodger and finisher.' },
+    { name: 'Tom Schreiber', number: '7', position: 'Attack', hometown: 'Huntington, NY', college: 'Princeton', imagePage: 'https://premierlacrosseleague.com/teams/utah-archers', facts: 'One of the most prolific scorers in PLL history. Multiple All-Star selections. Elite dodger and finisher.' },
   ],
   outlaws: [
-    { name: 'Lyle Thompson', number: '4', position: 'Attack', hometown: 'Onondaga Nation, NY', college: 'Albany', facts: 'Native American lacrosse legend. Three-time Tewaaraton Award winner. One of the greatest players in the history of the sport.' },
+    { name: 'Lyle Thompson', number: '4', position: 'Attack', hometown: 'Onondaga Nation, NY', college: 'Albany', imagePage: 'https://premierlacrosseleague.com/teams/denver-outlaws', facts: 'Native American lacrosse legend. Three-time Tewaaraton Award winner. One of the greatest players in the history of the sport.' },
   ],
   cannons: [
-    { name: 'Connor Martin', number: '2', position: 'Midfield', hometown: 'Boston, MA', college: 'Notre Dame', facts: 'Boston Cannons captain. Elite two-way midfielder known for his athleticism and work rate.' },
+    { name: 'Connor Martin', number: '2', position: 'Midfield', hometown: 'Boston, MA', college: 'Notre Dame', imagePage: 'https://premierlacrosseleague.com/teams/boston-cannons', facts: 'Boston Cannons captain. Elite two-way midfielder known for his athleticism and work rate.' },
   ],
   whipsnakes: [
-    { name: 'Matt Rambo', number: '1', position: 'Attack', hometown: 'Berwyn, PA', college: 'Maryland', facts: 'Multiple-time PLL champion with Whipsnakes. One of the most dangerous finishers in the league.' },
+    { name: 'Matt Rambo', number: '1', position: 'Attack', hometown: 'Berwyn, PA', college: 'Maryland', imagePage: 'https://premierlacrosseleague.com/teams/maryland-whipsnakes', facts: 'Multiple-time PLL champion with Whipsnakes. One of the most dangerous finishers in the league.' },
   ],
   atlas: [
-    { name: 'Jeff Teat', number: '17', position: 'Attack', hometown: 'Carthage, NY', college: 'Cornell', facts: '28 goals and 36 assists in 2024, leading the Atlas to their first PLL championship in 2025. Tewaaraton Award winner.' },
+    { name: 'Jeff Teat', number: '17', position: 'Attack', hometown: 'Carthage, NY', college: 'Cornell', imagePage: 'https://premierlacrosseleague.com/teams/new-york-atlas', facts: '28 goals and 36 assists in 2024, leading the Atlas to their first PLL championship in 2025. Tewaaraton Award winner.' },
   ],
   waterdogs: [
-    { name: 'Trevor Baptiste', number: '5', position: 'Faceoff', hometown: 'Aurora, CO', college: 'Denver', facts: 'Most dominant faceoff specialist in PLL history. Multiple Faceoff Player of the Year awards.' },
+    { name: 'Trevor Baptiste', number: '5', position: 'Faceoff', hometown: 'Aurora, CO', college: 'Denver', imagePage: 'https://premierlacrosseleague.com/teams/philadelphia-waterdogs', facts: 'Most dominant faceoff specialist in PLL history. Multiple Faceoff Player of the Year awards.' },
   ],
   redwoods: [
-    { name: 'Myles Jones', number: '3', position: 'Midfield', hometown: 'Catonsville, MD', college: 'Duke', facts: 'PLL All-Star midfielder. Dual threat on offense and defense. Key piece of California Redwoods system.' },
+    { name: 'Myles Jones', number: '3', position: 'Midfield', hometown: 'Catonsville, MD', college: 'Duke', imagePage: 'https://premierlacrosseleague.com/teams/california-redwoods', facts: 'PLL All-Star midfielder. Dual threat on offense and defense. Key piece of California Redwoods system.' },
   ],
 };
 
@@ -140,6 +165,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
     return Response.json({
       ...player,
       ...aiContent,
+      imagePage: resolveImagePage(teamId, player),
       playerIndex: idx,
       totalPlayers: players.length,
       teamId,
@@ -148,6 +174,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
     // Return static data if AI call fails
     return Response.json({
       ...player,
+      imagePage: resolveImagePage(teamId, player),
       headline: `${player.name} — Elite ${player.position}`,
       tagline: `One of the best ${player.position.toLowerCase()}s in professional lacrosse.`,
       description: player.facts.slice(0, 300),

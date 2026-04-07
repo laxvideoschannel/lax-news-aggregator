@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
 import { TeamLogo } from '@/lib/team-logo';
-import { ALL_PLL_SCHEDULE_2026, getTeamSchedule } from '@/lib/schedule';
+import { ALL_PLL_SCHEDULE_2026, getTeamSchedule, parseScore } from '@/lib/schedule';
 
 function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: boolean }) {
   const team = getTeam(teamId);
@@ -30,14 +30,6 @@ function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: bo
       </div>
     </div>
   );
-}
-
-function parseScore(score?: string) {
-  const [home = '0', away = '0'] = (score || '0-0').split('-');
-  return {
-    home: Number(home),
-    away: Number(away),
-  };
 }
 
 export default function SchedulePage() {

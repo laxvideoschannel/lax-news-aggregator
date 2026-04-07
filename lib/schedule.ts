@@ -209,3 +209,26 @@ export function getTeamSchedule(teamId: string) {
 export function getScheduleGame(slug: string) {
   return ALL_PLL_SCHEDULE_2026.find((game) => game.slug === slug);
 }
+
+/** Score string is stored as home-away (matches schedule UI). */
+export function parseScore(score?: string) {
+  const [home = '0', away = '0'] = (score || '0-0').split('-');
+  return { home: Number(home), away: Number(away) };
+}
+
+export function getTeamSeasonRecord(teamId: string): { wins: number; losses: number; played: number } {
+  const games = getTeamSchedule(teamId).filter((g) => g.status === 'final');
+  let wins = 0;
+  for (const game of games) {
+    const s = parseScore(game.score);
+    if (game.homeId === teamId && s.home > s.away) wins += 1;
+    else if (game.awayId === teamId && s.away > s.home) wins += 1;
+  }
+  return { wins, losses: games.length - wins, played: games.length };
+}
+
+export function getNextUpcomingGameForTeam(teamId: string): Game | undefined {
+  return getTeamSchedule(teamId)
+    .filter((g) => g.status === 'upcoming')
+    .sort((a, b) => a.sortDate.localeCompare(b.sortDate))[0];
+}
