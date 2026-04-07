@@ -25,6 +25,7 @@ export interface VideoSource {
   league: VideoLeague;
   channelName: string;
   channelId?: string | null;
+  rssUrl?: string | null;
   pullMode: PullMode;
   active: boolean;
   teamId?: string | null;
@@ -63,6 +64,7 @@ export const DEFAULT_VIDEO_SOURCES: VideoSource[] = [
     league: 'PLL',
     channelName: 'Premier Lacrosse League',
     channelId: 'UCNUOJo_m8-w2yPSIC5DLK1g',
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCNUOJo_m8-w2yPSIC5DLK1g',
     pullMode: 'all',
     active: true,
     official: true,
@@ -74,6 +76,7 @@ export const DEFAULT_VIDEO_SOURCES: VideoSource[] = [
     league: 'WLL',
     channelName: "Women's Lacrosse League",
     channelId: 'UCQ0oNhh5uQcmjS5kQBP8qkg',
+    rssUrl: 'https://www.youtube.com/feeds/videos.xml?channel_id=UCQ0oNhh5uQcmjS5kQBP8qkg',
     pullMode: 'all',
     active: true,
     official: true,
@@ -179,6 +182,7 @@ function normalizeVideoSource(row: VideoSourceRow): VideoSource | null {
     handleUrl: row.handle_url,
     channelName: row.channel_name || row.title || 'Custom channel',
     channelId: row.channel_id || null,
+    rssUrl: row.channel_id ? `https://www.youtube.com/feeds/videos.xml?channel_id=${row.channel_id}` : null,
     league: row.league || 'CUSTOM',
     pullMode: row.pull_mode || 'select',
     active: row.active !== false,
@@ -214,8 +218,18 @@ export async function fetchVideosForSource(source: VideoSource, limit = 12): Pro
   try {
     const channelId = source.channelId || await resolveChannelId(source.handleUrl);
     if (!channelId) return [];
+    const rssUrl = source.rssUrl || `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+    const response = await fetch(rssUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0',
+      },
+      next: { revalidate: 3600 },
+    });
 
-    const feed = await parser.parseURL(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+    if (!response.ok) return [];
+
+    const xml = await response.text();
+    const feed = await parser.parseString(xml);
 
     return (feed.items ?? []).slice(0, limit).map((item) => {
       const youtubeUrl = item.link ?? '';

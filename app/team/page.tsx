@@ -115,6 +115,7 @@ export default function TeamPage() {
   const merch = getTeamMerch(teamId);
   const merchItems = gearItems.length ? gearItems : merch.items;
   const merchRail = [...merchItems, ...merchItems];
+  const heroImageSrc = getPlayerImageSrc(activePlayer.imagePage || content.spotlights[0]?.imagePage);
   const statItems = [
     { label: 'Championships', val: content.championships },
     { label: 'Roster Size', val: content.rosterSize },
@@ -132,6 +133,42 @@ export default function TeamPage() {
           overflow: 'hidden',
         }}
       >
+        {heroImageSrc ? (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={heroImageSrc}
+              alt={activePlayer.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                filter: 'grayscale(1) contrast(1.05) brightness(0.62)',
+                opacity: 0.42,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(90deg, color-mix(in srgb, var(--bg) 24%, transparent) 0%, color-mix(in srgb, var(--primary) 26%, transparent) 45%, color-mix(in srgb, var(--bg) 16%, transparent) 100%)`,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.52) 42%, rgba(0,0,0,0.72) 100%)',
+              }}
+            />
+          </div>
+        ) : null}
         <div
           style={{
             position: 'absolute',

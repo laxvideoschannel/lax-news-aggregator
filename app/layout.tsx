@@ -90,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [teamId, setTeamId] = useState('chaos');
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [teamPickerOpen, setTeamPickerOpen] = useState(false);
+  const [collegeMenuOpen, setCollegeMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
@@ -164,7 +165,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     { href: '/', label: 'Home' },
     { href: '/news', label: 'News' },
     { href: '/videos', label: 'Videos' },
-    { href: '/college', label: 'College' },
+    {
+      href: '/college',
+      label: 'College',
+      children: [
+        { href: '/college', label: 'Overview' },
+        { href: '/college/scoreboard', label: 'Scoreboard' },
+        { href: '/college/standings', label: 'Standings' },
+        { href: '/college/rankings', label: 'Rankings' },
+      ],
+    },
     { href: '/team', label: 'Team' },
     { href: '/schedule', label: 'Schedule' },
   ];
@@ -235,26 +245,101 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Link>
 
             <nav style={{ display: 'flex', gap: '2px', alignItems: 'center' }}>
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  style={{
-                    fontFamily: 'var(--font-accent)',
-                    fontSize: '14px',
-                    letterSpacing: '0.15em',
-                    textTransform: 'uppercase',
-                    padding: '8px 18px',
-                    color: pathname === link.href ? 'var(--primary)' : 'var(--text-muted)',
-                    borderBottom: pathname === link.href ? '2px solid var(--primary)' : '2px solid transparent',
-                    transition: 'all 0.2s',
-                  }}
-                  onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--primary)'; }}
-                  onMouseLeave={(e) => { (e.target as HTMLElement).style.color = pathname === link.href ? 'var(--primary)' : 'var(--text-muted)'; }}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isCollege = link.href === '/college';
+                const isActive = pathname === link.href || (isCollege && pathname.startsWith('/college'));
+
+                if (link.children) {
+                  return (
+                    <div
+                      key={link.href}
+                      style={{ position: 'relative' }}
+                      onMouseEnter={() => setCollegeMenuOpen(true)}
+                      onMouseLeave={() => setCollegeMenuOpen(false)}
+                    >
+                      <Link
+                        href={link.href}
+                        onClick={() => setCollegeMenuOpen((open) => !open)}
+                        style={{
+                          fontFamily: 'var(--font-accent)',
+                          fontSize: '14px',
+                          letterSpacing: '0.15em',
+                          textTransform: 'uppercase',
+                          padding: '8px 18px',
+                          color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                          borderBottom: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                          transition: 'all 0.2s',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                        }}
+                      >
+                        {link.label}
+                        <span style={{ fontSize: '14px', opacity: 0.7 }}>v</span>
+                      </Link>
+
+                      {collegeMenuOpen && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 'calc(100% + 10px)',
+                            left: 0,
+                            minWidth: '220px',
+                            background: 'var(--team-surface)',
+                            border: '1px solid var(--border)',
+                            boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
+                            padding: '8px',
+                            zIndex: 700,
+                          }}
+                        >
+                          {link.children.map((child) => {
+                            const childActive = pathname === child.href;
+                            return (
+                              <Link
+                                key={child.href}
+                                href={child.href}
+                                onClick={() => setCollegeMenuOpen(false)}
+                                style={{
+                                  display: 'block',
+                                  padding: '10px 12px',
+                                  fontFamily: 'var(--font-accent)',
+                                  fontSize: '14px',
+                                  letterSpacing: '0.12em',
+                                  color: childActive ? 'var(--primary)' : 'var(--text)',
+                                  background: childActive ? 'color-mix(in srgb, var(--primary) 14%, transparent)' : 'transparent',
+                                }}
+                              >
+                                {child.label.toUpperCase()}
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                return (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    style={{
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: '14px',
+                      letterSpacing: '0.15em',
+                      textTransform: 'uppercase',
+                      padding: '8px 18px',
+                      color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                      borderBottom: isActive ? '2px solid var(--primary)' : '2px solid transparent',
+                      transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={(e) => { (e.target as HTMLElement).style.color = 'var(--primary)'; }}
+                    onMouseLeave={(e) => { (e.target as HTMLElement).style.color = isActive ? 'var(--primary)' : 'var(--text-muted)'; }}
+                  >
+                    {link.label}
+                  </Link>
+                );
+              })}
             </nav>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

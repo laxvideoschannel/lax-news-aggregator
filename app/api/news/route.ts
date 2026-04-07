@@ -9,7 +9,23 @@ type FeedStory = {
   source: string;
   category: string;
   published_at: string;
+  image_url?: string;
 };
+
+function extractImageUrl(item: any) {
+  const mediaContent = item?.['media:content'];
+  if (Array.isArray(mediaContent) && mediaContent[0]?.$?.url) return mediaContent[0].$.url;
+  if (mediaContent?.$?.url) return mediaContent.$.url;
+
+  const enclosure = item?.enclosure;
+  if (enclosure?.url && `${enclosure.type || ''}`.startsWith('image/')) return enclosure.url;
+
+  const content = `${item?.content || ''} ${item?.contentSnippet || ''}`;
+  const imgMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+  if (imgMatch?.[1]) return imgMatch[1];
+
+  return undefined;
+}
 
 function categorizeStory(title: string, summary: string) {
   const content = `${title} ${summary}`.toLowerCase();
@@ -71,6 +87,7 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
         source: titleParts.slice(1).join(' - ').trim() || 'Lax News',
         category: categorizeStory(title, summary),
         published_at: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
+        image_url: extractImageUrl(item),
       });
     }
   }

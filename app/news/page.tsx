@@ -95,6 +95,19 @@ export default function NewsPage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
               {filtered.map((item, i) => (
                 <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="card" style={{ display: 'block', overflow: 'hidden' }}>
+                  {item.image_url ? (
+                    <img
+                      src={item.image_url}
+                      alt={item.title}
+                      style={{
+                        width: '100%',
+                        aspectRatio: '16 / 9',
+                        objectFit: 'cover',
+                        display: 'block',
+                        borderBottom: '1px solid var(--border)',
+                      }}
+                    />
+                  ) : null}
                   <div style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
                       <span className="news-pill">{item.category}</span>

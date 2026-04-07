@@ -16,36 +16,42 @@ export default function CollegePage() {
     <div>
       <section
         style={{
-          position: 'relative',
-          overflow: 'hidden',
-          background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 8%, var(--bg)) 0%, var(--bg) 100%)',
-          padding: '88px 0 64px',
+          background: 'color-mix(in srgb, var(--team-surface) 28%, var(--bg))',
+          padding: '56px 0 42px',
           borderBottom: '1px solid var(--border)',
         }}
       >
-        <div
-          style={{
-            position: 'absolute',
-            inset: 0,
-            backgroundImage: 'linear-gradient(color-mix(in srgb, var(--primary) 7%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--primary) 7%, transparent) 1px, transparent 1px)',
-            backgroundSize: '44px 44px',
-          }}
-        />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="section-tag" style={{ marginBottom: '16px' }}>PHASE ONE FOUNDATION</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '20px' }}>
-            COLLEGE<br /><span style={{ color: 'var(--primary)' }}>LACROSSE</span>
+        <div className="container">
+          <div className="section-tag" style={{ marginBottom: '12px' }}>COLLEGE HUB</div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 900,
+              fontSize: 'clamp(34px, 5vw, 58px)',
+              lineHeight: 0.96,
+              marginBottom: '14px',
+              maxWidth: '980px',
+            }}
+          >
+            College lacrosse teams,
+            <span style={{ color: 'var(--primary)' }}> scoreboard, rankings, and standings</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, maxWidth: '860px', marginBottom: '28px' }}>
-            This is the start of a MaxPreps-style college lacrosse layer for LaxHub: searchable school hubs, official roster and schedule links,
-            rewatch destinations, recruiting-focused profile infrastructure, and eventually player-owned recruiting pages.
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8, maxWidth: '860px', marginBottom: '24px' }}>
+            This section is moving toward utility first: searchable school hubs, cleaner schedules, better official links, and structured pages we can
+            expand into player profiles and recruiting tools.
           </p>
+
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px' }}>
+            <Link href="/college/scoreboard" className="btn-outline">Scoreboard</Link>
+            <Link href="/college/standings" className="btn-outline">Standings</Link>
+            <Link href="/college/rankings" className="btn-outline">Rankings</Link>
+          </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
             {[
-              { label: 'School Hubs', value: `${COLLEGE_TEAMS.length}`, sub: 'Foundational team pages live' },
-              { label: 'Rewatch Sources', value: 'ESPN+', sub: 'ACCN, BTN+, FloSports, YouTube next' },
-              { label: 'Recruiting Vision', value: 'Portal', sub: 'Player + coach uploads planned in phases' },
+              { label: 'School Hubs', value: `${COLLEGE_TEAMS.length}`, sub: 'Team pages live now' },
+              { label: 'Official Links', value: 'School First', sub: 'Schedule pages replace generic watch links' },
+              { label: 'Next Phase', value: 'Players', sub: 'Profiles and game pages come next' },
             ].map((item) => (
               <div key={item.label} className="card" style={{ padding: '24px' }}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
@@ -57,17 +63,22 @@ export default function CollegePage() {
         </div>
       </section>
 
-      <section style={{ padding: '52px 0 24px' }}>
+      <section style={{ padding: '42px 0 24px' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1.05fr 0.95fr', gap: '22px', marginBottom: '30px' }}>
             <div className="card" style={{ padding: '28px' }}>
-              <div className="section-tag" style={{ marginBottom: '14px' }}>FEATURED SCOREBOARD</div>
+              <div className="section-tag" style={{ marginBottom: '14px' }}>SCOREBOARD</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 0.95, marginBottom: '16px' }}>
-                TODAY’S COLLEGE<br /><span style={{ color: 'var(--primary)' }}>WATCH BOARD</span>
+                Today&apos;s college<br /><span style={{ color: 'var(--primary)' }}>watch board</span>
               </h2>
               <div style={{ display: 'grid', gap: '12px' }}>
                 {COLLEGE_FEATURED_GAMES.slice(0, 3).map((game) => (
-                  <Link key={game.slug} href="/college/scoreboard" className="card" style={{ display: 'block', padding: '18px', background: 'color-mix(in srgb, var(--team-surface) 64%, transparent)' }}>
+                  <Link
+                    key={game.slug}
+                    href="/college/scoreboard"
+                    className="card"
+                    style={{ display: 'block', padding: '18px', background: 'color-mix(in srgb, var(--team-surface) 64%, transparent)' }}
+                  >
                     <div style={{ display: 'flex', justifyContent: 'space-between', gap: '10px', marginBottom: '10px' }}>
                       <div className="section-tag" style={{ marginBottom: 0 }}>{game.dateLabel}</div>
                       <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>{game.broadcast}</div>
@@ -87,7 +98,7 @@ export default function CollegePage() {
             <div className="card" style={{ padding: '28px' }}>
               <div className="section-tag" style={{ marginBottom: '14px' }}>RANKINGS SNAPSHOT</div>
               <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 0.95, marginBottom: '16px' }}>
-                TOP PROGRAMS<br /><span style={{ color: 'var(--primary)' }}>TO TRACK</span>
+                Top programs<br /><span style={{ color: 'var(--primary)' }}>to track</span>
               </h2>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {COLLEGE_RANKINGS.slice(0, 5).map((row) => (
@@ -115,8 +126,8 @@ export default function CollegePage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', gap: '20px', marginBottom: '26px', flexWrap: 'wrap' }}>
             <div>
               <div className="section-tag" style={{ marginBottom: '12px' }}>SCHOOL DIRECTORY</div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(30px, 4vw, 52px)' }}>
-                TRACK THE<br /><span style={{ color: 'var(--primary)' }}>PROGRAMS</span>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 44px)' }}>
+                Browse teams
               </h2>
             </div>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
@@ -144,7 +155,7 @@ export default function CollegePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '18px' }}>
             {visibleTeams.map((team) => (
               <Link key={team.slug} href={`/college/teams/${team.slug}`} className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 18%, transparent) 0%, transparent 70%)` }} />
+                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 12%, transparent) 0%, transparent 70%)` }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
                     <div>
@@ -157,12 +168,13 @@ export default function CollegePage() {
                       style={{
                         minWidth: '74px',
                         height: '74px',
-                        borderRadius: '18px',
+                        borderRadius: '14px',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `linear-gradient(135deg, ${team.primary}, ${team.secondary})`,
-                        color: '#fff',
+                        background: `color-mix(in srgb, ${team.primary} 18%, var(--team-surface))`,
+                        color: team.primary,
+                        border: '1px solid var(--border)',
                         fontFamily: 'var(--font-display)',
                         fontWeight: 900,
                         fontSize: '24px',
@@ -173,7 +185,7 @@ export default function CollegePage() {
                     </div>
                   </div>
 
-                  <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '12px' }}>{team.nickname} • {team.city}, {team.state}</div>
+                  <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '12px' }}>{team.nickname} - {team.city}, {team.state}</div>
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '16px' }}>{team.overview}</p>
 
                   <div style={{ display: 'grid', gap: '8px' }}>
@@ -194,15 +206,16 @@ export default function CollegePage() {
       <section style={{ padding: '36px 0 80px' }}>
         <div className="container" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '22px' }}>
           <div className="card" style={{ padding: '28px' }}>
-            <div className="section-tag" style={{ marginBottom: '14px' }}>REWATCH HUBS</div>
+            <div className="section-tag" style={{ marginBottom: '14px' }}>WATCH LINKS</div>
             <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 0.95, marginBottom: '14px' }}>
-              BUILDING A BETTER<br /><span style={{ color: 'var(--primary)' }}>GAME LIBRARY</span>
+              Cleaner official<br /><span style={{ color: 'var(--primary)' }}>game destinations</span>
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8, marginBottom: '18px' }}>
-              Team pages will collect official game destinations and replay sources in one place, including ESPN+, ACC Network, BTN+, FloSports, YouTube, and school media pages wherever those rewatch links exist.
+              Team pages now prioritize official school schedule and game pages instead of dropping people onto generic network home screens. We can layer
+              in better direct replay links later when those are stable.
             </p>
             <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-              {['ESPN+', 'ACCN', 'BTN+', 'FloSports', 'YouTube', 'School Media'].map((label) => (
+              {['Official schedule', 'Game recap', 'ESPN+', 'ACCN', 'BTN+', 'FloSports'].map((label) => (
                 <span key={label} style={{ padding: '7px 12px', border: '1px solid var(--border)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--text-muted)' }}>
                   {label}
                 </span>
@@ -213,10 +226,11 @@ export default function CollegePage() {
           <div className="card" style={{ padding: '28px' }}>
             <div className="section-tag" style={{ marginBottom: '14px' }}>RECRUITING ROADMAP</div>
             <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 44px)', lineHeight: 0.95, marginBottom: '14px' }}>
-              PLAYER-OWNED<br /><span style={{ color: 'var(--primary)' }}>PROFILE PAGES</span>
+              Player-owned<br /><span style={{ color: 'var(--primary)' }}>profile pages</span>
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8, marginBottom: '18px' }}>
-              A later phase can let high school and college players maintain recruiting profiles with film links, coach contact information, measurements, academic notes, and portal/availability status through a protected backend workflow.
+              A later phase can let high school and college players maintain recruiting profiles with film links, coach contact information, measurements,
+              academic notes, and portal or availability status through a protected backend workflow.
             </p>
             <div style={{ display: 'grid', gap: '8px' }}>
               {[
@@ -232,12 +246,6 @@ export default function CollegePage() {
               ))}
             </div>
           </div>
-        </div>
-
-        <div className="container" style={{ marginTop: '22px', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-          <Link href="/college/scoreboard" className="btn-outline">College Scoreboard</Link>
-          <Link href="/college/standings" className="btn-outline">College Standings</Link>
-          <Link href="/college/rankings" className="btn-outline">College Rankings</Link>
         </div>
       </section>
     </div>

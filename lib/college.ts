@@ -14,6 +14,7 @@ export interface CollegeRosterPlayer {
   classYear: string;
   hometown: string;
   standout: string;
+  imagePage?: string;
 }
 
 export interface CollegeScheduleGame {
@@ -29,6 +30,7 @@ export interface CollegeScheduleGame {
   venue: string;
   notes: string;
   watchHref: string;
+  watchLabel?: string;
 }
 
 export interface CollegeTeam {
@@ -89,6 +91,7 @@ export interface FeaturedCollegeGame {
   broadcast: string;
   venue: string;
   watchHref: string;
+  watchLabel?: string;
   notes: string;
 }
 
@@ -115,8 +118,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Team Page', href: 'https://goduke.com/sports/mens-lacrosse', type: 'official' },
       { label: 'Official Roster', href: 'https://goduke.com/sports/mens-lacrosse/roster', type: 'roster' },
       { label: 'Official Schedule', href: 'https://goduke.com/sports/mens-lacrosse/schedule', type: 'schedule' },
-      { label: 'ESPN College Lacrosse Hub', href: 'https://www.espn.com/college-sports/lacrosse/', type: 'rewatch' },
-      { label: 'ACC Network', href: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra', type: 'rewatch' },
+      { label: 'Official Game + Schedule Hub', href: 'https://goduke.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
+      { label: 'ACC Network Extra', href: 'https://goduke.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
       { label: 'YouTube Search: Duke Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=duke+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
@@ -126,9 +129,9 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { name: 'Andrew McAdorey', number: '1', position: 'A', classYear: 'So', hometown: 'Stony Brook, NY', standout: 'Dynamic dodger and transition threat' },
     ],
     featuredSchedule: [
-      { slug: 'duke-vs-virginia-2026-04-04', dateLabel: 'Apr 4', opponent: 'Virginia', opponentSlug: 'virginia', location: 'home', status: 'final', result: 'L', score: '10-14', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Virginia knocked off previously unbeaten Duke.', watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra' },
-      { slug: 'duke-at-syracuse-2026-03-28', dateLabel: 'Mar 28', opponent: 'Syracuse', opponentSlug: 'syracuse', location: 'away', status: 'upcoming', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Top-10 ACC collision with major ranking impact.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'duke-vs-denver-2026-03-22', dateLabel: 'Mar 22', opponent: 'Denver', location: 'neutral', status: 'final', result: 'W', score: 'Featured Win', broadcast: 'ESPN+', venue: 'National TV Window', notes: 'Momentum-building resume win before ACC play tightened.', watchHref: 'https://www.espn.com/watch/' },
+      { slug: 'duke-vs-virginia-2026-04-04', dateLabel: 'Apr 4', opponent: 'Virginia', opponentSlug: 'virginia', location: 'home', status: 'final', result: 'L', score: '10-14', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Virginia knocked off previously unbeaten Duke.', watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
+      { slug: 'duke-at-syracuse-2026-03-28', dateLabel: 'Mar 28', opponent: 'Syracuse', opponentSlug: 'syracuse', location: 'away', status: 'upcoming', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Top-10 ACC collision with major ranking impact.', watchHref: 'https://cuse.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
+      { slug: 'duke-vs-denver-2026-03-22', dateLabel: 'Mar 22', opponent: 'Denver', location: 'neutral', status: 'final', result: 'W', score: 'Featured Win', broadcast: 'ESPN+', venue: 'National TV Window', notes: 'Momentum-building resume win before ACC play tightened.', watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
     ],
   },
   {
@@ -153,20 +156,20 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Team Page', href: 'https://cuse.com/', type: 'official' },
       { label: 'Official Roster', href: 'https://cuse.com/sports/mens-lacrosse/roster', type: 'roster' },
       { label: 'Official Schedule', href: 'https://cuse.com/sports/mens-lacrosse/schedule', type: 'schedule' },
-      { label: 'Official Videos', href: 'https://cuse.com/', type: 'highlights' },
-      { label: 'ESPN College Lacrosse Hub', href: 'https://www.espn.com/college-sports/lacrosse/', type: 'rewatch' },
+      { label: 'Official Videos', href: 'https://cuse.com/sports/mens-lacrosse', type: 'highlights' },
+      { label: 'Official Game + Schedule Hub', href: 'https://cuse.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
       { label: 'YouTube Search: Syracuse Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=syracuse+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Joey Spallina', number: '22', position: 'A', classYear: 'Jr', hometown: 'Mount Sinai, NY', standout: 'Face-of-the-program attackman and creator' },
+      { name: 'Joey Spallina', number: '22', position: 'A', classYear: 'Jr', hometown: 'Mount Sinai, NY', standout: 'Face-of-the-program attackman and creator', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/joey-spallina/24013' },
       { name: 'Owen Hiltz', number: '77', position: 'A', classYear: 'Sr', hometown: 'Peterborough, ON', standout: 'Finisher with elite lefty scoring touch' },
-      { name: 'Jimmy McCool', number: '30', position: 'G', classYear: 'Sr', hometown: 'Redding, CT', standout: 'Veteran goalie stabilizing big possession swings' },
-      { name: 'Sam English', number: '44', position: 'M', classYear: 'Jr', hometown: 'Haverford, PA', standout: 'High-volume midfielder driving pace and offense' },
+      { name: 'Jimmy McCool', number: '30', position: 'G', classYear: 'Sr', hometown: 'Redding, CT', standout: 'Veteran goalie stabilizing big possession swings', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/jimmy-mccool/24941' },
+      { name: 'Sam English', number: '44', position: 'M', classYear: 'Jr', hometown: 'Haverford, PA', standout: 'High-volume midfielder driving pace and offense', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/english-sam/23981' },
     ],
     featuredSchedule: [
-      { slug: 'syracuse-vs-georgetown-2026-03-22', dateLabel: 'Mar 22', opponent: 'Georgetown', location: 'home', status: 'final', result: 'W', score: '18-12', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Statement win that pushed the Orange back into the top-tier conversation.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'syracuse-vs-duke-2026-03-28', dateLabel: 'Mar 28', opponent: 'Duke', opponentSlug: 'duke', location: 'home', status: 'upcoming', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Top-10 ACC matchup with seeding implications.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'syracuse-vs-cornell-2026-03-08', dateLabel: 'Mar 8', opponent: 'Cornell', location: 'neutral', status: 'final', result: 'Featured Rivalry', score: 'In-State Test', broadcast: 'ESPN+', venue: 'Central New York', notes: 'One of the sport\'s strongest regional rivalry data points.', watchHref: 'https://www.espn.com/watch/' },
+      { slug: 'syracuse-vs-georgetown-2026-03-22', dateLabel: 'Mar 22', opponent: 'Georgetown', location: 'home', status: 'final', result: 'W', score: '18-12', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Statement win that pushed the Orange back into the top-tier conversation.', watchHref: 'https://cuse.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
+      { slug: 'syracuse-vs-duke-2026-03-28', dateLabel: 'Mar 28', opponent: 'Duke', opponentSlug: 'duke', location: 'home', status: 'upcoming', broadcast: 'ESPNU', venue: 'Syracuse, NY', notes: 'Top-10 ACC matchup with seeding implications.', watchHref: 'https://cuse.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
+      { slug: 'syracuse-vs-cornell-2026-03-08', dateLabel: 'Mar 8', opponent: 'Cornell', location: 'neutral', status: 'final', result: 'Featured Rivalry', score: 'In-State Test', broadcast: 'ESPN+', venue: 'Central New York', notes: 'One of the sport\'s strongest regional rivalry data points.', watchHref: 'https://cuse.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
     ],
   },
   {
@@ -192,7 +195,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Roster', href: 'https://fightingirish.com/sports/mlax/roster/', type: 'roster' },
       { label: 'Official Schedule', href: 'https://fightingirish.com/sports/mlax/schedule/', type: 'schedule' },
       { label: 'Official Videos', href: 'https://fightingirish.com/sports/mlax/', type: 'highlights' },
-      { label: 'ESPN College Lacrosse Hub', href: 'https://www.espn.com/college-sports/lacrosse/', type: 'rewatch' },
+      { label: 'Official Game + Schedule Hub', href: 'https://fightingirish.com/sports/mlax/schedule/', type: 'rewatch' },
       { label: 'YouTube Search: Notre Dame Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=notre+dame+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
@@ -202,9 +205,9 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { name: 'Will Donovan', number: '19', position: 'D', classYear: 'Sr', hometown: 'Hingham, MA', standout: 'Anchor defender against top attack units' },
     ],
     featuredSchedule: [
-      { slug: 'notre-dame-at-virginia-2026-03-28', dateLabel: 'Mar 28', opponent: 'Virginia', opponentSlug: 'virginia', location: 'away', status: 'final', result: 'L', score: '9-11', broadcast: 'ACCNX', venue: 'Charlottesville, VA', notes: 'Virginia collected a marquee ACC win over the Irish.', watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra' },
-      { slug: 'notre-dame-vs-marquette-2026-02-14', dateLabel: 'Feb 14', opponent: 'Marquette', location: 'home', status: 'final', result: 'W', score: 'Season Opening Win', broadcast: 'ESPN+', venue: 'South Bend, IN', notes: 'Comfortable opener that set up another national run.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'notre-dame-vs-acc-showdown-2026-04-11', dateLabel: 'Apr 11', opponent: 'ACC Rival', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'South Bend, IN', notes: 'Key conference test in the heart of seeding season.', watchHref: 'https://www.espn.com/watch/' },
+      { slug: 'notre-dame-at-virginia-2026-03-28', dateLabel: 'Mar 28', opponent: 'Virginia', opponentSlug: 'virginia', location: 'away', status: 'final', result: 'L', score: '9-11', broadcast: 'ACCNX', venue: 'Charlottesville, VA', notes: 'Virginia collected a marquee ACC win over the Irish.', watchHref: 'https://virginiasports.com/sports/mlax/schedule/', watchLabel: 'Official recap' },
+      { slug: 'notre-dame-vs-marquette-2026-02-14', dateLabel: 'Feb 14', opponent: 'Marquette', location: 'home', status: 'final', result: 'W', score: 'Season Opening Win', broadcast: 'ESPN+', venue: 'South Bend, IN', notes: 'Comfortable opener that set up another national run.', watchHref: 'https://fightingirish.com/sports/mlax/schedule/', watchLabel: 'Official recap' },
+      { slug: 'notre-dame-vs-acc-showdown-2026-04-11', dateLabel: 'Apr 11', opponent: 'ACC Rival', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'South Bend, IN', notes: 'Key conference test in the heart of seeding season.', watchHref: 'https://fightingirish.com/sports/mlax/schedule/', watchLabel: 'Official game page' },
     ],
   },
   {
@@ -228,8 +231,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Team Page', href: 'https://virginiasports.com/sports/mlax/', type: 'official' },
       { label: 'Official Roster', href: 'https://virginiasports.com/sports/mlax/roster/', type: 'roster' },
       { label: 'Official Schedule', href: 'https://virginiasports.com/sports/mlax/schedule/', type: 'schedule' },
-      { label: 'ACC Network', href: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra', type: 'rewatch' },
-      { label: 'ESPN College Lacrosse Hub', href: 'https://www.espn.com/college-sports/lacrosse/', type: 'rewatch' },
+      { label: 'Official Game + Schedule Hub', href: 'https://virginiasports.com/sports/mlax/schedule/', type: 'rewatch' },
+      { label: 'ACC Network Extra', href: 'https://virginiasports.com/sports/mlax/schedule/', type: 'rewatch' },
       { label: 'YouTube Search: Virginia Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=virginia+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
@@ -239,9 +242,9 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { name: 'Matthew Nunes', number: '18', position: 'G', classYear: 'Jr', hometown: 'Smithtown, NY', standout: 'Goaltending stabilizer in transition games' },
     ],
     featuredSchedule: [
-      { slug: 'virginia-at-duke-2026-04-04', dateLabel: 'Apr 4', opponent: 'Duke', opponentSlug: 'duke', location: 'away', status: 'final', result: 'W', score: '14-10', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Best resume win of the spring so far for Virginia.', watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra' },
-      { slug: 'virginia-vs-notre-dame-2026-03-28', dateLabel: 'Mar 28', opponent: 'Notre Dame', opponentSlug: 'notre-dame', location: 'home', status: 'final', result: 'W', score: '11-9', broadcast: 'ACCNX', venue: 'Charlottesville, VA', notes: 'Another major ACC result that kept the Cavaliers in the national picture.', watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra' },
-      { slug: 'virginia-vs-acc-showdown-2026-04-12', dateLabel: 'Apr 12', opponent: 'ACC Rival', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'Charlottesville, VA', notes: 'Critical stretch game with postseason implications.', watchHref: 'https://www.espn.com/watch/' },
+      { slug: 'virginia-at-duke-2026-04-04', dateLabel: 'Apr 4', opponent: 'Duke', opponentSlug: 'duke', location: 'away', status: 'final', result: 'W', score: '14-10', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Best resume win of the spring so far for Virginia.', watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
+      { slug: 'virginia-vs-notre-dame-2026-03-28', dateLabel: 'Mar 28', opponent: 'Notre Dame', opponentSlug: 'notre-dame', location: 'home', status: 'final', result: 'W', score: '11-9', broadcast: 'ACCNX', venue: 'Charlottesville, VA', notes: 'Another major ACC result that kept the Cavaliers in the national picture.', watchHref: 'https://virginiasports.com/sports/mlax/schedule/', watchLabel: 'Official recap' },
+      { slug: 'virginia-vs-acc-showdown-2026-04-12', dateLabel: 'Apr 12', opponent: 'ACC Rival', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'Charlottesville, VA', notes: 'Critical stretch game with postseason implications.', watchHref: 'https://virginiasports.com/sports/mlax/schedule/', watchLabel: 'Official game page' },
     ],
   },
   {
@@ -265,7 +268,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Athletics Site', href: 'https://umterps.com/', type: 'official' },
       { label: 'Roster Page', href: 'https://umterps.com/sports/mens-lacrosse/roster', type: 'roster' },
       { label: 'Schedule Page', href: 'https://umterps.com/sports/mens-lacrosse/schedule', type: 'schedule' },
-      { label: 'Big Ten Plus', href: 'https://www.bigtenplus.com/en-int/page/home', type: 'rewatch' },
+      { label: 'Official Game + Schedule Hub', href: 'https://umterps.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
+      { label: 'Big Ten Plus', href: 'https://umterps.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
       { label: 'YouTube Search: Maryland Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=maryland+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
@@ -275,9 +279,9 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { name: 'Brett Makar', number: '32', position: 'D', classYear: 'Sr', hometown: 'Yorktown Heights, NY', standout: 'Top-end cover defender against primary dodgers' },
     ],
     featuredSchedule: [
-      { slug: 'maryland-vs-ohio-state-2026-04-04', dateLabel: 'Apr 4', opponent: 'Ohio State', location: 'home', status: 'upcoming', broadcast: 'Big Ten Plus', venue: 'College Park, MD', notes: 'Major Big Ten swing game in the conference title race.', watchHref: 'https://www.bigtenplus.com/en-int/page/home' },
-      { slug: 'maryland-at-michigan-2026-03-29', dateLabel: 'Mar 29', opponent: 'Michigan', location: 'away', status: 'final', result: 'W', score: '14-8', broadcast: 'Big Ten Plus', venue: 'Ann Arbor, MI', notes: 'Balanced team performance that kept Maryland in the hunt.', watchHref: 'https://www.bigtenplus.com/en-int/page/home' },
-      { slug: 'maryland-vs-johns-hopkins-2026-04-12', dateLabel: 'Apr 12', opponent: 'Johns Hopkins', location: 'home', status: 'upcoming', broadcast: 'Big Ten Plus', venue: 'College Park, MD', notes: 'Traditional rivalry game with postseason weight.', watchHref: 'https://www.bigtenplus.com/en-int/page/home' },
+      { slug: 'maryland-vs-ohio-state-2026-04-04', dateLabel: 'Apr 4', opponent: 'Ohio State', location: 'home', status: 'upcoming', broadcast: 'Big Ten Plus', venue: 'College Park, MD', notes: 'Major Big Ten swing game in the conference title race.', watchHref: 'https://umterps.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
+      { slug: 'maryland-at-michigan-2026-03-29', dateLabel: 'Mar 29', opponent: 'Michigan', location: 'away', status: 'final', result: 'W', score: '14-8', broadcast: 'Big Ten Plus', venue: 'Ann Arbor, MI', notes: 'Balanced team performance that kept Maryland in the hunt.', watchHref: 'https://umterps.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
+      { slug: 'maryland-vs-johns-hopkins-2026-04-12', dateLabel: 'Apr 12', opponent: 'Johns Hopkins', location: 'home', status: 'upcoming', broadcast: 'Big Ten Plus', venue: 'College Park, MD', notes: 'Traditional rivalry game with postseason weight.', watchHref: 'https://umterps.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
     ],
   },
   {
@@ -302,7 +306,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'Official Team Page', href: 'https://goprincetontigers.com/sports/mens-lacrosse', type: 'official' },
       { label: 'Official Roster', href: 'https://goprincetontigers.com/sports/mens-lacrosse/roster', type: 'roster' },
       { label: 'Official Schedule', href: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', type: 'schedule' },
-      { label: 'ESPN College Lacrosse Hub', href: 'https://www.espn.com/college-sports/lacrosse/', type: 'rewatch' },
+      { label: 'Official Game + Schedule Hub', href: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', type: 'rewatch' },
       { label: 'YouTube Search: Princeton Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=princeton+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
@@ -312,9 +316,9 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { name: 'Michael Gianforcaro', number: '30', position: 'G', classYear: 'Sr', hometown: 'Summit, NJ', standout: 'Strong stopper with postseason-caliber poise' },
     ],
     featuredSchedule: [
-      { slug: 'princeton-vs-cornell-2026-03-21', dateLabel: 'Mar 21', opponent: 'Cornell', location: 'home', status: 'final', result: 'Ivy Test', score: 'Key Conference Game', broadcast: 'ESPN+', venue: 'Princeton, NJ', notes: 'High-value Ivy result with direct standings significance.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'princeton-vs-harvard-2026-04-05', dateLabel: 'Apr 5', opponent: 'Harvard', location: 'away', status: 'upcoming', broadcast: 'ESPN+', venue: 'Cambridge, MA', notes: 'Potential Ivy title-deciding matchup.', watchHref: 'https://www.espn.com/watch/' },
-      { slug: 'princeton-vs-yale-2026-04-12', dateLabel: 'Apr 12', opponent: 'Yale', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'Princeton, NJ', notes: 'Another major Ivy challenge with NCAA resume value.', watchHref: 'https://www.espn.com/watch/' },
+      { slug: 'princeton-vs-cornell-2026-03-21', dateLabel: 'Mar 21', opponent: 'Cornell', location: 'home', status: 'final', result: 'Ivy Test', score: 'Key Conference Game', broadcast: 'ESPN+', venue: 'Princeton, NJ', notes: 'High-value Ivy result with direct standings significance.', watchHref: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
+      { slug: 'princeton-vs-harvard-2026-04-05', dateLabel: 'Apr 5', opponent: 'Harvard', location: 'away', status: 'upcoming', broadcast: 'ESPN+', venue: 'Cambridge, MA', notes: 'Potential Ivy title-deciding matchup.', watchHref: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
+      { slug: 'princeton-vs-yale-2026-04-12', dateLabel: 'Apr 12', opponent: 'Yale', location: 'home', status: 'upcoming', broadcast: 'ESPN+', venue: 'Princeton, NJ', notes: 'Another major Ivy challenge with NCAA resume value.', watchHref: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
     ],
   },
 ];
@@ -378,7 +382,8 @@ export const COLLEGE_FEATURED_GAMES: FeaturedCollegeGame[] = [
     score: '14-10',
     broadcast: 'ACCNX',
     venue: 'Durham, NC',
-    watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra',
+    watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule',
+    watchLabel: 'Official recap',
     notes: 'Virginia handed Duke its first loss in a huge ACC result.',
   },
   {
@@ -390,7 +395,8 @@ export const COLLEGE_FEATURED_GAMES: FeaturedCollegeGame[] = [
     status: 'upcoming',
     broadcast: 'Big Ten Plus',
     venue: 'College Park, MD',
-    watchHref: 'https://www.bigtenplus.com/en-int/page/home',
+    watchHref: 'https://umterps.com/sports/mens-lacrosse/schedule',
+    watchLabel: 'Official game page',
     notes: 'Big Ten title-race swing game.',
   },
   {
@@ -403,7 +409,8 @@ export const COLLEGE_FEATURED_GAMES: FeaturedCollegeGame[] = [
     status: 'upcoming',
     broadcast: 'ESPNU',
     venue: 'Syracuse, NY',
-    watchHref: 'https://www.espn.com/watch/',
+    watchHref: 'https://cuse.com/sports/mens-lacrosse/schedule',
+    watchLabel: 'Official game page',
     notes: 'Nationally relevant ACC showdown.',
   },
   {
@@ -417,7 +424,8 @@ export const COLLEGE_FEATURED_GAMES: FeaturedCollegeGame[] = [
     score: '9-11',
     broadcast: 'ACCNX',
     venue: 'Charlottesville, VA',
-    watchHref: 'https://www.espn.com/watch/catalog/36d7765d-1be2-46e5-9c17-29621f1f6951/acc-network-extra',
+    watchHref: 'https://virginiasports.com/sports/mlax/schedule/',
+    watchLabel: 'Official recap',
     notes: 'Virginia added a marquee ACC win to its resume.',
   },
   {
@@ -429,7 +437,8 @@ export const COLLEGE_FEATURED_GAMES: FeaturedCollegeGame[] = [
     status: 'upcoming',
     broadcast: 'ESPN+',
     venue: 'Cambridge, MA',
-    watchHref: 'https://www.espn.com/watch/',
+    watchHref: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule',
+    watchLabel: 'Official game page',
     notes: 'Potential Ivy title-decider.',
   },
 ];

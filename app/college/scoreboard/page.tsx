@@ -6,18 +6,19 @@ export default function CollegeScoreboardPage() {
     <div>
       <section
         style={{
-          background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 10%, var(--bg)) 0%, var(--bg) 100%)',
-          padding: '86px 0 54px',
+          background: 'color-mix(in srgb, var(--team-surface) 32%, var(--bg))',
+          padding: '54px 0 34px',
           borderBottom: '1px solid var(--border)',
         }}
       >
         <div className="container">
-          <div className="section-tag" style={{ marginBottom: '16px' }}>COLLEGE LACROSSE</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(46px, 7vw, 86px)', lineHeight: 0.92, marginBottom: '16px' }}>
-            FEATURED<br /><span style={{ color: 'var(--primary)' }}>SCOREBOARD</span>
+          <div className="section-tag" style={{ marginBottom: '12px' }}>COLLEGE SCOREBOARD</div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(34px, 5vw, 56px)', lineHeight: 0.96, marginBottom: '12px' }}>
+            National scoreboard and
+            <span style={{ color: 'var(--primary)' }}> official game links</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, maxWidth: '820px' }}>
-            A focused board of nationally relevant college matchups, with broadcast and rewatch destinations centralized in one place.
+          <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.8, maxWidth: '820px' }}>
+            This board stays practical: matchup, score, broadcast window, and the official school destination that is most likely to have live or replay details.
           </p>
         </div>
       </section>
@@ -43,7 +44,7 @@ export default function CollegeScoreboardPage() {
                     {game.status === 'final' ? game.score : 'UP NEXT'}
                   </div>
                   <a href={game.watchHref} target="_blank" rel="noreferrer" className="btn-outline" style={{ marginTop: '12px' }}>
-                    {game.status === 'final' ? 'Rewatch' : 'Watch Live'}
+                    {game.watchLabel ?? (game.status === 'final' ? 'Official recap' : 'Official game page')}
                   </a>
                 </div>
               </div>
@@ -54,4 +55,3 @@ export default function CollegeScoreboardPage() {
     </div>
   );
 }
-
