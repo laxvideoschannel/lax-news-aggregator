@@ -42,6 +42,7 @@ function SpotlightPlayerPhoto({
       <div
         style={{
           position: 'relative',
+          width: '100%',
           minHeight: fullHeight ? '100%' : 420,
           height: fullHeight ? '100%' : undefined,
           borderRadius: 12,
@@ -87,6 +88,7 @@ function SpotlightPlayerPhoto({
     <div
       style={{
         position: 'relative',
+        width: '100%',
         minHeight: fullHeight ? '100%' : 460,
         height: fullHeight ? '100%' : undefined,
         borderRadius: 12,
@@ -236,7 +238,7 @@ export default function HomePage() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center center',
                 filter: 'grayscale(1)',
-                opacity: 0.22,
+                opacity: 0.34,
                 transform: 'scale(1.04)',
               }}
             />
@@ -245,7 +247,7 @@ export default function HomePage() {
                 position: 'absolute',
                 inset: 0,
                 background:
-                  'linear-gradient(90deg, rgba(5,5,5,0.9) 0%, rgba(10,10,10,0.82) 36%, rgba(10,10,10,0.52) 62%, rgba(10,10,10,0.78) 100%)',
+                  'linear-gradient(90deg, rgba(5,5,5,0.8) 0%, rgba(10,10,10,0.72) 36%, rgba(10,10,10,0.44) 62%, rgba(10,10,10,0.68) 100%)',
               }}
             />
             <div
@@ -431,7 +433,7 @@ export default function HomePage() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center top',
                 filter: 'grayscale(1)',
-                opacity: 0.1,
+                opacity: 0.16,
                 transform: 'scale(1.04)',
               }}
             />
@@ -486,7 +488,7 @@ export default function HomePage() {
             </div>
           ) : spotlight ? (
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'stretch' }}>
-              <div style={{ display: 'flex' }}>
+              <div style={{ display: 'flex', minWidth: 0 }}>
                 <SpotlightPlayerPhoto
                   key={`${teamId}-${spotlightIndex}-${spotlight.name}`}
                   imagePage={spotlight.imagePage}
