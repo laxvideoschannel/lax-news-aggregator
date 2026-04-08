@@ -21,6 +21,7 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '1',
     rosterSize: '13',
     founded: '2025',
+    heroImagePage: 'https://premierlacrosseleague.com/articles/boston-guard-roster-reaction-a-north-star-eagles-and-irish',
     roster: buildRoster(
       {
         A: ['Andie Aldave', 'Charlotte North', 'Jackie Wolak'],
@@ -81,6 +82,7 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '0',
     rosterSize: '13',
     founded: '2025',
+    heroImagePage: 'https://premierlacrosseleague.com/articles/california-palms-roster-debut-wll',
     roster: buildRoster(
       {
         A: ['Sam Geiersbach', 'Gabby Rosenzweig', 'Caitlyn Wurzburger'],
@@ -141,6 +143,7 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '0',
     rosterSize: '13',
     founded: '2025',
+    heroImagePage: 'https://premierlacrosseleague.com/articles/maryland-charm-roster-reaction-veteran-stars-and-a-terrapin-flavor',
     roster: buildRoster(
       {
         A: ['Sydni Black', 'Aurora Cordingley', 'Ashley Humphrey'],
@@ -201,6 +204,7 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '0',
     rosterSize: '13',
     founded: '2025',
+    heroImagePage: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
     roster: buildRoster(
       {
         A: ['Meg Carney', 'Erin Coykendall', 'Izzy Scane', 'Grace Fujinaga'],

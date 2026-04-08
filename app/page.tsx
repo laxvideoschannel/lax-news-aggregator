@@ -13,10 +13,12 @@ function SpotlightPlayerPhoto({
   imagePage,
   name,
   number,
+  fullHeight = false,
 }: {
   imagePage?: string | null;
   name: string;
   number?: string;
+  fullHeight?: boolean;
 }) {
   const [broken, setBroken] = useState(false);
   const src =
@@ -40,7 +42,8 @@ function SpotlightPlayerPhoto({
       <div
         style={{
           position: 'relative',
-          minHeight: 420,
+          minHeight: fullHeight ? '100%' : 420,
+          height: fullHeight ? '100%' : undefined,
           borderRadius: 12,
           overflow: 'hidden',
           background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 32%, #111), #080808)',
@@ -84,7 +87,8 @@ function SpotlightPlayerPhoto({
     <div
       style={{
         position: 'relative',
-        minHeight: 460,
+        minHeight: fullHeight ? '100%' : 460,
+        height: fullHeight ? '100%' : undefined,
         borderRadius: 12,
         overflow: 'hidden',
         background: '#070707',
@@ -202,6 +206,9 @@ export default function HomePage() {
   const spotlightBgSrc = spotlight?.imagePage
     ? `/api/player-image?url=${encodeURIComponent(spotlight.imagePage)}`
     : null;
+  const heroBgSrc = pageContent.heroImagePage
+    ? `/api/player-image?url=${encodeURIComponent(pageContent.heroImagePage)}`
+    : spotlightBgSrc;
 
   const visibleAccolades = (spotlight?.accolades || []).filter(
     (item: string) => item !== 'PLL Professional' && item !== 'PLL Professional Player',
@@ -219,6 +226,38 @@ export default function HomePage() {
           overflow: 'hidden',
         }}
       >
+        {heroBgSrc ? (
+          <>
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url("${heroBgSrc}")`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                filter: 'grayscale(1)',
+                opacity: 0.22,
+                transform: 'scale(1.04)',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(90deg, rgba(5,5,5,0.9) 0%, rgba(10,10,10,0.82) 36%, rgba(10,10,10,0.52) 62%, rgba(10,10,10,0.78) 100%)',
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'linear-gradient(135deg, color-mix(in srgb, var(--primary) 26%, transparent) 0%, transparent 45%, color-mix(in srgb, var(--primary) 18%, transparent) 100%)',
+              }}
+            />
+          </>
+        ) : null}
         <div
           style={{
             position: 'absolute',
@@ -286,7 +325,6 @@ export default function HomePage() {
                 >
                   {team.name.toUpperCase()}
                 </span>
-                <span style={{ display: 'block', fontSize: '55%' }}>LACROSSE HUB</span>
               </h1>
               <p
                 className="fade-up fade-up-3"
@@ -415,9 +453,6 @@ export default function HomePage() {
                 <br />
                 <span style={{ color: 'var(--primary)' }}>SPOTLIGHT</span>
               </h2>
-              <p style={{ marginTop: 12, fontSize: 14, color: 'var(--text-muted)', maxWidth: 420 }}>
-                Feature refreshes daily when the AI writer is available; image is pulled from official league pages.
-              </p>
             </div>
             {spotlight && (
               <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -450,13 +485,14 @@ export default function HomePage() {
               </div>
             </div>
           ) : spotlight ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'start' }}>
-              <div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'stretch' }}>
+              <div style={{ display: 'flex' }}>
                 <SpotlightPlayerPhoto
                   key={`${teamId}-${spotlightIndex}-${spotlight.name}`}
                   imagePage={spotlight.imagePage}
                   name={spotlight.name}
                   number={spotlight.number}
+                  fullHeight
                 />
               </div>
 
@@ -573,6 +609,20 @@ export default function HomePage() {
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
               {news.map((item, i) => (
                 <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="card" style={{ padding: 0, overflow: 'hidden', display: 'block' }}>
+                  {item.image_url ? (
+                    <div style={{ aspectRatio: '16 / 9', overflow: 'hidden', background: 'var(--bg-card)' }}>
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                        }}
+                      />
+                    </div>
+                  ) : null}
                   <div style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
                       <span className="news-pill">{item.category || 'General'}</span>

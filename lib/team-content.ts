@@ -29,6 +29,7 @@ export type TeamPageContent = {
   championships: string;
   rosterSize: string;
   founded: string;
+  heroImagePage?: string;
   roster: TeamRosterPlayer[];
   spotlights: TeamSpotlight[];
 };
@@ -40,6 +41,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '2',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/carolina-chaos',
     roster: [
       { slug: 'blaze-riorden', name: 'Blaze Riorden', number: '30', pos: 'G', hometown: 'Fairport, NY', college: 'Albany', highlight: '5x Goalie of the Year', imagePage: 'https://premierlacrosseleague.com/articles/blaze-riorden-professional-lacrosses-greatest-playoff-performer' },
       { slug: 'jack-rowlett', name: 'Jack Rowlett', number: '4', pos: 'D', hometown: 'Chesapeake, VA', college: 'Duke', highlight: '3x All-Star close defender', imagePage: 'https://premierlacrosseleague.com/articles/how-a-simple-question-inspired-jack-rowletts-love-for-lacrosse' },
@@ -59,6 +61,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '2',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/utah-archers',
     roster: [
       { name: 'Tom Schreiber', number: '7', pos: 'A', hometown: 'Huntington, NY', college: 'Princeton', highlight: 'All-time great playmaker' },
       { name: 'Grant Ament', number: '10', pos: 'A', hometown: 'Doylestown, PA', college: 'Penn State', highlight: 'Elite distributor at X' },
@@ -76,6 +79,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '1',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/denver-outlaws',
     roster: [
       { name: 'Lyle Thompson', number: '4', pos: 'A', hometown: 'Onondaga Nation, NY', college: 'Albany', highlight: 'One of the greatest ever' },
       { name: 'Brennan O’Neill', number: '13', pos: 'A', hometown: 'Bay Shore, NY', college: 'Duke', highlight: 'Power dodger and scorer' },
@@ -93,6 +97,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '1',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/boston-cannons',
     roster: [
       { name: 'Asher Nolting', number: '1', pos: 'A', hometown: 'Burlington, ON', college: 'High Point', highlight: 'One of the league’s best initiators' },
       { name: 'Marcus Holman', number: '77', pos: 'A', hometown: 'Baltimore, MD', college: 'North Carolina', highlight: 'Veteran finisher with touch' },
@@ -110,6 +115,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '4',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/maryland-whipsnakes',
     roster: [
       { name: 'Matt Rambo', number: '1', pos: 'A', hometown: 'Berwyn, PA', college: 'Maryland', highlight: 'One of the fiercest finishers alive' },
       { name: 'Zed Williams', number: '6', pos: 'A', hometown: 'Utica, NY', college: 'Virginia', highlight: 'Power and touch around the crease' },
@@ -127,6 +133,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '1',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/new-york-atlas',
     roster: [
       { name: 'Jeff Teat', number: '17', pos: 'A', hometown: 'Brampton, ON', college: 'Cornell', highlight: 'Premier quarterback of the offense' },
       { name: 'Connor Shellenberger', number: '11', pos: 'A', hometown: 'Charlottesville, VA', college: 'Virginia', highlight: 'Silky creator and passer' },
@@ -144,6 +151,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '0',
     rosterSize: '25',
     founded: '2020',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/philadelphia-waterdogs',
     roster: [
       { name: 'Michael Sowers', number: '22', pos: 'A', hometown: 'Upper Dublin, PA', college: 'Duke', highlight: 'Quickest feet in the league' },
       { name: 'Kieran McArdle', number: '15', pos: 'A', hometown: 'Melbourne, AUS', college: 'St. John’s', highlight: 'Savvy veteran scorer' },
@@ -161,6 +169,7 @@ export const TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     championships: '0',
     rosterSize: '25',
     founded: '2019',
+    heroImagePage: 'https://premierlacrosseleague.com/teams/california-redwoods',
     roster: [
       { name: 'Ryder Garnsey', number: '13', pos: 'A', hometown: 'Denver, CO', college: 'Notre Dame', highlight: 'Creative finisher and feeder' },
       { name: 'Jules Heningburg', number: '10', pos: 'M', hometown: 'West Nyack, NY', college: 'Rutgers', highlight: 'Strong, downhill dodger' },

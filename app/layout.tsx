@@ -382,7 +382,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       top: 'calc(100% + 8px)',
                       background: 'var(--team-surface)',
                       border: '1px solid var(--border)',
-                      minWidth: '220px',
+                      width: 'min(560px, calc(100vw - 32px))',
+                      maxHeight: '70vh',
+                      overflowY: 'auto',
                       zIndex: 600,
                       boxShadow: '0 20px 60px rgba(0,0,0,0.35)',
                     }}
@@ -392,33 +394,35 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', padding: '10px 16px 6px', borderBottom: '1px solid var(--border)' }}>
                           {group.toUpperCase()}
                         </div>
-                        {ALL_TEAMS.filter((t) => t.group === group).map((t) => (
-                          <button
-                            key={t.id}
-                            onClick={() => selectTeam(t.id)}
-                            style={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '12px',
-                              width: '100%',
-                              padding: '10px 16px',
-                              background: 'none',
-                              border: 'none',
-                              color: teamId === t.id ? 'var(--primary)' : 'var(--text-muted)',
-                              cursor: 'pointer',
-                              fontFamily: 'var(--font-body)',
-                              fontSize: '14px',
-                              textAlign: 'left',
-                              transition: 'background 0.15s',
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px 0', padding: '8px' }}>
+                          {ALL_TEAMS.filter((t) => t.group === group).map((t) => (
+                            <button
+                              key={t.id}
+                              onClick={() => selectTeam(t.id)}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                width: '100%',
+                                padding: '10px 12px',
+                                background: 'none',
+                                border: 'none',
+                                color: teamId === t.id ? 'var(--primary)' : 'var(--text-muted)',
+                                cursor: 'pointer',
+                                fontFamily: 'var(--font-body)',
+                                fontSize: '14px',
+                                textAlign: 'left',
+                                transition: 'background 0.15s',
                               }}
-                            onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
-                            onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
-                          >
-                            <TeamLogo teamId={t.id} size={36} style={{ flexShrink: 0 }} />
-                            {t.full}
-                            {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '14px' }}>OK</span>}
-                          </button>
-                        ))}
+                              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'color-mix(in srgb, var(--team-surface-strong) 82%, transparent)'; }}
+                              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'none'; }}
+                            >
+                              <TeamLogo teamId={t.id} size={40} style={{ flexShrink: 0 }} />
+                              <span style={{ lineHeight: 1.25 }}>{t.full}</span>
+                              {teamId === t.id && <span style={{ marginLeft: 'auto', fontSize: '14px' }}>OK</span>}
+                            </button>
+                          ))}
+                        </div>
                       </div>
                     ))}
                   </div>

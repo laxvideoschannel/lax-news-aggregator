@@ -115,7 +115,7 @@ export default function TeamPage() {
   const merch = getTeamMerch(teamId);
   const merchItems = gearItems.length ? gearItems : merch.items;
   const merchRail = [...merchItems, ...merchItems];
-  const heroImageSrc = getPlayerImageSrc(activePlayer.imagePage || content.spotlights[0]?.imagePage);
+  const heroImageSrc = getPlayerImageSrc(activePlayer.imagePage || content.heroImagePage || content.spotlights[0]?.imagePage);
   const statItems = [
     { label: 'Championships', val: content.championships },
     { label: 'Roster Size', val: content.rosterSize },
