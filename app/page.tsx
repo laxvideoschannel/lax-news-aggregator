@@ -205,12 +205,19 @@ export default function HomePage() {
     return team.league === 'WLL' ? WLL_TICKETS_URL : PLL_TICKETS_URL;
   }, [nextGame, team.league]);
 
+  const firstEditorialImagePage =
+    spotlight?.imagePage ||
+    pageContent.roster.find((player) => player.imagePage)?.imagePage ||
+    pageContent.spotlights.find((player) => player.imagePage)?.imagePage ||
+    pageContent.heroImagePage ||
+    null;
+
   const spotlightBgSrc = spotlight?.imagePage
     ? `/api/player-image?url=${encodeURIComponent(spotlight.imagePage)}`
     : null;
-  const heroBgSrc = pageContent.heroImagePage
-    ? `/api/player-image?url=${encodeURIComponent(pageContent.heroImagePage)}`
-    : spotlightBgSrc;
+  const heroBgSrc = firstEditorialImagePage
+    ? `/api/player-image?url=${encodeURIComponent(firstEditorialImagePage)}`
+    : null;
 
   const visibleAccolades = (spotlight?.accolades || []).filter(
     (item: string) => item !== 'PLL Professional' && item !== 'PLL Professional Player',
@@ -238,7 +245,7 @@ export default function HomePage() {
                 backgroundSize: 'cover',
                 backgroundPosition: 'center center',
                 filter: 'grayscale(1)',
-                opacity: 0.34,
+                opacity: 0.46,
                 transform: 'scale(1.04)',
               }}
             />
@@ -247,7 +254,7 @@ export default function HomePage() {
                 position: 'absolute',
                 inset: 0,
                 background:
-                  'linear-gradient(90deg, rgba(5,5,5,0.8) 0%, rgba(10,10,10,0.72) 36%, rgba(10,10,10,0.44) 62%, rgba(10,10,10,0.68) 100%)',
+                  'linear-gradient(90deg, rgba(5,5,5,0.7) 0%, rgba(10,10,10,0.58) 36%, rgba(10,10,10,0.3) 62%, rgba(10,10,10,0.54) 100%)',
               }}
             />
             <div
@@ -311,6 +318,7 @@ export default function HomePage() {
                   fontFamily: 'var(--font-display)',
                   fontWeight: 900,
                   fontSize: 'clamp(56px, 8vw, 110px)',
+                  color: '#fff',
                   lineHeight: 0.9,
                   letterSpacing: '-0.01em',
                   marginBottom: '24px',
@@ -450,7 +458,7 @@ export default function HomePage() {
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px', flexWrap: 'wrap', gap: '20px' }}>
             <div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 60px)' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 60px)', color: '#fff' }}>
                 PLAYER
                 <br />
                 <span style={{ color: 'var(--primary)' }}>SPOTLIGHT</span>
@@ -595,7 +603,7 @@ export default function HomePage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
             <div>
               <div className="section-tag" style={{ marginBottom: '12px' }}>LATEST NEWS</div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 56px)' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 56px)', color: '#fff' }}>
                 STAY IN THE
                 <br />
                 <span style={{ color: 'var(--primary)' }}>GAME</span>
