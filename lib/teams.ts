@@ -27,7 +27,7 @@ export const PLL_TEAMS: Team[] = [
 ];
 
 export const WLL_TEAMS: Team[] = [
-  { id: 'guard', name: 'Guard', city: 'Boston', full: 'Boston Guard', short: 'BG', league: 'WLL', group: 'WLL Teams', primary: '#5E7F36', secondary: '#D64541', accent: '#FFFFFF', conference: 'WLL', logo: 'BG' },
+  { id: 'guard', name: 'Guard', city: 'Boston', full: 'Boston Guard', short: 'BG', league: 'WLL', group: 'WLL Teams', primary: '#C8102E', secondary: '#003087', accent: '#FFFFFF', conference: 'WLL', logo: 'BG' },
   { id: 'palms', name: 'Palms', city: 'California', full: 'California Palms', short: 'CP', league: 'WLL', group: 'WLL Teams', primary: '#E0B83A', secondary: '#2D7C5A', accent: '#FFFFFF', conference: 'WLL', logo: 'CP' },
   { id: 'charm', name: 'Charm', city: 'Maryland', full: 'Maryland Charm', short: 'MC', league: 'WLL', group: 'WLL Teams', primary: '#9B3F67', secondary: '#F2A7C2', accent: '#FFFFFF', conference: 'WLL', logo: 'MC' },
   { id: 'charging', name: 'Charging', city: 'New York', full: 'New York Charging', short: 'NC', league: 'WLL', group: 'WLL Teams', primary: '#244E9B', secondary: '#B7D9FF', accent: '#FFFFFF', conference: 'WLL', logo: 'NC' },
