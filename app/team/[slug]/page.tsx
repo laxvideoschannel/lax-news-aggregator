@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { ALL_PLAYERS, getPlayer } from '@/lib/players';
@@ -94,7 +94,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
         />
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '70px', paddingBottom: '70px' }}>
           <div style={{ marginBottom: '20px' }}>
-            <Link href="/team" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
+            <Link href="/team" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
               {'<-'} BACK TO TEAM
             </Link>
           </div>
@@ -160,7 +160,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
             </div>
 
             <div>
-              <div className="section-tag" style={{ marginBottom: '16px' }}>{`${team.full.toUpperCase()} • ${player.league}`}</div>
+              <div className="section-tag" style={{ marginBottom: '16px' }}>{`${team.full.toUpperCase()} â€¢ ${player.league}`}</div>
               <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(40px, 7vw, 88px)', lineHeight: 0.92, marginBottom: '16px' }}>
                 {player.name.toUpperCase()}
               </h1>
@@ -243,7 +243,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(204,0,0,0.14), rgba(0,0,0,0.9))' }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ width: '62px', height: '62px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', marginBottom: '18px' }}>
-                    ▶
+                    â–¶
                   </div>
                   <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)', marginBottom: '12px' }}>
                     WATCH
@@ -340,3 +340,5 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
     </div>
   );
 }
+
+

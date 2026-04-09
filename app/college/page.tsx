@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import Link from 'next/link';
 import { COLLEGE_CONFERENCES, COLLEGE_FEATURED_GAMES, COLLEGE_RANKINGS, COLLEGE_TEAMS } from '@/lib/college';
@@ -42,9 +42,9 @@ export default function CollegePage() {
           </p>
 
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px' }}>
-            <Link href="/college/scoreboard" className="btn-outline">Scoreboard</Link>
-            <Link href="/college/standings" className="btn-outline">Standings</Link>
-            <Link href="/college/rankings" className="btn-outline">Rankings</Link>
+            <Link href="/college/scoreboard" target="_blank" rel="noopener noreferrer" className="btn-outline">Scoreboard</Link>
+            <Link href="/college/standings" target="_blank" rel="noopener noreferrer" className="btn-outline">Standings</Link>
+            <Link href="/college/rankings" target="_blank" rel="noopener noreferrer" className="btn-outline">Rankings</Link>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
@@ -76,6 +76,8 @@ export default function CollegePage() {
                   <Link
                     key={game.slug}
                     href="/college/scoreboard"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="card"
                     style={{ display: 'block', padding: '18px', background: 'color-mix(in srgb, var(--team-surface) 64%, transparent)' }}
                   >
@@ -109,7 +111,7 @@ export default function CollegePage() {
                       <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{row.conference} - {row.record}</div>
                     </div>
                     {row.slug ? (
-                      <Link href={`/college/teams/${row.slug}`} style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)' }}>
+                      <Link href={`/college/teams/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)' }}>
                         OPEN
                       </Link>
                     ) : null}
@@ -117,8 +119,8 @@ export default function CollegePage() {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '18px', flexWrap: 'wrap' }}>
-                <Link href="/college/rankings" className="btn-primary">Full Rankings</Link>
-                <Link href="/college/standings" className="btn-outline">Conference Standings</Link>
+                <Link href="/college/rankings" target="_blank" rel="noopener noreferrer" className="btn-primary">Full Rankings</Link>
+                <Link href="/college/standings" target="_blank" rel="noopener noreferrer" className="btn-outline">Conference Standings</Link>
               </div>
             </div>
           </div>
@@ -154,7 +156,7 @@ export default function CollegePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '18px' }}>
             {visibleTeams.map((team) => (
-              <Link key={team.slug} href={`/college/teams/${team.slug}`} className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
+              <Link key={team.slug} href={`/college/teams/${team.slug}`} target="_blank" rel="noopener noreferrer" className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 12%, transparent) 0%, transparent 70%)` }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
@@ -251,3 +253,5 @@ export default function CollegePage() {
     </div>
   );
 }
+
+

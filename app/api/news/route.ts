@@ -12,6 +12,34 @@ type FeedStory = {
   image_url?: string;
 };
 
+async function resolveArticleImage(url: string) {
+  try {
+    const response = await fetch(url, {
+      headers: { 'user-agent': 'Mozilla/5.0 (compatible; LaxHubBot/1.0)' },
+      next: { revalidate: 60 * 30 },
+    });
+    if (!response.ok) return undefined;
+
+    const html = await response.text();
+    const metaPatterns = [
+      /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
+      /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+      /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
+      /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
+    ];
+
+    for (const pattern of metaPatterns) {
+      const match = html.match(pattern);
+      if (match?.[1]) return new URL(match[1], url).toString();
+    }
+
+    const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
+    return imgMatch?.[1] ? new URL(imgMatch[1], url).toString() : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function extractImageUrl(item: any) {
   const mediaContent = item?.['media:content'];
   if (Array.isArray(mediaContent) && mediaContent[0]?.$?.url) return mediaContent[0].$.url;
@@ -92,9 +120,18 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
     }
   }
 
-  return Array.from(stories.values())
+  const sortedStories = Array.from(stories.values())
     .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())
     .slice(0, 50);
+
+  const withImages = await Promise.all(
+    sortedStories.map(async (story) => ({
+      ...story,
+      image_url: story.image_url || await resolveArticleImage(story.link),
+    })),
+  );
+
+  return withImages;
 }
 
 export async function GET() {

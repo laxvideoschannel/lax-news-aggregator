@@ -1,6 +1,8 @@
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
+import { getTeamPageContent } from '@/lib/team-content';
+
 /** Article or team hub URLs — `/api/player-image` pulls og:image for the spotlight visual. */
 const TEAM_SPOTLIGHT_IMAGE_PAGE: Record<string, string> = {
   chaos: 'https://premierlacrosseleague.com/teams/carolina-chaos',
@@ -17,8 +19,8 @@ const TEAM_SPOTLIGHT_IMAGE_PAGE: Record<string, string> = {
   charging: 'https://premierlacrosseleague.com/articles/new-york-charging-roster-wll',
 };
 
-function resolveImagePage(teamId: string, player: { imagePage?: string }) {
-  return player.imagePage || TEAM_SPOTLIGHT_IMAGE_PAGE[teamId] || TEAM_SPOTLIGHT_IMAGE_PAGE.chaos;
+function resolveImagePage(player: { imagePage?: string | null }) {
+  return player.imagePage || null;
 }
 
 // Known player data seeded from real stats - Claude enriches and varies this
@@ -71,10 +73,10 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
     },
   ],
   archers: [
-    { name: 'Tom Schreiber', number: '7', position: 'Attack', hometown: 'Huntington, NY', college: 'Princeton', imagePage: 'https://premierlacrosseleague.com/teams/utah-archers', facts: 'One of the most prolific scorers in PLL history. Multiple All-Star selections. Elite dodger and finisher.' },
+    { name: 'Tom Schreiber', number: '7', position: 'Attack', hometown: 'Huntington, NY', college: 'Princeton', imagePage: 'https://premierlacrosseleague.com/articles/archers-extend-three-time-mvp-tom-schreiber-through-2026', facts: 'One of the most prolific scorers in PLL history. Multiple All-Star selections. Elite dodger and finisher.' },
   ],
   outlaws: [
-    { name: 'Lyle Thompson', number: '4', position: 'Attack', hometown: 'Onondaga Nation, NY', college: 'Albany', imagePage: 'https://premierlacrosseleague.com/teams/denver-outlaws', facts: 'Native American lacrosse legend. Three-time Tewaaraton Award winner. One of the greatest players in the history of the sport.' },
+    { name: 'Lyle Thompson', number: '4', position: 'Attack', hometown: 'Onondaga Nation, NY', college: 'Albany', imagePage: 'https://premierlacrosseleague.com/articles/players-top-50-3-lyle-thompson', facts: 'Native American lacrosse legend. Three-time Tewaaraton Award winner. One of the greatest players in the history of the sport.' },
   ],
   cannons: [
     {
@@ -106,16 +108,16 @@ const PLAYER_SEED_DATA: Record<string, any[]> = {
     },
   ],
   whipsnakes: [
-    { name: 'Matt Rambo', number: '1', position: 'Attack', hometown: 'Berwyn, PA', college: 'Maryland', imagePage: 'https://premierlacrosseleague.com/teams/maryland-whipsnakes', facts: 'Multiple-time PLL champion with Whipsnakes. One of the most dangerous finishers in the league.' },
+    { name: 'Matt Rambo', number: '1', position: 'Attack', hometown: 'Berwyn, PA', college: 'Maryland', imagePage: 'https://premierlacrosseleague.com/articles/players-top-50-8-matt-rambo', facts: 'Multiple-time PLL champion with Whipsnakes. One of the most dangerous finishers in the league.' },
   ],
   atlas: [
-    { name: 'Jeff Teat', number: '17', position: 'Attack', hometown: 'Carthage, NY', college: 'Cornell', imagePage: 'https://premierlacrosseleague.com/teams/new-york-atlas', facts: '28 goals and 36 assists in 2024, leading the Atlas to their first PLL championship in 2025. Tewaaraton Award winner.' },
+    { name: 'Jeff Teat', number: '17', position: 'Attack', hometown: 'Carthage, NY', college: 'Cornell', imagePage: 'https://premierlacrosseleague.com/articles/new-york-atlas-extend-jeff-teat-through-2027', facts: '28 goals and 36 assists in 2024, leading the Atlas to their first PLL championship in 2025. Tewaaraton Award winner.' },
   ],
   waterdogs: [
-    { name: 'Trevor Baptiste', number: '5', position: 'Faceoff', hometown: 'Aurora, CO', college: 'Denver', imagePage: 'https://premierlacrosseleague.com/teams/philadelphia-waterdogs', facts: 'Most dominant faceoff specialist in PLL history. Multiple Faceoff Player of the Year awards.' },
+    { name: 'Michael Sowers', number: '22', position: 'Attack', hometown: 'Upper Dublin, PA', college: 'Duke', imagePage: 'https://premierlacrosseleague.com/articles/philadelphia-waterdogs-extend-michael-sowers-through-2026', facts: 'One of the quickest attackmen in professional lacrosse. Waterdogs offensive catalyst and one of the best creators in the league from X.' },
   ],
   redwoods: [
-    { name: 'Myles Jones', number: '3', position: 'Midfield', hometown: 'Catonsville, MD', college: 'Duke', imagePage: 'https://premierlacrosseleague.com/teams/california-redwoods', facts: 'PLL All-Star midfielder. Dual threat on offense and defense. Key piece of California Redwoods system.' },
+    { name: 'Myles Jones', number: '3', position: 'Midfield', hometown: 'Catonsville, MD', college: 'Duke', imagePage: 'https://premierlacrosseleague.com/articles/myles-jones-dissecting-defenses-like-a-quarterback', facts: 'PLL All-Star midfielder. Dual threat on offense and defense. Key piece of California Redwoods system.' },
   ],
 };
 
@@ -124,7 +126,17 @@ export async function GET(request: Request) {
   const teamId = searchParams.get('team') || 'chaos';
   const playerIndex = searchParams.get('player');
 
-  const players = PLAYER_SEED_DATA[teamId] || PLAYER_SEED_DATA.chaos;
+  const content = getTeamPageContent(teamId);
+  const contentFallbackPlayers = content.spotlights.map((player) => ({
+    name: player.name,
+    number: player.number,
+    position: player.position,
+    hometown: player.hometown,
+    college: player.college,
+    imagePage: player.imagePage,
+    facts: player.description,
+  }));
+  const players = PLAYER_SEED_DATA[teamId] || contentFallbackPlayers || PLAYER_SEED_DATA.chaos;
 
   // Rotate daily or use requested index
   const day = Math.floor(Date.now() / 86400000);
@@ -191,7 +203,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
     return Response.json({
       ...player,
       ...aiContent,
-      imagePage: resolveImagePage(teamId, player),
+      imagePage: resolveImagePage(player),
       playerIndex: idx,
       totalPlayers: players.length,
       teamId,
@@ -200,7 +212,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
     // Return static data if AI call fails
     return Response.json({
       ...player,
-      imagePage: resolveImagePage(teamId, player),
+      imagePage: resolveImagePage(player),
       headline: `${player.name} — Elite ${player.position}`,
       tagline: `One of the best ${player.position.toLowerCase()}s in professional lacrosse.`,
       description: player.facts.slice(0, 300),

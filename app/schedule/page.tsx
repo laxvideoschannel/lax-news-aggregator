@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { getTeam } from '@/lib/teams';
@@ -300,7 +300,7 @@ export default function SchedulePage() {
             }
 
             return (
-              <Link key={game.slug} href={`/schedule/${game.slug}`} style={{ display: 'block' }}>
+              <Link key={game.slug} href={`/schedule/${game.slug}`} target="_blank" rel="noopener noreferrer" style={{ display: 'block' }}>
                 {cardInner}
               </Link>
             );
@@ -320,3 +320,5 @@ export default function SchedulePage() {
     </div>
   );
 }
+
+

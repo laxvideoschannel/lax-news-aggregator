@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { COLLEGE_RANKINGS } from '@/lib/college';
 
 export default function CollegeRankingsPage() {
@@ -32,7 +32,7 @@ export default function CollegeRankingsPage() {
                   <div>
                     <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '28px', lineHeight: 1 }}>{row.school.toUpperCase()}</div>
                     {row.slug ? (
-                      <Link href={`/college/teams/${row.slug}`} style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em' }}>
+                      <Link href={`/college/teams/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em' }}>
                         OPEN TEAM HUB
                       </Link>
                     ) : null}
@@ -57,3 +57,5 @@ export default function CollegeRankingsPage() {
     </div>
   );
 }
+
+

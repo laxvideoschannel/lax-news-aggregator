@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getScheduleGame } from '@/lib/schedule';
 import { getTeam } from '@/lib/teams';
@@ -191,7 +191,7 @@ export default async function ScheduleGamePage({ params }: Props) {
           <div className="card" style={{ padding: '28px' }}>
             <div className="section-tag" style={{ marginBottom: '18px' }}>Quick Links</div>
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-              <Link href="/schedule" className="btn-outline">Back To Schedule</Link>
+              <Link href="/schedule" target="_blank" rel="noopener noreferrer" className="btn-outline">Back To Schedule</Link>
               {game.media?.map((item) => (
                 <a key={item.href} href={item.href} target="_blank" rel="noopener noreferrer" className="btn-outline">
                   {item.label}
@@ -204,3 +204,5 @@ export default async function ScheduleGamePage({ params }: Props) {
     </div>
   );
 }
+
+

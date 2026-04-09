@@ -547,6 +547,8 @@ export default function TeamPage() {
                   <Link
                     key={`${teamId}-${player.name}`}
                     href={`/team/${player.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="card"
                     style={{ overflow: 'hidden', cursor: 'pointer', position: 'relative', display: 'block' }}
                   >
@@ -730,5 +732,7 @@ export default function TeamPage() {
     </div>
   );
 }
+
+
 
 

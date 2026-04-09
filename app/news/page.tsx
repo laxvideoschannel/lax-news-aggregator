@@ -115,7 +115,7 @@ export default function NewsPage() {
                         {item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
                       </span>
                     </div>
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1.15, marginBottom: '12px', color: '#fff' }}>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1.15, marginBottom: '12px', color: 'var(--text)' }}>
                       {item.title}
                     </h3>
                     <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.65, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>

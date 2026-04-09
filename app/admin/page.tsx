@@ -435,7 +435,7 @@ export default function AdminPage() {
                     <div style={{ color: 'var(--text-muted)', fontSize: '14px', marginTop: '8px' }}>
                       {(video.league === 'CUSTOM' ? 'PLAYLIST' : video.league) || 'PLAYLIST'} • {video.channel_name || 'LaxHub'}
                     </div>
-                    <a href={video.youtube_url} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontSize: '14px', marginTop: '10px', display: 'inline-block' }}>
+                    <a href={video.youtube_url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontSize: '14px', marginTop: '10px', display: 'inline-block' }}>
                       Open source video
                     </a>
                   </div>

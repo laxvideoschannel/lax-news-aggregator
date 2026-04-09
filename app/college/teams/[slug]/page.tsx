@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { COLLEGE_TEAMS, getCollegeTeam } from '@/lib/college';
 
@@ -75,7 +75,7 @@ export default async function CollegeTeamPage({ params }: Props) {
         }}
       >
         <div className="container">
-          <Link href="/college" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
+          <Link href="/college" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
             {'<-'} BACK TO COLLEGE
           </Link>
 
@@ -99,9 +99,9 @@ export default async function CollegeTeamPage({ params }: Props) {
             <div className="card" style={{ padding: '20px' }}>
               <div className="section-tag" style={{ marginBottom: '12px' }}>QUICK LINKS</div>
               <div style={{ display: 'grid', gap: '10px' }}>
-                <a href={team.officialUrl} target="_blank" rel="noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Team Site</a>
-                <a href={team.rosterUrl} target="_blank" rel="noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Roster</a>
-                <a href={team.scheduleUrl} target="_blank" rel="noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Schedule</a>
+                <a href={team.officialUrl} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Team Site</a>
+                <a href={team.rosterUrl} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Roster</a>
+                <a href={team.scheduleUrl} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Schedule</a>
               </div>
             </div>
           </div>
@@ -177,7 +177,7 @@ export default async function CollegeTeamPage({ params }: Props) {
                   Players to know
                 </h2>
               </div>
-              <a href={team.rosterUrl} target="_blank" rel="noreferrer" className="btn-outline">Full official roster</a>
+              <a href={team.rosterUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">Full official roster</a>
             </div>
 
             <div style={{ display: 'grid', gap: '14px' }}>
@@ -238,3 +238,5 @@ export default async function CollegeTeamPage({ params }: Props) {
     </div>
   );
 }
+
+

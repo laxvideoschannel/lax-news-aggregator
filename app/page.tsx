@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo, type CSSProperties } from 'react';
 import Link from 'next/link';
@@ -48,39 +48,9 @@ function SpotlightPlayerPhoto({
           borderRadius: 12,
           overflow: 'hidden',
           background: 'linear-gradient(135deg, color-mix(in srgb, var(--primary) 32%, #111), #080808)',
-          display: 'flex',
-          alignItems: 'flex-end',
-          padding: 32,
           border: '1px solid color-mix(in srgb, var(--primary) 28%, transparent)',
         }}
-      >
-        <div>
-          <div
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 900,
-              fontSize: 'clamp(48px, 10vw, 80px)',
-              color: 'var(--primary)',
-              lineHeight: 1,
-            }}
-          >
-            #{number || '-'}
-          </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 900,
-              fontSize: 'clamp(22px, 4vw, 32px)',
-              marginTop: 8,
-            }}
-          >
-            {name}
-          </div>
-          <div style={{ fontSize: 14, color: 'var(--text-muted)', marginTop: 10 }}>
-            Photo loads from the player's official league article when available.
-          </div>
-        </div>
-      </div>
+      />
     );
   }
 
@@ -310,7 +280,7 @@ export default function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
             <div>
               <div className="section-tag fade-up fade-up-1" style={{ marginBottom: '20px' }}>
-                {team.league} · FAN HUB
+                {team.league} Â· FAN HUB
               </div>
               <h1
                 className="fade-up fade-up-2"
@@ -344,8 +314,8 @@ export default function HomePage() {
                 Pick any club from the header to re-theme the site.
               </p>
               <div className="fade-up fade-up-4" style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                <Link href="/news" className="btn-primary">Latest News →</Link>
-                <Link href="/team" className="btn-outline">View Roster</Link>
+                <Link href="/news" target="_blank" rel="noopener noreferrer" className="btn-primary">Latest News â†’</Link>
+                <Link href="/team" target="_blank" rel="noopener noreferrer" className="btn-outline">View Roster</Link>
               </div>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
@@ -394,12 +364,12 @@ export default function HomePage() {
                       vs {opponentTeam.full}
                     </div>
                     <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '14px' }}>
-                      {nextGame.dateLabel} · {nextGame.time}
+                      {nextGame.dateLabel} Â· {nextGame.time}
                       <br />
                       {nextGame.venue}
                     </div>
                     <a href={ticketHref} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ display: 'inline-block', textAlign: 'center' }}>
-                      Get tickets →
+                      Get tickets â†’
                     </a>
                   </>
                 ) : (
@@ -413,7 +383,7 @@ export default function HomePage() {
                         : 'No upcoming match loaded for this club in the current dataset.'}
                     </div>
                     <a href={ticketHref} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ display: 'inline-block', textAlign: 'center' }}>
-                      {team.league === 'WLL' ? 'WLL tickets & schedule →' : 'PLL tickets & schedule →'}
+                      {team.league === 'WLL' ? 'WLL tickets & schedule â†’' : 'PLL tickets & schedule â†’'}
                     </a>
                   </>
                 )}
@@ -512,7 +482,7 @@ export default function HomePage() {
                     <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '8px' }}>
                       {spotlight.position?.toUpperCase()}
                     </div>
-                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4.6vw, 56px)', lineHeight: 0.95, marginBottom: '8px' }}>
+                    <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4.6vw, 56px)', lineHeight: 0.95, marginBottom: '8px', color: '#fff' }}>
                       {spotlight.name.toUpperCase()}
                     </h3>
                     <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>
@@ -527,7 +497,7 @@ export default function HomePage() {
                 </div>
 
                 {spotlight.headline && (
-                  <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 52px)', lineHeight: 0.95, marginBottom: '16px' }}>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 52px)', lineHeight: 0.95, marginBottom: '16px', color: '#fff' }}>
                     {spotlight.headline.toUpperCase()}
                   </h3>
                 )}
@@ -578,20 +548,20 @@ export default function HomePage() {
                 )}
 
                 <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <Link href="/team" className="btn-primary">Full Roster →</Link>
+                  <Link href="/team" target="_blank" rel="noopener noreferrer" className="btn-primary">Full Roster â†’</Link>
                   <button
                     onClick={() => loadSpotlight(teamId, (spotlightIndex + 1) % (spotlight.totalPlayers || 3))}
                     className="btn-outline"
                     style={{ cursor: 'pointer' }}
                   >
-                    Next Player →
+                    Next Player â†’
                   </button>
                 </div>
               </div>
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🥍</div>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>ðŸ¥</div>
               <p>Player spotlight unavailable.</p>
             </div>
           )}
@@ -603,13 +573,13 @@ export default function HomePage() {
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '48px' }}>
             <div>
               <div className="section-tag" style={{ marginBottom: '12px' }}>LATEST NEWS</div>
-              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 56px)', color: '#fff' }}>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(32px, 5vw, 56px)', color: '#111' }}>
                 STAY IN THE
                 <br />
                 <span style={{ color: 'var(--primary)' }}>GAME</span>
               </h2>
             </div>
-            <Link href="/news" className="btn-outline">All News →</Link>
+            <Link href="/news" target="_blank" rel="noopener noreferrer" className="btn-outline">All News â†’</Link>
           </div>
           {loadingNews ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
@@ -647,14 +617,14 @@ export default function HomePage() {
                   </div>
                   <div style={{ padding: '12px 24px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{item.source}</span>
-                    <span style={{ color: 'var(--primary)' }}>→</span>
+                    <span style={{ color: 'var(--primary)' }}>â†’</span>
                   </div>
                 </a>
               ))}
             </div>
           ) : (
             <div style={{ textAlign: 'center', padding: '60px', background: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '48px', marginBottom: '16px' }}>🥍</div>
+              <div style={{ fontSize: '48px', marginBottom: '16px' }}>ðŸ¥</div>
               <h3 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', marginBottom: '12px' }}>NEWS COMING SOON</h3>
               <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>Stories will appear here once your Supabase DB is set up and the cron has run.</p>
             </div>
@@ -670,10 +640,10 @@ export default function HomePage() {
             REPRESENTING {team.full.toUpperCase()}
           </h2>
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Link href="/team" style={{ background: '#000', color: '#fff', padding: '14px 36px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>
+            <Link href="/team" target="_blank" rel="noopener noreferrer" style={{ background: '#000', color: '#fff', padding: '14px 36px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>
               VIEW ROSTER
             </Link>
-            <Link href="/schedule" style={{ border: '2px solid rgba(255,255,255,0.5)', color: '#fff', padding: '12px 34px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>
+            <Link href="/schedule" target="_blank" rel="noopener noreferrer" style={{ border: '2px solid rgba(255,255,255,0.5)', color: '#fff', padding: '12px 34px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', display: 'inline-block' }}>
               SCHEDULE
             </Link>
           </div>
@@ -682,3 +652,5 @@ export default function HomePage() {
     </div>
   );
 }
+
+

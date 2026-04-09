@@ -1,4 +1,4 @@
-import Link from 'next/link';
+﻿import Link from 'next/link';
 import { COLLEGE_STANDINGS } from '@/lib/college';
 
 export default function CollegeStandingsPage() {
@@ -17,7 +17,7 @@ export default function CollegeStandingsPage() {
             COLLEGE<br /><span style={{ color: 'var(--primary)' }}>STANDINGS</span>
           </h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, maxWidth: '820px' }}>
-            Snapshot boards for the major conference races we’re building out first. This is the foundation for a deeper standings product with sortable records, tiebreakers, and auto-updated results.
+            Snapshot boards for the major conference races weâ€™re building out first. This is the foundation for a deeper standings product with sortable records, tiebreakers, and auto-updated results.
           </p>
         </div>
       </section>
@@ -42,7 +42,7 @@ export default function CollegeStandingsPage() {
                     <div>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: '26px', lineHeight: 1 }}>{row.school.toUpperCase()}</div>
                       {row.slug ? (
-                        <Link href={`/college/teams/${row.slug}`} style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em' }}>
+                        <Link href={`/college/teams/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em' }}>
                           OPEN TEAM HUB
                         </Link>
                       ) : null}
@@ -69,4 +69,6 @@ export default function CollegeStandingsPage() {
     </div>
   );
 }
+
+
 

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 import './globals.css';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -221,7 +221,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         >
           <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '70px' }}>
-            <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link href="/" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div
                 style={{
                   width: '38px',
@@ -259,6 +259,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                     >
                       <Link
                         href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         onClick={() => setCollegeMenuOpen((open) => !open)}
                         style={{
                           fontFamily: 'var(--font-accent)',
@@ -298,6 +300,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               <Link
                                 key={child.href}
                                 href={child.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 onClick={() => setCollegeMenuOpen(false)}
                                 style={{
                                   display: 'block',
@@ -323,6 +327,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <Link
                     key={link.href}
                     href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     style={{
                       fontFamily: 'var(--font-accent)',
                       fontSize: '14px',
@@ -434,7 +440,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <main>{children}</main>
 
-        <footer style={{ background: 'var(--bg-footer)', borderTop: '1px solid var(--border)', paddingTop: '60px', marginTop: '80px' }}>
+        <footer style={{ background: 'var(--bg-footer)', borderTop: '1px solid var(--border)', paddingTop: '60px', marginTop: 0 }}>
           <div className="container">
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '40px', marginBottom: '60px' }}>
               <div>
@@ -455,7 +461,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 <div key={col.title}>
                   <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '20px' }}>{col.title.toUpperCase()}</div>
                   {col.links.map((label) => (
-                    <a key={label} href="#" style={{ display: 'block', color: 'var(--text-muted)', fontSize: '14px', marginBottom: '12px' }}>
+                    <a key={label} href="#" target="_blank" rel="noopener noreferrer" style={{ display: 'block', color: 'var(--text-muted)', fontSize: '14px', marginBottom: '12px' }}>
                       {label}
                     </a>
                   ))}
@@ -477,3 +483,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
+
+
