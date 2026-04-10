@@ -214,106 +214,108 @@ export default function HomePage() {
   }, [videos, videoFilter]);
 
   const featuredVideo = filteredVideos.find((v) => v.featured) ?? filteredVideos[0];
-  const sideVideos = filteredVideos.filter((v) => v !== featuredVideo).slice(0, 2);
+  const sideVideos = filteredVideos.filter((v) => v !== featuredVideo).slice(0, 3);
   const gridVideos = filteredVideos.filter((v) => v !== featuredVideo).slice(0, 6);
   const visibleAccolades = (spotlight?.accolades || []).filter((a: string) => !a.includes('PLL Professional'));
 
   return (
     <div>
 
-      {/* ─── VIDEO HERO ─── */}
-      <section className="video-hero" style={{ position: 'relative', background: 'var(--bg)', overflow: 'hidden', borderBottom: '1px solid var(--border)' }}>
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px)', backgroundSize: '52px 52px', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 40% at 50% 0%, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-        <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '56px', paddingBottom: '56px' }}>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', marginBottom: '32px', flexWrap: 'wrap' }}>
-            <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(44px, 7vw, 88px)', lineHeight: 0.9, color: 'var(--text)' }}>
+      {/* ─── VIDEO BENTO ─── */}
+      <section style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
+        {/* Header bar */}
+        <div className="container" style={{ paddingTop: '40px', paddingBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
+            <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.2em', color: 'var(--primary)' }}>LATEST</span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: 0.9, color: 'var(--text)' }}>
               LACROSSE <span style={{ color: 'var(--primary)' }}>VIDEOS</span>
-            </h1>
-            <div style={{ display: 'flex', gap: 0, border: '1px solid var(--border)', flexShrink: 0 }}>
-              {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
-                <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
-                  style={{ fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.14em', padding: '10px 20px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'var(--text)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
-                  {f}
-                </button>
-              ))}
-            </div>
+            </h2>
           </div>
+          <div style={{ display: 'flex', gap: 0, border: '1px solid var(--border)' }}>
+            {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
+              <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
+                style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', padding: '8px 18px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'var(--text-muted)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+                {f}
+              </button>
+            ))}
+          </div>
+        </div>
 
+        {/* Bento grid */}
+        <div className="container" style={{ paddingBottom: '40px' }}>
           {videosLoading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px' }}>
-              <div style={{ background: 'var(--bg-card)', aspectRatio: '16/9', opacity: 0.5 }} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ background: 'var(--bg-card)', flex: 1, opacity: 0.5 }} />
-                <div style={{ background: 'var(--bg-card)', flex: 1, opacity: 0.35 }} />
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '240px 240px', gap: '8px' }}>
+              {[1,2,3,4,5,6].map(i => <div key={i} style={{ background: 'var(--bg-card)', opacity: 0.4 + i * 0.05 }} />)}
             </div>
           ) : filteredVideos.length === 0 ? (
             <div className="card" style={{ padding: '48px', textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
+              <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels in the admin panel.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', aspectRatio: '2.92' }}>
-              {/* Main player */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '248px 248px', gap: '8px' }}>
+
+              {/* Cell 0 — FEATURED: spans 2 rows, 2 cols */}
               {featuredVideo && (
-                <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', width: '100%', height: '100%', minWidth: 0 }}>
+                <div
+                  style={{ gridColumn: '1 / 3', gridRow: '1 / 3', position: 'relative', overflow: 'hidden', background: '#000', cursor: 'pointer' }}
+                  onClick={() => setActiveVideoId(activeVideoId === featuredVideo.id ? null : featuredVideo.id)}
+                  onMouseEnter={(e) => { if (activeVideoId !== featuredVideo.id) (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1.03)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement | null)?.style && ((e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1)'); }}
+                >
                   {activeVideoId === featuredVideo.id ? (
                     <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
                   ) : (
-                    <div style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }} onClick={() => setActiveVideoId(featuredVideo.id)}>
-                      <img src={featuredVideo.thumbnailUrl} alt={featuredVideo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.78) 100%)', display: 'flex', alignItems: 'flex-end', padding: '28px' }}>
-                        <div style={{ display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
-                          <PlayButton size={72} />
-                          <div>
-                            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.2em', color: 'var(--primary)', marginBottom: '8px' }}>
-                              {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
-                            </div>
-                            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(22px, 3vw, 38px)', lineHeight: 1.05, color: '#fff' }}>
-                              {featuredVideo.title}
-                            </div>
-                            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'rgba(255,255,255,0.5)', marginTop: '6px', letterSpacing: '0.08em' }}>
-                              {featuredVideo.channelName}
-                              {featuredVideo.publishedAt ? ` · ${new Date(featuredVideo.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
-                            </div>
+                    <>
+                      <img src={featuredVideo.thumbnailUrl} alt={featuredVideo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
+                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.88) 100%)' }} />
+                      {/* League badge */}
+                      <div style={{ position: 'absolute', top: '20px', left: '20px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.2em', color: '#fff', background: 'var(--primary)', padding: '4px 10px' }}>
+                        {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
+                      </div>
+                      <div style={{ position: 'absolute', bottom: '28px', left: '28px', right: '28px', display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
+                        <PlayButton size={64} />
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(20px, 2.8vw, 34px)', lineHeight: 1.05, color: '#fff', marginBottom: '6px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                            {featuredVideo.title}
+                          </div>
+                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em' }}>
+                            {featuredVideo.channelName}{featuredVideo.publishedAt ? ` · ${new Date(featuredVideo.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </>
                   )}
                 </div>
               )}
 
-              {/* Side stack */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%' }}>
-                {sideVideos.map((v) => (
-                  <div key={v.id}
-                    onClick={() => { setActiveVideoId(null); window.open(v.youtubeUrl, '_blank'); }}
-                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', flex: 1, minHeight: 0, width: '100%' }}
-                    onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--primary)')}
-                    onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}>
-                    <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.75) 100%)', display: 'flex', alignItems: 'flex-end', padding: '14px' }}>
-                      <div style={{ display: 'flex', alignItems: 'flex-end', gap: '12px' }}>
-                        <PlayButton size={36} />
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'var(--primary)', marginBottom: '4px' }}>
-                            {v.league === 'CUSTOM' ? 'MY VIDEOS' : `${v.league} OFFICIAL`}
-                          </div>
-                          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(14px, 1.6vw, 20px)', lineHeight: 1.05, color: '#fff', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                            {v.title}
-                          </div>
-                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', color: 'rgba(255,255,255,0.5)', marginTop: '4px' }}>
-                            {v.publishedAt ? new Date(v.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : v.channelName}
-                          </div>
-                        </div>
+              {/* Cells 1–3 — side tiles, one per row slot on col 3 (and wrap if needed) */}
+              {sideVideos.map((v, i) => (
+                <div
+                  key={v.id}
+                  style={{ position: 'relative', overflow: 'hidden', background: '#000', cursor: 'pointer', gridColumn: 3, gridRow: i + 1 }}
+                  onClick={() => window.open(v.youtubeUrl, '_blank')}
+                  onMouseEnter={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1.05)'; }}
+                  onMouseLeave={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1)'; }}
+                >
+                  <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.35s ease' }} />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0) 20%, rgba(0,0,0,0.85) 100%)' }} />
+                  <div style={{ position: 'absolute', top: '14px', left: '14px', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--primary)', background: 'rgba(0,0,0,0.55)', padding: '3px 8px' }}>
+                    {v.league === 'CUSTOM' ? 'MY VIDEOS' : `${v.league} OFFICIAL`}
+                  </div>
+                  <div style={{ position: 'absolute', bottom: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
+                    <PlayButton size={32} />
+                    <div style={{ minWidth: 0 }}>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '15px', lineHeight: 1.1, color: '#fff', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                        {v.title}
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', color: 'rgba(255,255,255,0.45)', marginTop: '4px' }}>
+                        {v.publishedAt ? new Date(v.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : v.channelName}
                       </div>
                     </div>
                   </div>
-                ))}
-              </div>
+                </div>
+              ))}
+
             </div>
           )}
         </div>
