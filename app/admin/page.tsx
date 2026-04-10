@@ -335,7 +335,7 @@ export default function AdminPage() {
               </p>
               <form onSubmit={handleCreateSource} style={{ display: 'grid', gap: '12px' }}>
                 <input value={sourceForm.handleUrl} onChange={(e) => setSourceForm((p) => ({ ...p, handleUrl: e.target.value }))} placeholder="YouTube channel URL (e.g. youtube.com/@channel)" style={inputStyle} required />
-                <input value={sourceForm.title} onChange={(e) => setSourceForm((p) => ({ ...p, title: e.target.value }))} placeholder="Feed label (e.g. "My Lacrosse Reel")" style={inputStyle} required />
+                <input value={sourceForm.title} onChange={(e) => setSourceForm((p) => ({ ...p, title: e.target.value }))} placeholder="Feed label (e.g. My Lacrosse Reel)" style={inputStyle} required />
                 <input value={sourceForm.channelName} onChange={(e) => setSourceForm((p) => ({ ...p, channelName: e.target.value }))} placeholder="Channel display name" style={inputStyle} />
                 <select value={sourceForm.league} onChange={(e) => setSourceForm((p) => ({ ...p, league: e.target.value as any }))} style={inputStyle}>
                   <option value="CUSTOM">My Videos (custom)</option>

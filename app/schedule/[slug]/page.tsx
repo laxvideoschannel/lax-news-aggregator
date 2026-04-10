@@ -107,7 +107,7 @@ export default async function ScheduleGamePage({ params }: Props) {
                   style={{ justifyContent: 'space-between' }}
                 >
                   <span>{item.label}</span>
-                  <span>-></span>
+                  <span>{'→'}</span>
                 </a>
               ))}
               <div style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.7, marginTop: '6px' }}>
