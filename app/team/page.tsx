@@ -242,13 +242,13 @@ export default function TeamPage() {
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
             {team.city.toUpperCase()}<br /><span style={{ color: 'var(--primary)' }}>{team.name.toUpperCase()}</span>
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>{content.seasonNote}</p>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>{content.seasonNote}</p>
 
           <div style={{ display: 'flex', gap: '40px', marginTop: '40px', flexWrap: 'wrap' }}>
             {statItems.map((stat) => (
               <div key={stat.label}>
                 <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{stat.val}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
               </div>
             ))}
           </div>
@@ -301,7 +301,7 @@ export default function TeamPage() {
                       height: '100%',
                       objectFit: 'cover',
                       objectPosition: 'center top',
-                      filter: 'grayscale(1) contrast(1.08) brightness(0.82)',
+                      filter: 'contrast(1.05) brightness(0.92)',
                     }}
                   />
                 ) : (

@@ -205,7 +205,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
         description: player.facts.slice(0, 200),
         stats: [{ label: 'Position', value: player.position }, { label: 'Number', value: `#${player.number}` }],
         quote: 'Every game I go out there to be the best version of myself.',
-        accolades: [player.position, player.college, player.hometown],
+        accolades: [],
       };
     }
 
@@ -232,7 +232,7 @@ Make it exciting and specific. Use real stats from the facts provided.`,
         { label: 'Hometown', value: player.hometown },
       ],
       quote: 'We play for each other every single game.',
-      accolades: [player.position, player.college, player.hometown],
+      accolades: [],
       playerIndex: idx,
       totalPlayers: players.length,
       teamId,

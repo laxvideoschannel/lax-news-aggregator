@@ -255,10 +255,11 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'stretch' }}>
+            {/* Container aspect ratio = (total cols / left col) * (16/9) so left video is exactly 16:9 and right matches */}
+            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', aspectRatio: '2.92' }}>
               {/* Main player */}
               {featuredVideo && (
-                <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', aspectRatio: '16/9', width: '100%', minWidth: 0 }}>
+                <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', width: '100%', height: '100%', minWidth: 0 }}>
                   {activeVideoId === featuredVideo.id ? (
                     <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
                   ) : (
@@ -407,7 +408,6 @@ export default function HomePage() {
                       <img src={`/api/player-image?url=${encodeURIComponent(spotlight.imagePage)}`} alt={spotlight.name} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top', display: 'block' }} onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 45%, rgba(0,0,0,0.75) 100%)' }} />
                       <div style={{ position: 'absolute', bottom: '16px', left: '20px' }}>
-                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--primary)', marginBottom: '4px' }}>{spotlight.position?.toUpperCase()}</div>
                         <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(24px, 3.5vw, 42px)', lineHeight: 0.95, color: '#fff' }}>{spotlight.name.toUpperCase()}</div>
                       </div>
                       {spotlight.number && (
@@ -429,14 +429,27 @@ export default function HomePage() {
                     );
                   })()}
                   {spotlight.description && <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.75, marginBottom: '16px' }}>{spotlight.description}</p>}
-                  {visibleAccolades.length > 0 && (
-                    <div style={{ marginBottom: '20px' }}>
-                      {visibleAccolades.slice(0, 3).map((a: string, i: number) => (
-                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '8px 0', borderBottom: '1px solid var(--border)' }}>
-                          <div style={{ width: '5px', height: '5px', background: 'var(--primary)', borderRadius: '50%', flexShrink: 0 }} />
-                          <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{a}</span>
+                  {/* Player details as labeled rows */}
+                  {(spotlight.college || spotlight.hometown || spotlight.quote) && (
+                    <div style={{ display: 'grid', gap: '0', marginBottom: '20px', border: '1px solid var(--border)' }}>
+                      {spotlight.college && (
+                        <div style={{ display: 'flex', gap: '12px', padding: '10px 14px', borderBottom: spotlight.hometown || spotlight.quote ? '1px solid var(--border)' : 'none' }}>
+                          <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--primary)', minWidth: '90px', paddingTop: '1px' }}>PLAYED AT</span>
+                          <span style={{ fontSize: '13px', color: 'var(--text)' }}>{spotlight.college}</span>
                         </div>
-                      ))}
+                      )}
+                      {spotlight.hometown && (
+                        <div style={{ display: 'flex', gap: '12px', padding: '10px 14px', borderBottom: spotlight.quote ? '1px solid var(--border)' : 'none' }}>
+                          <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--primary)', minWidth: '90px', paddingTop: '1px' }}>FROM</span>
+                          <span style={{ fontSize: '13px', color: 'var(--text)' }}>{spotlight.hometown}</span>
+                        </div>
+                      )}
+                      {spotlight.quote && (
+                        <div style={{ display: 'flex', gap: '12px', padding: '10px 14px' }}>
+                          <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--primary)', minWidth: '90px', paddingTop: '1px' }}>IN HIS WORDS</span>
+                          <span style={{ fontSize: '13px', color: 'var(--text)', fontStyle: 'italic' }}>"{spotlight.quote}"</span>
+                        </div>
+                      )}
                     </div>
                   )}
                   <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>

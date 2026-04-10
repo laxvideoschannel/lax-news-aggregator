@@ -4,23 +4,17 @@ export const runtime = 'nodejs';
 async function decodeGoogleNewsUrl(gnUrl: string): Promise<string> {
   if (!gnUrl.includes('news.google.com')) return gnUrl;
   try {
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(gnUrl, {
-      method: 'GET',
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-      },
-    });
-    const finalUrl = res.url;
-    if (finalUrl && !finalUrl.includes('news.google.com') && !finalUrl.includes('google.com/search')) {
-      return finalUrl;
+    const articleId = gnUrl.split('/articles/')[1]?.split('?')[0];
+    if (articleId) {
+      const padded = articleId.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = padded.length % 4;
+      const base64 = pad ? padded + '='.repeat(4 - pad) : padded;
+      const decoded = Buffer.from(base64, 'base64').toString('latin1');
+      const urlMatch = decoded.match(/https?:\/\/[^\x00-\x1f\s"'<>]+/);
+      if (urlMatch?.[0] && !urlMatch[0].includes('news.google.com')) {
+        return urlMatch[0];
+      }
     }
-    const html = await res.text();
-    const canonical = html.match(/<link[^>]+rel=[\"']canonical[\"'][^>]+href=[\"']([^\"']+)[\"']/i)?.[1];
-    if (canonical && !canonical.includes('news.google.com')) return canonical;
   } catch { /* ignore */ }
   return gnUrl;
 }

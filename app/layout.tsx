@@ -311,7 +311,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                                   letterSpacing: '0.12em',
                                   color: childActive ? 'var(--primary)' : 'var(--text)',
                                   background: childActive ? 'color-mix(in srgb, var(--primary) 14%, transparent)' : 'transparent',
+                                  transition: 'background 0.15s, color 0.15s',
                                 }}
+                                onMouseEnter={(e) => { if (!childActive) { (e.currentTarget as HTMLElement).style.background = 'color-mix(in srgb, var(--primary) 10%, transparent)'; (e.currentTarget as HTMLElement).style.color = 'var(--primary)'; } }}
+                                onMouseLeave={(e) => { if (!childActive) { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.color = 'var(--text)'; } }}
                               >
                                 {child.label.toUpperCase()}
                               </Link>

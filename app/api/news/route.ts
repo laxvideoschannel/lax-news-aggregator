@@ -13,31 +13,21 @@ type FeedStory = {
 };
 
 // Decode Google News redirect URLs to get the real article URL
+// Google News encodes the real URL in a base64 protobuf in the article ID
 async function decodeGoogleNewsUrl(gnUrl: string): Promise<string> {
   if (!gnUrl.includes('news.google.com')) return gnUrl;
   try {
-    // Google News RSS items link to news.google.com/rss/articles/CB...
-    // The actual URL can sometimes be extracted from the feed item's <guid> or by
-    // hitting the Google News redirect endpoint with a HEAD request
-    const controller = new AbortController();
-    setTimeout(() => controller.abort(), 5000);
-    const res = await fetch(gnUrl, {
-      method: 'GET',
-      redirect: 'follow',
-      signal: controller.signal,
-      headers: {
-        'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
-      },
-    });
-    const finalUrl = res.url;
-    // If redirect landed on a non-google URL, use it
-    if (finalUrl && !finalUrl.includes('news.google.com') && !finalUrl.includes('google.com/search')) {
-      return finalUrl;
+    const articleId = gnUrl.split('/articles/')[1]?.split('?')[0];
+    if (articleId) {
+      const padded = articleId.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = padded.length % 4;
+      const base64 = pad ? padded + '='.repeat(4 - pad) : padded;
+      const decoded = Buffer.from(base64, 'base64').toString('latin1');
+      const urlMatch = decoded.match(/https?:\/\/[^\x00-\x1f\s"'<>]+/);
+      if (urlMatch?.[0] && !urlMatch[0].includes('news.google.com')) {
+        return urlMatch[0];
+      }
     }
-    // Fallback: try extracting from HTML canonical link
-    const html = await res.text();
-    const canonical = html.match(/<link[^>]+rel=[\"']canonical[\"'][^>]+href=[\"']([^\"']+)[\"']/i)?.[1];
-    if (canonical && !canonical.includes('news.google.com')) return canonical;
   } catch { /* ignore */ }
   return gnUrl;
 }

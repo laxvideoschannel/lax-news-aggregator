@@ -206,14 +206,6 @@ export default function CollegePage() {
                   <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '12px' }}>{team.nickname} - {team.city}, {team.state}</div>
                   <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '16px' }}>{team.overview}</p>
 
-                  <div style={{ display: 'grid', gap: '8px' }}>
-                    {team.strengths.map((strength) => (
-                      <div key={strength} style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
-                        <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: team.primary, marginTop: '7px', flexShrink: 0 }} />
-                        <span style={{ fontSize: '14px', color: 'var(--text)' }}>{strength}</span>
-                      </div>
-                    ))}
-                  </div>
                 </div>
               </Link>
             ))}
