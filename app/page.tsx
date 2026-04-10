@@ -255,7 +255,6 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
             </div>
           ) : (
-            {/* Container aspect ratio = (total cols / left col) * (16/9) so left video is exactly 16:9 and right matches */}
             <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', aspectRatio: '2.92' }}>
               {/* Main player */}
               {featuredVideo && (
