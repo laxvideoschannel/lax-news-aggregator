@@ -275,23 +275,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                         }}
                       >
                         {link.label}
-                        <span style={{ fontSize: '14px', opacity: 0.7 }}>v</span>
                       </Link>
 
                       {collegeMenuOpen && (
                         <div
                           style={{
                             position: 'absolute',
-                            top: 'calc(100% + 10px)',
+                            top: 'calc(100%)',
                             left: 0,
                             minWidth: '220px',
-                            background: 'var(--team-surface)',
-                            border: '1px solid var(--border)',
-                            boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
-                            padding: '8px',
                             zIndex: 700,
+                            paddingTop: '10px',
                           }}
                         >
+                          <div
+                            style={{
+                              background: 'var(--team-surface)',
+                              border: '1px solid var(--border)',
+                              boxShadow: '0 20px 60px rgba(0,0,0,0.28)',
+                              padding: '8px',
+                            }}
+                          >
                           {link.children.map((child) => {
                             const childActive = pathname === child.href;
                             return (
@@ -313,6 +317,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                               </Link>
                             );
                           })}
+                          </div>
                         </div>
                       )}
                     </div>

@@ -43,6 +43,7 @@ export interface CollegeTeam {
   state: string;
   primary: string;
   secondary: string;
+  logoUrl?: string;
   officialUrl: string;
   scheduleUrl: string;
   rosterUrl: string;
@@ -106,6 +107,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NC',
     primary: '#003087',
     secondary: '#ffffff',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/200px-Duke_Athletics_logo.svg.png',
     officialUrl: 'https://goduke.com/sports/mens-lacrosse',
     scheduleUrl: 'https://goduke.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://goduke.com/sports/mens-lacrosse/roster',
@@ -144,6 +146,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NY',
     primary: '#f76900',
     secondary: '#0f0f0f',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Syracuse_Orange_logo.svg/240px-Syracuse_Orange_logo.svg.png',
     officialUrl: 'https://cuse.com/',
     scheduleUrl: 'https://cuse.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://cuse.com/sports/mens-lacrosse/roster',
@@ -182,6 +185,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'IN',
     primary: '#0c2340',
     secondary: '#c99700',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Notre_Dame_Fighting_Irish_logo.svg/240px-Notre_Dame_Fighting_Irish_logo.svg.png',
     officialUrl: 'https://fightingirish.com/sports/mlax/',
     scheduleUrl: 'https://fightingirish.com/sports/mlax/schedule/',
     rosterUrl: 'https://fightingirish.com/sports/mlax/roster/',
@@ -220,6 +224,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'VA',
     primary: '#232d4b',
     secondary: '#f84c1e',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Virginia_Cavaliers_sabre_logo.svg/240px-Virginia_Cavaliers_sabre_logo.svg.png',
     officialUrl: 'https://virginiasports.com/sports/mlax/',
     scheduleUrl: 'https://virginiasports.com/sports/mlax/schedule/',
     rosterUrl: 'https://virginiasports.com/sports/mlax/roster/',
@@ -257,6 +262,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'MD',
     primary: '#e03a3e',
     secondary: '#ffd520',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Maryland_Terrapins_logo.svg/200px-Maryland_Terrapins_logo.svg.png',
     officialUrl: 'https://umterps.com/',
     scheduleUrl: 'https://umterps.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://umterps.com/sports/mens-lacrosse/roster',
@@ -294,6 +300,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NJ',
     primary: '#f58025',
     secondary: '#111111',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Princeton_Tigers_logo.svg/240px-Princeton_Tigers_logo.svg.png',
     officialUrl: 'https://goprincetontigers.com/sports/mens-lacrosse',
     scheduleUrl: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://goprincetontigers.com/sports/mens-lacrosse/roster',

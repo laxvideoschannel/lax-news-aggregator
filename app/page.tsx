@@ -126,7 +126,7 @@ export default function HomePage() {
     <div>
 
       {/* ─── VIDEO HERO ─── */}
-      <section style={{ position: 'relative', background: 'var(--bg)', overflow: 'hidden', borderBottom: '1px solid var(--border)' }}>
+      <section className="video-hero" style={{ position: 'relative', background: 'var(--bg)', overflow: 'hidden', borderBottom: '1px solid var(--border)' }}>
         <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--primary) 5%, transparent) 1px, transparent 1px)', backgroundSize: '52px 52px', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 40% at 50% 0%, color-mix(in srgb, var(--primary) 9%, transparent) 0%, transparent 70%)', pointerEvents: 'none' }} />
 
@@ -139,7 +139,7 @@ export default function HomePage() {
             <div style={{ display: 'flex', gap: 0, border: '1px solid var(--border)', flexShrink: 0 }}>
               {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
                 <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
-                  style={{ fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.14em', padding: '10px 20px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'var(--text-muted)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  style={{ fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.14em', padding: '10px 20px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'var(--text)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
                   {f}
                 </button>
               ))}
@@ -159,7 +159,7 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'stretch' }}>
               {/* Main player */}
               {featuredVideo && (
                 <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', aspectRatio: '16/9' }}>
@@ -190,12 +190,12 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Side stack */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Side stack — fills same height as main via CSS grid rows */}
+              <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '16px' }}>
                 {sideVideos.map((v) => (
                   <div key={v.id}
                     onClick={() => { setActiveVideoId(null); window.open(v.youtubeUrl, '_blank'); }}
-                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', aspectRatio: '16/9' }}
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', minHeight: 0 }}
                     onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--primary)')}
                     onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}>
                     <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -442,10 +442,10 @@ export default function HomePage() {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
             {[
-              { slug: 'duke', name: 'DUKE BLUE DEVILS', conf: 'ACC', abbr: 'DU', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/240px-Duke_Athletics_logo.svg.png' },
-              { slug: 'maryland', name: 'MARYLAND TERRAPINS', conf: 'BIG TEN', abbr: 'MD', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/thirty/Maryland_Terrapins_logo.svg/240px-Maryland_Terrapins_logo.svg.png' },
-              { slug: 'syracuse', name: 'SYRACUSE ORANGE', conf: 'ACC', abbr: 'SYR', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Syracuse_Orange_logo.svg/240px-Syracuse_Orange_logo.svg.png' },
-              { slug: 'virginia', name: 'UVA CAVALIERS', conf: 'ACC', abbr: 'UVA', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Virginia_Cavaliers_sabre_logo.svg/240px-Virginia_Cavaliers_sabre_logo.svg.png' },
+              { slug: 'duke', name: 'DUKE BLUE DEVILS', conf: 'ACC', abbr: 'DU', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/200px-Duke_Athletics_logo.svg.png' },
+              { slug: 'maryland', name: 'MARYLAND TERRAPINS', conf: 'BIG TEN', abbr: 'MD', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Maryland_Terrapins_logo.svg/200px-Maryland_Terrapins_logo.svg.png' },
+              { slug: 'syracuse', name: 'SYRACUSE ORANGE', conf: 'ACC', abbr: 'SYR', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Syracuse_Orange_logo.svg/200px-Syracuse_Orange_logo.svg.png' },
+              { slug: 'virginia', name: 'UVA CAVALIERS', conf: 'ACC', abbr: 'UVA', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Virginia_Cavaliers_sabre_logo.svg/200px-Virginia_Cavaliers_sabre_logo.svg.png' },
             ].map((s) => (
               <Link key={s.slug} href={`/college/teams/${s.slug}`}
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)', overflow: 'hidden', display: 'block', textDecoration: 'none', transition: 'border-color 0.2s, transform 0.2s' }}

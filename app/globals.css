@@ -227,6 +227,13 @@ body::before {
 /* Red glow */
 .red-glow { filter: drop-shadow(0 0 20px rgba(204,0,0,0.4)); }
 
+/* Video hero: in light mode the section bg is light so no special override needed —
+   overlay text on thumbnails is already white via rgba(255,255,255,x).
+   The side-card muted info text below tiles should be readable in both modes. */
+:root[data-theme='light'] .video-hero .side-card-meta {
+  color: var(--text-muted);
+}
+
 /* Page transitions */
 .page-enter { opacity: 0; transform: translateY(20px); }
 .page-enter-active { opacity: 1; transform: translateY(0); transition: all 0.4s; }

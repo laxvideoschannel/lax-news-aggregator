@@ -75,8 +75,8 @@ export default async function CollegeTeamPage({ params }: Props) {
         }}
       >
         <div className="container">
-          <Link href="/college" target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
-            {'<-'} BACK TO COLLEGE
+          <Link href="/college" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text-muted)' }}>
+            ← BACK TO COLLEGE
           </Link>
 
           <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '28px', marginTop: '20px', alignItems: 'end' }}>

@@ -42,23 +42,30 @@ export default function CollegePage() {
           </p>
 
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '24px' }}>
-            <Link href="/college/scoreboard" target="_blank" rel="noopener noreferrer" className="btn-outline">Scoreboard</Link>
-            <Link href="/college/standings" target="_blank" rel="noopener noreferrer" className="btn-outline">Standings</Link>
-            <Link href="/college/rankings" target="_blank" rel="noopener noreferrer" className="btn-outline">Rankings</Link>
+            <Link href="/college/scoreboard" className="btn-outline">Scoreboard</Link>
+            <Link href="/college/standings" className="btn-outline">Standings</Link>
+            <Link href="/college/rankings" className="btn-outline">Rankings</Link>
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '16px' }}>
-            {[
-              { label: 'School Hubs', value: `${COLLEGE_TEAMS.length}`, sub: 'Team pages live now' },
-              { label: 'Official Links', value: 'School First', sub: 'Schedule pages replace generic watch links' },
-              { label: 'Next Phase', value: 'Players', sub: 'Profiles and game pages come next' },
-            ].map((item) => (
-              <div key={item.label} className="card" style={{ padding: '24px' }}>
-                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>{item.label.toUpperCase()}</div>
-                <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>{item.sub}</div>
-              </div>
-            ))}
+            <Link href="/college/add-school" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{COLLEGE_TEAMS.length}</div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>SCHOOL HUBS</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Team pages live now</div>
+              <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>+ ADD YOUR SCHOOL →</div>
+            </Link>
+            <Link href="/videos" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>Video</div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>COLLEGE VIDEOS</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Watch college lacrosse highlights</div>
+              <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>WATCH NOW →</div>
+            </Link>
+            <Link href="/college/teams/duke" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>Players</div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>TEAM ROSTERS</div>
+              <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Browse players from each school</div>
+              <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>VIEW ROSTERS →</div>
+            </Link>
           </div>
         </div>
       </section>
@@ -111,7 +118,7 @@ export default function CollegePage() {
                       <div style={{ fontSize: '14px', color: 'var(--text-muted)' }}>{row.conference} - {row.record}</div>
                     </div>
                     {row.slug ? (
-                      <Link href={`/college/teams/${row.slug}`} target="_blank" rel="noopener noreferrer" style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)' }}>
+                      <Link href={`/college/teams/${row.slug}`} style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.12em', color: 'var(--primary)' }}>
                         OPEN
                       </Link>
                     ) : null}
@@ -119,8 +126,8 @@ export default function CollegePage() {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: '12px', marginTop: '18px', flexWrap: 'wrap' }}>
-                <Link href="/college/rankings" target="_blank" rel="noopener noreferrer" className="btn-primary">Full Rankings</Link>
-                <Link href="/college/standings" target="_blank" rel="noopener noreferrer" className="btn-outline">Conference Standings</Link>
+                <Link href="/college/rankings" className="btn-primary">Full Rankings</Link>
+                <Link href="/college/standings" className="btn-outline">Conference Standings</Link>
               </div>
             </div>
           </div>
@@ -156,7 +163,7 @@ export default function CollegePage() {
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '18px' }}>
             {visibleTeams.map((team) => (
-              <Link key={team.slug} href={`/college/teams/${team.slug}`} target="_blank" rel="noopener noreferrer" className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
+              <Link key={team.slug} href={`/college/teams/${team.slug}`} className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 12%, transparent) 0%, transparent 70%)` }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
@@ -175,15 +182,24 @@ export default function CollegePage() {
                         alignItems: 'center',
                         justifyContent: 'center',
                         background: `color-mix(in srgb, ${team.primary} 18%, var(--team-surface))`,
-                        color: team.primary,
                         border: '1px solid var(--border)',
-                        fontFamily: 'var(--font-display)',
-                        fontWeight: 900,
-                        fontSize: '24px',
-                        padding: '0 8px',
+                        overflow: 'hidden',
+                        padding: '8px',
                       }}
                     >
-                      {team.shortName}
+                      {team.logoUrl ? (
+                        <img
+                          src={team.logoUrl}
+                          alt={team.school}
+                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = `<span style="font-family:var(--font-display);font-weight:900;font-size:20px;color:${team.primary};padding:0 4px">${team.shortName}</span>`;
+                          }}
+                        />
+                      ) : (
+                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '20px', color: team.primary, padding: '0 4px' }}>{team.shortName}</span>
+                      )}
                     </div>
                   </div>
 
