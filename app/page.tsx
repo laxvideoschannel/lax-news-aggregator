@@ -255,7 +255,7 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'start' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'stretch' }}>
               {/* Main player */}
               {featuredVideo && (
                 <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', aspectRatio: '16/9', width: '100%', minWidth: 0 }}>
@@ -287,11 +287,11 @@ export default function HomePage() {
               )}
 
               {/* Side stack */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', height: '100%' }}>
                 {sideVideos.map((v) => (
                   <div key={v.id}
                     onClick={() => { setActiveVideoId(null); window.open(v.youtubeUrl, '_blank'); }}
-                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', aspectRatio: '16/9', width: '100%' }}
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', flex: 1, minHeight: 0, width: '100%' }}
                     onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--primary)')}
                     onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}>
                     <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />

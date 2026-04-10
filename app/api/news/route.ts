@@ -12,15 +12,49 @@ type FeedStory = {
   image_url?: string;
 };
 
+// Decode Google News redirect URLs to get the real article URL
+async function decodeGoogleNewsUrl(gnUrl: string): Promise<string> {
+  if (!gnUrl.includes('news.google.com')) return gnUrl;
+  try {
+    // Google News RSS items link to news.google.com/rss/articles/CB...
+    // The actual URL can sometimes be extracted from the feed item's <guid> or by
+    // hitting the Google News redirect endpoint with a HEAD request
+    const controller = new AbortController();
+    setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(gnUrl, {
+      method: 'GET',
+      redirect: 'follow',
+      signal: controller.signal,
+      headers: {
+        'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)',
+      },
+    });
+    const finalUrl = res.url;
+    // If redirect landed on a non-google URL, use it
+    if (finalUrl && !finalUrl.includes('news.google.com') && !finalUrl.includes('google.com/search')) {
+      return finalUrl;
+    }
+    // Fallback: try extracting from HTML canonical link
+    const html = await res.text();
+    const canonical = html.match(/<link[^>]+rel=[\"']canonical[\"'][^>]+href=[\"']([^\"']+)[\"']/i)?.[1];
+    if (canonical && !canonical.includes('news.google.com')) return canonical;
+  } catch { /* ignore */ }
+  return gnUrl;
+}
+
 async function resolveArticleImage(url: string): Promise<string | undefined> {
   try {
+    // Decode Google News redirect first
+    const resolvedUrl = await decodeGoogleNewsUrl(url);
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
-    const response = await fetch(url, {
+    const response = await fetch(resolvedUrl, {
       headers: {
         'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
         'accept-language': 'en-US,en;q=0.5',
+        'referer': 'https://www.google.com/',
       },
       redirect: 'follow',
       signal: controller.signal,
