@@ -12,29 +12,54 @@ type FeedStory = {
   image_url?: string;
 };
 
-async function resolveArticleImage(url: string) {
+async function resolveArticleImage(url: string): Promise<string | undefined> {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
     const response = await fetch(url, {
-      headers: { 'user-agent': 'Mozilla/5.0 (compatible; LaxHubBot/1.0)' },
-      next: { revalidate: 60 * 30 },
+      headers: {
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        'accept-language': 'en-US,en;q=0.5',
+      },
+      redirect: 'follow',
+      signal: controller.signal,
     });
+    clearTimeout(timeout);
     if (!response.ok) return undefined;
 
+    const finalUrl = response.url || url;
     const html = await response.text();
+
+    // Try og:image and twitter:image meta tags (both attribute orderings)
     const metaPatterns = [
       /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i,
       /<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i,
+      /<meta[^>]+property=["']og:image:secure_url["'][^>]+content=["']([^"']+)["']/i,
       /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
       /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
     ];
-
     for (const pattern of metaPatterns) {
       const match = html.match(pattern);
-      if (match?.[1]) return new URL(match[1], url).toString();
+      if (match?.[1] && !match[1].startsWith('data:')) {
+        const imgUrl = new URL(match[1], finalUrl).toString();
+        if (!imgUrl.includes('favicon') && !imgUrl.includes('1x1') && !imgUrl.includes('pixel')) {
+          return imgUrl;
+        }
+      }
     }
 
-    const imgMatch = html.match(/<img[^>]+src=["']([^"']+)["']/i);
-    return imgMatch?.[1] ? new URL(imgMatch[1], url).toString() : undefined;
+    // Try JSON-LD schema for article image
+    const jsonLdMatch = html.match(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/i);
+    if (jsonLdMatch?.[1]) {
+      try {
+        const schema = JSON.parse(jsonLdMatch[1]);
+        const img = schema?.image?.url || (Array.isArray(schema?.image) && schema.image[0]?.url) || (typeof schema?.image === 'string' && schema.image);
+        if (typeof img === 'string' && img.startsWith('http')) return img;
+      } catch { /* ignore */ }
+    }
+
+    return undefined;
   } catch {
     return undefined;
   }

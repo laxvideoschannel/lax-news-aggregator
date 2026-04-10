@@ -23,8 +23,103 @@ type VideoItem = {
 
 type VideoFilter = 'ALL' | 'PLL' | 'WLL' | 'MY VIDEOS';
 
+type ArticleData = {
+  title?: string;
+  author?: string;
+  paragraphs?: string[];
+  image?: string;
+  description?: string;
+  sourceUrl?: string;
+  canEmbed?: boolean;
+  error?: string;
+};
+
 const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
 const WLL_TICKETS_URL = 'https://thewll.com/schedule';
+
+function ArticleModal({ item, onClose }: { item: any; onClose: () => void }) {
+  const [article, setArticle] = useState<ArticleData | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(`/api/news-article?url=${encodeURIComponent(item.link)}`)
+      .then(r => r.json())
+      .then(d => { setArticle(d); setLoading(false); })
+      .catch(() => { setArticle({ canEmbed: false }); setLoading(false); });
+  }, [item.link]);
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    document.body.style.overflow = 'hidden';
+    return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
+  }, [onClose]);
+
+  const displayImage = article?.image || item.image_url;
+  const paragraphs = article?.paragraphs || [];
+  const hasContent = !loading && paragraphs.length > 0;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', width: '100%', maxWidth: '760px', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}
+      >
+        <button
+          onClick={onClose}
+          style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10, background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', color: '#fff', width: '36px', height: '36px', cursor: 'pointer', fontFamily: 'var(--font-accent)', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+        >&#x2715;</button>
+
+        {displayImage && (
+          <div style={{ aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
+            <img src={displayImage} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none'; }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.6) 100%)' }} />
+          </div>
+        )}
+
+        <div style={{ padding: '28px 32px 32px' }}>
+          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap' }}>
+            <span className="news-pill">{item.category || 'General'}</span>
+            {item.source && <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>{item.source.toUpperCase()}</span>}
+            {item.published_at && <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'var(--text-muted)' }}>{new Date(item.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>}
+          </div>
+
+          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(24px, 4vw, 38px)', lineHeight: 1.05, color: 'var(--text)', marginBottom: '8px' }}>{article?.title || item.title}</h2>
+          {article?.author && <div style={{ fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: '24px' }}>BY {article.author.toUpperCase()}</div>}
+
+          <div style={{ width: '48px', height: '3px', background: 'var(--primary)', marginBottom: '24px' }} />
+
+          {loading ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {[100, 85, 92, 78].map((w, i) => (
+                <div key={i} style={{ height: '14px', background: 'var(--bg)', opacity: 0.6, width: `${w}%` }} />
+              ))}
+            </div>
+          ) : hasContent ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {paragraphs.map((p: string, i: number) => (
+                <p key={i} style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, margin: 0 }}>{p}</p>
+              ))}
+            </div>
+          ) : (
+            <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8 }}>{item.summary || article?.description || 'Unable to load article content.'}</p>
+          )}
+
+          <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Source: {item.source}</span>
+            <a href={item.link} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: '13px' }}>
+              Read Full Article &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 function PlayButton({ size = 56 }: { size?: number }) {
   return (
@@ -74,6 +169,7 @@ export default function HomePage() {
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [news, setNews] = useState<any[]>([]);
   const [showFilmCta, setShowFilmCta] = useState(false);
+  const [selectedNewsItem, setSelectedNewsItem] = useState<any | null>(null);
 
   useEffect(() => {
     const sync = () => setTeamId(localStorage.getItem('lax_team') || 'chaos');
@@ -159,10 +255,10 @@ export default function HomePage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels or individual videos in the admin panel.</p>
             </div>
           ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'stretch' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1.55fr 1fr', gap: '16px', alignItems: 'start' }}>
               {/* Main player */}
               {featuredVideo && (
-                <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', aspectRatio: '16/9' }}>
+                <div style={{ background: '#000', border: '1px solid var(--border)', overflow: 'hidden', position: 'relative', aspectRatio: '16/9', width: '100%', minWidth: 0 }}>
                   {activeVideoId === featuredVideo.id ? (
                     <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
                   ) : (
@@ -190,12 +286,12 @@ export default function HomePage() {
                 </div>
               )}
 
-              {/* Side stack — fills same height as main via CSS grid rows */}
-              <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '16px' }}>
+              {/* Side stack */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 {sideVideos.map((v) => (
                   <div key={v.id}
                     onClick={() => { setActiveVideoId(null); window.open(v.youtubeUrl, '_blank'); }}
-                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', minHeight: 0 }}
+                    style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', overflow: 'hidden', cursor: 'pointer', transition: 'border-color 0.2s', position: 'relative', aspectRatio: '16/9', width: '100%' }}
                     onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--primary)')}
                     onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}>
                     <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -319,16 +415,19 @@ export default function HomePage() {
                       )}
                     </div>
                   )}
-                  {spotlight.stats && spotlight.stats.length > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1px', background: 'var(--border)', marginBottom: '16px' }}>
-                      {spotlight.stats.slice(0, 4).map((s: any, i: number) => (
+                  {spotlight.stats && spotlight.stats.length > 0 && (() => {
+                    const stats = spotlight.stats.filter((s: any) => s.value && s.label).slice(0, 4);
+                    return (
+                    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${stats.length}, 1fr)`, gap: '1px', background: 'var(--border)', marginBottom: '16px' }}>
+                      {stats.map((s: any, i: number) => (
                         <div key={i} style={{ background: 'var(--bg-card)', padding: '12px 14px' }}>
                           <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '26px', color: 'var(--primary)', lineHeight: 1 }}>{s.value}</div>
                           <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{s.label?.toUpperCase()}</div>
                         </div>
                       ))}
                     </div>
-                  )}
+                    );
+                  })()}
                   {spotlight.description && <p style={{ color: 'var(--text-muted)', fontSize: '14px', lineHeight: 1.75, marginBottom: '16px' }}>{spotlight.description}</p>}
                   {visibleAccolades.length > 0 && (
                     <div style={{ marginBottom: '20px' }}>
@@ -402,13 +501,13 @@ export default function HomePage() {
                 );
                 const showImage = item.image_url && !isGoogleNewsImg;
                 return (
-                <a key={i} href={item.link} target="_blank" rel="noopener noreferrer" className="card"
-                  style={{ padding: 0, overflow: 'hidden', display: 'block', textDecoration: 'none', transition: 'transform 0.2s, border-color 0.2s' }}
-                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.borderColor = 'var(--primary)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.borderColor = 'var(--border)'; }}>
+                <div key={i} className="card" onClick={() => setSelectedNewsItem(item)}
+                  style={{ padding: 0, overflow: 'hidden', display: 'block', cursor: 'pointer', transition: 'transform 0.2s, border-color 0.2s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; }}>
                   <div style={{ aspectRatio: '16/9', overflow: 'hidden', background: 'color-mix(in srgb, var(--primary) 12%, var(--bg))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
                     {showImage ? (
-                      <img src={item.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { e.currentTarget.parentElement!.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--primary) 12%, var(--bg))"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.3"><path d="M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3l2-2h4l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z"/><circle cx="12" cy="13" r="3"/></svg></div>`; }} />
+                      <img src={item.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { (e.currentTarget.parentElement as HTMLElement).innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--primary) 12%, var(--bg))"><svg width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' opacity='0.3'><path d='M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3l2-2h4l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z'/><circle cx='12' cy='13' r='3'/></svg></div>`; }} />
                     ) : (
                       <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ opacity: 0.3 }}>
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
@@ -422,8 +521,9 @@ export default function HomePage() {
                       <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{item.published_at ? new Date(item.published_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}</span>
                     </div>
                     <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '18px', lineHeight: 1.15, color: 'var(--text)' }}>{item.title}</h3>
+                    <div style={{ marginTop: '8px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--primary)' }}>READ STORY →</div>
                   </div>
-                </a>
+                </div>
               )})}
             </div>
           </div>
@@ -443,9 +543,9 @@ export default function HomePage() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
             {[
               { slug: 'duke', name: 'DUKE BLUE DEVILS', conf: 'ACC', abbr: 'DU', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/200px-Duke_Athletics_logo.svg.png' },
-              { slug: 'maryland', name: 'MARYLAND TERRAPINS', conf: 'BIG TEN', abbr: 'MD', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Maryland_Terrapins_logo.svg/200px-Maryland_Terrapins_logo.svg.png' },
-              { slug: 'syracuse', name: 'SYRACUSE ORANGE', conf: 'ACC', abbr: 'SYR', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Syracuse_Orange_logo.svg/200px-Syracuse_Orange_logo.svg.png' },
-              { slug: 'virginia', name: 'UVA CAVALIERS', conf: 'ACC', abbr: 'UVA', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Virginia_Cavaliers_sabre_logo.svg/200px-Virginia_Cavaliers_sabre_logo.svg.png' },
+              { slug: 'maryland', name: 'MARYLAND TERRAPINS', conf: 'BIG TEN', abbr: 'MD', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Maryland_Terrapins_logo.svg/330px-Maryland_Terrapins_logo.svg.png' },
+              { slug: 'syracuse', name: 'SYRACUSE ORANGE', conf: 'ACC', abbr: 'SYR', logo: 'https://upload.wikimedia.org/wikipedia/commons/4/49/Syracuse_Orange_logo.svg' },
+              { slug: 'virginia', name: 'UVA CAVALIERS', conf: 'ACC', abbr: 'UVA', logo: 'https://upload.wikimedia.org/wikipedia/commons/0/04/UVA_Cavaliers_logo.png' },
             ].map((s) => (
               <Link key={s.slug} href={`/college/teams/${s.slug}`}
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)', overflow: 'hidden', display: 'block', textDecoration: 'none', transition: 'border-color 0.2s, transform 0.2s' }}
@@ -497,6 +597,11 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+      )}
+
+      {/* ─── ARTICLE MODAL ─── */}
+      {selectedNewsItem && (
+        <ArticleModal item={selectedNewsItem} onClose={() => setSelectedNewsItem(null)} />
       )}
 
     </div>

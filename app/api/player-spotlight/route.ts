@@ -157,6 +157,15 @@ export async function GET(request: Request) {
         system: `You are a professional sports writer for a PLL lacrosse fan site. 
 Generate compelling, accurate player spotlight content based on the facts provided.
 Respond ONLY with a JSON object, no markdown, no backticks.
+
+For stats, use EXACTLY 4 stats that are position-appropriate:
+- Goalie: use stats like saves, save%, GAA (goals against average), wins, or games started
+- Attack: use stats like goals, assists, points, shooting %, or two-point goals  
+- Midfield: use stats like goals, assists, ground balls, points, or caused turnovers
+- Defense/LSM: use stats like caused turnovers, ground balls, clears, or +/-
+- Close Defense: use stats like caused turnovers, ground balls, clears, or opponent shooting %
+Always use real, specific numbers from the facts provided. Never leave a stat as "N/A".
+
 The JSON must have exactly these fields:
 {
   "headline": "short punchy 4-6 word headline about the player",
