@@ -89,7 +89,7 @@ export default function AdminPage() {
   const [schoolSubs, setSchoolSubs] = useState<any[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings>({ showFilmCta: false, filmCtaEmail: '', filmCtaHeadline: 'WANT YOUR TEAM ON FILM?' });
   const [settingsSaving, setSettingsSaving] = useState(false);
-  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [videoForm, setVideoForm] = useState({ title: '', youtubeUrl: '', channelName: '', description: '', league: 'CUSTOM' as 'PLL' | 'WLL' | 'CUSTOM', featured: false });
   const [sourceForm, setSourceForm] = useState({ title: '', handleUrl: '', channelName: '', league: 'CUSTOM' as 'PLL' | 'WLL' | 'CUSTOM', pullMode: 'select' as 'all' | 'select', teamId: '' });
@@ -248,9 +248,46 @@ export default function AdminPage() {
           <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '52px', lineHeight: 0.9, marginBottom: '14px' }}>SIGN IN</h1>
           <p style={{ color: 'var(--text-muted)', marginBottom: '22px', fontSize: 14, lineHeight: 1.7 }}>Manage videos, schedule, news, and site settings.</p>
           <form onSubmit={handleLogin} style={{ display: 'grid', gap: '12px' }}>
-            <input value={loginForm.username} onChange={(e) => setLoginForm((p) => ({ ...p, username: e.target.value }))} placeholder="Username" style={inputStyle} />
-            <input type="password" value={loginForm.password} onChange={(e) => setLoginForm((p) => ({ ...p, password: e.target.value }))} placeholder="Password" style={inputStyle} />
-            {error && <div style={{ color: 'var(--primary)', fontSize: '13px' }}>{error}</div>}
+            <input value={loginForm.username} onChange={(e) => setLoginForm((p) => ({ ...p, username: e.target.value }))} placeholder="Username" autoComplete="username" style={inputStyle} />
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                value={loginForm.password}
+                onChange={(e) => setLoginForm((p) => ({ ...p, password: e.target.value }))}
+                placeholder="Password"
+                autoComplete="current-password"
+                style={{ ...inputStyle, paddingRight: '44px' }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(v => !v)}
+                style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: '4px', display: 'flex', alignItems: 'center' }}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/>
+                    <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                ) : (
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                )}
+              </button>
+            </div>
+            {error && (
+              <div style={{ color: 'var(--primary)', fontSize: '13px', background: 'color-mix(in srgb, var(--primary) 10%, transparent)', border: '1px solid color-mix(in srgb, var(--primary) 30%, transparent)', padding: '10px 14px', lineHeight: 1.5 }}>
+                {error}
+                {error.toLowerCase().includes('invalid') && (
+                  <div style={{ marginTop: '6px', opacity: 0.75, fontSize: '12px' }}>
+                    Make sure <code style={{ fontFamily: 'monospace', background: 'rgba(0,0,0,0.2)', padding: '1px 4px' }}>ADMIN_USERNAME</code> and <code style={{ fontFamily: 'monospace', background: 'rgba(0,0,0,0.2)', padding: '1px 4px' }}>ADMIN_PASSWORD</code> are set in Vercel → Settings → Environment Variables, then redeploy.
+                  </div>
+                )}
+              </div>
+            )}
             <button type="submit" className="btn-primary" disabled={submitting} style={{ cursor: 'pointer' }}>{submitting ? 'Signing in…' : 'Sign In →'}</button>
           </form>
         </div>
