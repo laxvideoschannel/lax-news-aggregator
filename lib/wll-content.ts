@@ -223,7 +223,11 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
     spotlights: [
       {
         name: 'Emily Hawryschuk',
+        number: '8',
         position: 'Midfield',
+        hometown: 'Lutherville, MD',
+        college: 'Northwestern',
+        highlight: 'Golden Stick Winner',
         description: 'Emily Hawryschuk returns to New York after winning last season\'s Golden Stick, giving the Charging a proven star who already knows how to dominate this format.',
         quote: 'The Charging always have game-breaking range when Hawryschuk is on the floor.',
         stats: [
@@ -235,7 +239,11 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
       },
       {
         name: 'Izzy Scane',
+        number: '22',
         position: 'Attack',
+        hometown: 'Kenilworth, IL',
+        college: 'Northwestern',
+        highlight: 'Golden Stick Favorite',
         description: 'ESPN identified Izzy Scane as a Golden Stick favorite for 2026, and New York\'s offense is built to put the ball in her hands in space and let her finish.',
         quote: 'If New York gets enough touches for Scane, the Charging can score in waves.',
         stats: [
@@ -247,7 +255,11 @@ export const WLL_TEAM_PAGE_CONTENT: Record<string, TeamPageContent> = {
       },
       {
         name: 'Madison Doucette',
+        number: '1',
         position: 'Goalie',
+        hometown: 'Doylestown, PA',
+        college: 'North Carolina',
+        highlight: 'Elite Goalie Duo',
         description: 'Madison Doucette headlines a goalie duo ESPN called one of New York\'s biggest strengths, capable of flipping momentum in an instant.',
         quote: 'Goalie play is a separator in sixes, and Doucette gives New York real winning equity.',
         stats: [
