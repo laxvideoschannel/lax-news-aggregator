@@ -192,25 +192,18 @@ export default function SchedulePage() {
                   <div
                     style={{
                       position: 'absolute',
-                      right: '-12px',
-                      bottom: '24px',
+                      right: '-24px',
+                      bottom: '-24px',
+                      width: '160px',
+                      height: '160px',
                       transform: 'rotate(-14deg)',
-                      opacity: 0.08,
+                      opacity: 0.07,
+                      filter: 'grayscale(100%)',
                       pointerEvents: 'none',
-                      fontFamily: 'var(--font-accent)',
-                      fontSize: '30px',
-                      fontWeight: 700,
-                      letterSpacing: '0.16em',
-                      textTransform: 'uppercase',
-                      color: 'var(--text)',
-                      whiteSpace: 'nowrap',
+                      zIndex: 0,
                     }}
                   >
-                    {[...Array(4)].map((_, index) => (
-                      <div key={index} style={{ marginBottom: '8px' }}>
-                        {`${getTeam(winnerTeamId).full} + ${getTeam(winnerTeamId).full} +`}
-                      </div>
-                    ))}
+                    <TeamLogo teamId={winnerTeamId} size={160} />
                   </div>
                 ) : null}
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 3%, transparent) 0%, transparent 100%)' }} />
