@@ -98,10 +98,19 @@ export default function AddSchoolPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    // Simulate submission — hook up to your backend / Supabase / email as needed
-    await new Promise((r) => setTimeout(r, 800));
-    setSubmitting(false);
-    setSubmitted(true);
+    try {
+      const res = await fetch('/api/school-submissions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) throw new Error('Failed');
+      setSubmitting(false);
+      setSubmitted(true);
+    } catch {
+      setSubmitting(false);
+      alert('Submission failed — please try again.');
+    }
   };
 
   if (submitted) {

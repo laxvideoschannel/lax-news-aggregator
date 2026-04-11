@@ -237,3 +237,7 @@ body::before {
 /* Page transitions */
 .page-enter { opacity: 0; transform: translateY(20px); }
 .page-enter-active { opacity: 1; transform: translateY(0); transition: all 0.4s; }
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

@@ -37,6 +37,55 @@ type ArticleData = {
 const PLL_TICKETS_URL = 'https://premierlacrosseleague.com/schedule';
 const WLL_TICKETS_URL = 'https://thewll.com/schedule';
 
+function NewsImageLazy({ url, alt }: { url: string; alt: string }) {
+  const [src, setSrc] = useState<string | null>(null);
+  const [failed, setFailed] = useState(false);
+
+  useEffect(() => {
+    if (!url) { setFailed(true); return; }
+    // If it's already a real image URL (not Google News), use it directly
+    const isGoogleNews = url.includes('news.google.com') || url.includes('googleusercontent.com') || url.includes('lh3.google');
+    if (!isGoogleNews) { setSrc(url); return; }
+    // Otherwise fetch via our image proxy
+    fetch(`/api/news-image?url=${encodeURIComponent(url)}`)
+      .then(r => r.json())
+      .then(d => { if (d.image) setSrc(d.image); else setFailed(true); })
+      .catch(() => setFailed(true));
+  }, [url]);
+
+  // Also try lazy-fetching even non-Google URLs if they fail to load
+  const handleImgError = () => {
+    if (src && !src.includes('/api/news-image')) {
+      fetch(`/api/news-image?url=${encodeURIComponent(url)}`)
+        .then(r => r.json())
+        .then(d => { if (d.image) setSrc(d.image); else setFailed(true); })
+        .catch(() => setFailed(true));
+    } else {
+      setFailed(true);
+    }
+  };
+
+  if (failed || (!src && !url)) {
+    return (
+      <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'color-mix(in srgb, var(--primary) 10%, var(--bg))' }}>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" style={{ opacity: 0.25 }}>
+          <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+        </svg>
+      </div>
+    );
+  }
+
+  if (!src) {
+    return (
+      <div style={{ width: '100%', height: '100%', background: 'color-mix(in srgb, var(--primary) 8%, var(--bg))', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: '24px', height: '24px', border: '2px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }} />
+      </div>
+    );
+  }
+
+  return <img src={src} alt={alt} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={handleImgError} />;
+}
+
 function ArticleModal({ item, onClose }: { item: any; onClose: () => void }) {
   const [article, setArticle] = useState<ArticleData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -221,103 +270,121 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* ─── VIDEO BENTO ─── */}
-      <section style={{ background: 'var(--bg)', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
-        {/* Header bar */}
-        <div className="container" style={{ paddingTop: '40px', paddingBottom: '20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', gap: '16px' }}>
-            <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.2em', color: 'var(--primary)' }}>LATEST</span>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: 0.9, color: 'var(--text)' }}>
-              LACROSSE <span style={{ color: 'var(--primary)' }}>VIDEOS</span>
-            </h2>
+      {/* ─── VIDEO FEATURE HERO ─── */}
+      <section style={{ position: 'relative', background: '#000', overflow: 'hidden', borderBottom: '1px solid var(--border)', minHeight: '480px' }}>
+        {/* Dynamic background from featured video thumbnail */}
+        {featuredVideo && (
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
+            <img src={featuredVideo.thumbnailUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(18px) brightness(0.28) saturate(1.4)', transform: 'scale(1.08)' }} />
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.2) 100%)' }} />
           </div>
-          <div style={{ display: 'flex', gap: 0, border: '1px solid var(--border)' }}>
-            {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
-              <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
-                style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', padding: '8px 18px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'var(--text-muted)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
-                {f}
-              </button>
-            ))}
-          </div>
-        </div>
+        )}
 
-        {/* Bento grid */}
-        <div className="container" style={{ paddingBottom: '40px' }}>
+        <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '48px', paddingBottom: '48px' }}>
+          {/* Header */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div style={{ width: '3px', height: '28px', background: 'var(--primary)' }} />
+              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', letterSpacing: '0.05em', color: '#fff' }}>
+                FEATURED <span style={{ color: 'var(--primary)' }}>VIDEO</span>
+              </span>
+            </div>
+            <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(255,255,255,0.18)' }}>
+              {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
+                <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
+                  style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', padding: '7px 16px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'rgba(255,255,255,0.5)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.18)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  {f}
+                </button>
+              ))}
+            </div>
+          </div>
+
           {videosLoading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '240px 240px', gap: '8px' }}>
-              {[1,2,3,4,5,6].map(i => <div key={i} style={{ background: 'var(--bg-card)', opacity: 0.4 + i * 0.05 }} />)}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'center' }}>
+              <div style={{ aspectRatio: '16/9', background: 'rgba(255,255,255,0.07)' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {[80, 55, 65, 40].map((w, i) => <div key={i} style={{ height: '14px', background: 'rgba(255,255,255,0.07)', width: `${w}%` }} />)}
+              </div>
             </div>
           ) : filteredVideos.length === 0 ? (
-            <div className="card" style={{ padding: '48px', textAlign: 'center' }}>
-              <p style={{ color: 'var(--text-muted)', fontSize: '15px' }}>No videos yet — add channels in the admin panel.</p>
+            <div style={{ padding: '48px', textAlign: 'center' }}>
+              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '15px' }}>No videos yet — add channels in the admin panel.</p>
             </div>
-          ) : (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridTemplateRows: '248px 248px', gap: '8px' }}>
+          ) : featuredVideo ? (
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '32px', alignItems: 'center' }}>
 
-              {/* Cell 0 — FEATURED: spans 2 rows, 2 cols */}
-              {featuredVideo && (
-                <div
-                  style={{ gridColumn: '1 / 3', gridRow: '1 / 3', position: 'relative', overflow: 'hidden', background: '#000', cursor: 'pointer' }}
-                  onClick={() => setActiveVideoId(activeVideoId === featuredVideo.id ? null : featuredVideo.id)}
-                  onMouseEnter={(e) => { if (activeVideoId !== featuredVideo.id) (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1.03)'; }}
-                  onMouseLeave={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement | null)?.style && ((e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1)'); }}
-                >
-                  {activeVideoId === featuredVideo.id ? (
-                    <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
-                  ) : (
-                    <>
-                      <img src={featuredVideo.thumbnailUrl} alt={featuredVideo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.4s ease' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.88) 100%)' }} />
-                      {/* League badge */}
-                      <div style={{ position: 'absolute', top: '20px', left: '20px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.2em', color: '#fff', background: 'var(--primary)', padding: '4px 10px' }}>
-                        {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
-                      </div>
-                      <div style={{ position: 'absolute', bottom: '28px', left: '28px', right: '28px', display: 'flex', alignItems: 'flex-end', gap: '20px' }}>
-                        <PlayButton size={64} />
-                        <div style={{ minWidth: 0 }}>
-                          <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(20px, 2.8vw, 34px)', lineHeight: 1.05, color: '#fff', marginBottom: '6px', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                            {featuredVideo.title}
-                          </div>
-                          <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em' }}>
-                            {featuredVideo.channelName}{featuredVideo.publishedAt ? ` · ${new Date(featuredVideo.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}` : ''}
-                          </div>
-                        </div>
-                      </div>
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* Cells 1–3 — side tiles, one per row slot on col 3 (and wrap if needed) */}
-              {sideVideos.map((v, i) => (
-                <div
-                  key={v.id}
-                  style={{ position: 'relative', overflow: 'hidden', background: '#000', cursor: 'pointer', gridColumn: 3, gridRow: i + 1 }}
-                  onClick={() => window.open(v.youtubeUrl, '_blank')}
-                  onMouseEnter={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1.05)'; }}
-                  onMouseLeave={(e) => { (e.currentTarget.querySelector('img') as HTMLImageElement).style.transform = 'scale(1)'; }}
-                >
-                  <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.35s ease' }} />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(0,0,0,0) 20%, rgba(0,0,0,0.85) 100%)' }} />
-                  <div style={{ position: 'absolute', top: '14px', left: '14px', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--primary)', background: 'rgba(0,0,0,0.55)', padding: '3px 8px' }}>
-                    {v.league === 'CUSTOM' ? 'MY VIDEOS' : `${v.league} OFFICIAL`}
-                  </div>
-                  <div style={{ position: 'absolute', bottom: '14px', left: '14px', right: '14px', display: 'flex', alignItems: 'flex-end', gap: '10px' }}>
-                    <PlayButton size={32} />
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '15px', lineHeight: 1.1, color: '#fff', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
-                        {v.title}
-                      </div>
-                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', color: 'rgba(255,255,255,0.45)', marginTop: '4px' }}>
-                        {v.publishedAt ? new Date(v.publishedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : v.channelName}
+              {/* Video player */}
+              <div style={{ position: 'relative', aspectRatio: '16/9', background: '#000', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}>
+                {activeVideoId === featuredVideo.id ? (
+                  <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
+                ) : (
+                  <div style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }}
+                    onClick={() => setActiveVideoId(featuredVideo.id)}
+                    onMouseEnter={(e) => { const img = e.currentTarget.querySelector('img') as HTMLImageElement; if (img) img.style.transform = 'scale(1.04)'; }}
+                    onMouseLeave={(e) => { const img = e.currentTarget.querySelector('img') as HTMLImageElement; if (img) img.style.transform = 'scale(1)'; }}>
+                    <img src={featuredVideo.thumbnailUrl} alt={featuredVideo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }} />
+                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                      <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'rgba(0,0,0,0.7)', border: '3px solid rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s, background 0.2s' }}>
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21" /></svg>
                       </div>
                     </div>
+                    <div style={{ position: 'absolute', bottom: '14px', left: '14px', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: '#fff', background: 'var(--primary)', padding: '4px 10px' }}>
+                      {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
+                    </div>
                   </div>
+                )}
+              </div>
+
+              {/* Info panel */}
+              <div style={{ color: '#fff' }}>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'var(--primary)', marginBottom: '12px' }}>
+                  {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`} · {featuredVideo.channelName}
                 </div>
-              ))}
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(22px, 3vw, 38px)', lineHeight: 1.05, color: '#fff', marginBottom: '14px' }}>
+                  {featuredVideo.title}
+                </h2>
+                {featuredVideo.publishedAt && (
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', marginBottom: '28px', letterSpacing: '0.08em' }}>
+                    {new Date(featuredVideo.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                  </div>
+                )}
+
+                {/* Next up thumbnails */}
+                {sideVideos.length > 0 && (
+                  <div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.35)', marginBottom: '12px' }}>UP NEXT</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      {sideVideos.map((v) => (
+                        <div key={v.id} onClick={() => window.open(v.youtubeUrl, '_blank')} style={{ display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', transition: 'background 0.2s' }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}>
+                          <div style={{ width: '80px', height: '45px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: '#000' }}>
+                            <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><polygon points="6,3 20,12 6,21" /></svg>
+                            </div>
+                          </div>
+                          <div style={{ minWidth: 0 }}>
+                            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.15em', color: 'var(--primary)', marginBottom: '3px' }}>
+                              {v.league === 'CUSTOM' ? 'MY VIDEOS' : `${v.league} OFFICIAL`}
+                            </div>
+                            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, color: '#fff', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
+                              {v.title}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <a href="/videos" style={{ display: 'inline-block', marginTop: '20px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '2px', textDecoration: 'none' }}>
+                  ALL VIDEOS →
+                </a>
+              </div>
 
             </div>
-          )}
+          ) : null}
         </div>
       </section>
 
@@ -506,28 +573,13 @@ export default function HomePage() {
               <Link href="/news" className="btn-outline">ALL NEWS →</Link>
             </div>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-              {news.map((item, i) => {
-                const isGoogleNewsImg = item.image_url && (
-                  item.image_url.includes('news.google.com') ||
-                  item.image_url.includes('googleusercontent.com') ||
-                  item.image_url.includes('lh3.google') ||
-                  item.image_url.includes('/rss/') 
-                );
-                const showImage = item.image_url && !isGoogleNewsImg;
-                return (
+              {news.map((item, i) => (
                 <div key={i} className="card" onClick={() => setSelectedNewsItem(item)}
                   style={{ padding: 0, overflow: 'hidden', display: 'block', cursor: 'pointer', transition: 'transform 0.2s, border-color 0.2s' }}
                   onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'; }}>
-                  <div style={{ aspectRatio: '16/9', overflow: 'hidden', background: 'color-mix(in srgb, var(--primary) 12%, var(--bg))', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                    {showImage ? (
-                      <img src={item.image_url} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={(e) => { (e.currentTarget.parentElement as HTMLElement).innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb, var(--primary) 12%, var(--bg))"><svg width='40' height='40' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.5' opacity='0.3'><path d='M19 20H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h3l2-2h4l2 2h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2z'/><circle cx='12' cy='13' r='3'/></svg></div>`; }} />
-                    ) : (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" style={{ opacity: 0.3 }}>
-                        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/>
-                        <path d="M3 9h18M9 21V9"/>
-                      </svg>
-                    )}
+                  <div style={{ aspectRatio: '16/9', overflow: 'hidden', position: 'relative' }}>
+                    <NewsImageLazy url={item.image_url || item.link} alt={item.title} />
                   </div>
                   <div style={{ padding: '18px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
@@ -538,7 +590,7 @@ export default function HomePage() {
                     <div style={{ marginTop: '8px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', color: 'var(--primary)' }}>READ STORY →</div>
                   </div>
                 </div>
-              )})}
+              ))}
             </div>
           </div>
         </section>

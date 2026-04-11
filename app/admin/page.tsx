@@ -39,7 +39,7 @@ type SiteSettings = {
   filmCtaHeadline: string;
 };
 
-type Tab = 'videos' | 'channels' | 'settings';
+type Tab = 'videos' | 'channels' | 'settings' | 'schools';
 
 const inputStyle = {
   padding: '13px 16px',
@@ -103,7 +103,7 @@ export default function AdminPage() {
   const [success, setSuccess] = useState('');
   const [videos, setVideos] = useState<AdminVideo[]>([]);
   const [sources, setSources] = useState<AdminSource[]>([]);
-  const [defaultSources, setDefaultSources] = useState<any[]>([]);
+  const [schoolSubs, setSchoolSubs] = useState<any[]>([]);  const [defaultSources, setDefaultSources] = useState<any[]>([]);
   const [previewVideos, setPreviewVideos] = useState<PreviewVideo[]>([]);
   const [selectedPreviewUrls, setSelectedPreviewUrls] = useState<string[]>([]);
   const [selectedSourceId, setSelectedSourceId] = useState('');
@@ -265,6 +265,7 @@ export default function AdminPage() {
         <TabButton active={activeTab === 'videos'} onClick={() => setActiveTab('videos')}>VIDEOS</TabButton>
         <TabButton active={activeTab === 'channels'} onClick={() => setActiveTab('channels')}>CHANNELS</TabButton>
         <TabButton active={activeTab === 'settings'} onClick={() => setActiveTab('settings')}>SITE SETTINGS</TabButton>
+        <TabButton active={activeTab === 'schools'} onClick={() => { setActiveTab('schools'); fetch('/api/school-submissions').then(r=>r.json()).then(setSchoolSubs).catch(()=>{}); }}>SCHOOL SUBMISSIONS</TabButton>
       </div>
 
       {/* ── TAB: VIDEOS ── */}
@@ -509,6 +510,56 @@ export default function AdminPage() {
               </p>
             </div>
           </div>
+        </div>
+      )}
+
+      {activeTab === 'schools' && (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.18em', color: 'var(--primary)', marginBottom: '4px' }}>REVIEW QUEUE</div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px' }}>School Submissions</h2>
+            </div>
+            <button onClick={() => fetch('/api/school-submissions').then(r=>r.json()).then(setSchoolSubs)} className="btn-outline" style={{ cursor: 'pointer' }}>↻ REFRESH</button>
+          </div>
+          {schoolSubs.length === 0 ? (
+            <div className="card" style={{ padding: '48px', textAlign: 'center' }}>
+              <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '32px', color: 'var(--primary)', marginBottom: '12px' }}>0</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '14px' }}>No pending school submissions yet. They'll show up here when fans submit via the College Hub.</p>
+            </div>
+          ) : (
+            <div style={{ display: 'grid', gap: '16px' }}>
+              {schoolSubs.map((sub: any) => (
+                <div key={sub.id} className="card" style={{ padding: '24px', borderLeft: `4px solid ${sub.status === 'approved' ? '#22c55e' : sub.status === 'rejected' ? '#ef4444' : 'var(--primary)'}` }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '16px', flexWrap: 'wrap', marginBottom: '16px' }}>
+                    <div>
+                      <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', marginBottom: '4px' }}>{sub.schoolName || 'Unnamed School'}</div>
+                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.15em', color: 'var(--text-muted)' }}>
+                        {sub.submitterName} · {sub.submitterEmail} · {new Date(sub.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </div>
+                    </div>
+                    <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.12em', padding: '4px 10px', background: sub.status === 'approved' ? '#22c55e22' : sub.status === 'rejected' ? '#ef444422' : 'color-mix(in srgb, var(--primary) 15%, transparent)', color: sub.status === 'approved' ? '#22c55e' : sub.status === 'rejected' ? '#ef4444' : 'var(--primary)' }}>
+                      {(sub.status || 'pending').toUpperCase()}
+                    </span>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '10px', marginBottom: '16px' }}>
+                    {([['Conference', sub.conference], ['Location', sub.city && sub.state ? `${sub.city}, ${sub.state}` : null], ['Nickname', sub.nickname], ['Team Site', sub.lacrosseSiteUrl], ['Schedule', sub.scheduleUrl], ['Roster', sub.rosterUrl]] as [string,string][]).filter(([,v]) => v).map(([label, val]) => (
+                      <div key={label}>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '3px' }}>{label}</div>
+                        {val.startsWith('http') ? <a href={val} target="_blank" rel="noopener noreferrer" style={{ fontSize: '13px', color: 'var(--primary)', wordBreak: 'break-all' }}>{val}</a> : <div style={{ fontSize: '13px', color: 'var(--text)' }}>{val}</div>}
+                      </div>
+                    ))}
+                  </div>
+                  {sub.notes && <div style={{ background: 'var(--bg)', border: '1px solid var(--border)', padding: '12px 14px', marginBottom: '16px', fontSize: '13px', color: 'var(--text-muted)', lineHeight: 1.6 }}><strong style={{ color: 'var(--text)', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.15em' }}>NOTES: </strong>{sub.notes}</div>}
+                  <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                    <button onClick={() => fetch('/api/school-submissions', { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: sub.id, status: 'approved'}) }).then(()=>fetch('/api/school-submissions').then(r=>r.json()).then(setSchoolSubs))} style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.15em', padding: '8px 18px', background: '#22c55e', color: '#fff', border: 'none', cursor: 'pointer' }}>✓ APPROVE</button>
+                    <button onClick={() => fetch('/api/school-submissions', { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: sub.id, status: 'rejected'}) }).then(()=>fetch('/api/school-submissions').then(r=>r.json()).then(setSchoolSubs))} style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.15em', padding: '8px 18px', background: 'transparent', color: '#ef4444', border: '1px solid #ef4444', cursor: 'pointer' }}>✕ REJECT</button>
+                    <button onClick={() => fetch('/api/school-submissions', { method: 'DELETE', headers: {'Content-Type':'application/json'}, body: JSON.stringify({id: sub.id}) }).then(()=>fetch('/api/school-submissions').then(r=>r.json()).then(setSchoolSubs))} style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.15em', padding: '8px 18px', background: 'transparent', color: 'var(--text-muted)', border: '1px solid var(--border)', cursor: 'pointer' }}>DELETE</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
     </div>
