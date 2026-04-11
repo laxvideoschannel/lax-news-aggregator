@@ -12,40 +12,107 @@ type Props = {
 
 const POSITION_LABELS: Record<string, string> = {
   A: 'Attack', M: 'Midfield', D: 'Defense', G: 'Goalie', LSM: 'LSM', SSDM: 'SSDM',
+  'ATTACK': 'Attack', 'MIDFIELD': 'Midfield', 'DEFENSE': 'Defense', 'GOALIE': 'Goalie',
+  'MF': 'Midfield', 'DEF': 'Defense', 'ATT': 'Attack',
 };
 
-function PlayerCard({ player, primary }: { player: RosterPlayer; primary: string }) {
+const POSITION_COLORS: Record<string, string> = {
+  A: '#dc2626', ATT: '#dc2626', ATTACK: '#dc2626',
+  M: '#2563eb', MF: '#2563eb', MIDFIELD: '#2563eb',
+  D: '#16a34a', DEF: '#16a34a', DEFENSE: '#16a34a',
+  G: '#d97706', GOALIE: '#d97706',
+  LSM: '#7c3aed', SSDM: '#0891b2',
+};
+
+function nameToSlug(name: string) {
+  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
+function getPosKey(position: string) {
+  return position?.toUpperCase().trim().split(/[\/\s]/)[0] || '';
+}
+
+function PlayerCard({ player, primary, teamSlug }: { player: RosterPlayer; primary: string; teamSlug: string }) {
   const initials = player.name.split(' ').map((p: string) => p[0]).slice(0, 2).join('');
+  const playerSlug = nameToSlug(player.name);
+  const posKey = getPosKey(player.position || '');
+  const posLabel = POSITION_LABELS[posKey] || player.position || '';
+  const posColor = POSITION_COLORS[posKey] || primary;
+
+  // Highlight stat: prefer height, then weight, then class year as a "bio stat"
+  const highlightStat = player.height
+    ? { label: 'HT', value: player.height }
+    : player.weight
+    ? { label: 'WT', value: `${player.weight} lbs` }
+    : player.classYear
+    ? { label: 'CLASS', value: player.classYear }
+    : null;
+
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
+    <Link
+      href={`/college/teams/${teamSlug}/players/${playerSlug}`}
+      style={{ display: 'grid', gridTemplateColumns: '96px 1fr auto', gap: 18, padding: '14px 0', borderBottom: '1px solid var(--border)', alignItems: 'center', textDecoration: 'none', transition: 'background 0.15s' }}
+      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'color-mix(in srgb, var(--primary) 4%, transparent)'; (e.currentTarget as HTMLElement).style.marginLeft = '-12px'; (e.currentTarget as HTMLElement).style.paddingLeft = '12px'; (e.currentTarget as HTMLElement).style.marginRight = '-12px'; (e.currentTarget as HTMLElement).style.paddingRight = '12px'; }}
+      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.marginLeft = '0'; (e.currentTarget as HTMLElement).style.paddingLeft = '0'; (e.currentTarget as HTMLElement).style.marginRight = '0'; (e.currentTarget as HTMLElement).style.paddingRight = '0'; }}
+    >
+      {/* Photo */}
       <div style={{ position: 'relative', flexShrink: 0 }}>
         {player.imageUrl ? (
-          <img src={player.imageUrl} alt={player.name}
-            style={{ width: 72, height: 72, objectFit: 'cover', objectPosition: 'top', borderRadius: 10, border: '1px solid var(--border)', display: 'block' }}
-            onError={(e) => { e.currentTarget.style.display = 'none'; (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex'; }} />
+          <img
+            src={player.imageUrl}
+            alt={player.name}
+            style={{ width: 96, height: 96, objectFit: 'cover', objectPosition: 'top', borderRadius: 10, border: `2px solid color-mix(in srgb, ${primary} 30%, var(--border))`, display: 'block' }}
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+              (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
+            }}
+          />
         ) : null}
-        <div style={{ width: 72, height: 72, borderRadius: 10, border: '1px solid var(--border)', background: `color-mix(in srgb, ${primary} 15%, var(--bg-card))`, display: player.imageUrl ? 'none' : 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 22, color: primary }}>
+        <div style={{
+          width: 96, height: 96, borderRadius: 10,
+          border: `2px solid color-mix(in srgb, ${primary} 30%, var(--border))`,
+          background: `color-mix(in srgb, ${primary} 15%, var(--bg-card))`,
+          display: player.imageUrl ? 'none' : 'flex',
+          alignItems: 'center', justifyContent: 'center',
+          fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 26, color: primary,
+        }}>
           {initials}
         </div>
         {player.number && (
-          <div style={{ position: 'absolute', bottom: -4, right: -4, background: primary, color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 11, padding: '2px 5px', borderRadius: 4, lineHeight: 1.4 }}>
+          <div style={{ position: 'absolute', bottom: -5, right: -5, background: primary, color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 11, padding: '2px 6px', borderRadius: 4, lineHeight: 1.5, border: '2px solid var(--bg-card)' }}>
             #{player.number}
           </div>
         )}
       </div>
+
+      {/* Info */}
       <div style={{ minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap', marginBottom: 4 }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, lineHeight: 1 }}>{player.name}</span>
-          {player.position && <span style={{ fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.14em', color: primary }}>{POSITION_LABELS[player.position.toUpperCase()] || player.position}</span>}
-          {player.classYear && <span style={{ fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.1em', color: 'var(--text-muted)' }}>{player.classYear}</span>}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7, flexWrap: 'wrap' }}>
+          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, lineHeight: 1, color: 'var(--text)' }}>{player.name}</span>
+          {posLabel && (
+            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 10, letterSpacing: '0.14em', color: '#fff', background: posColor, padding: '3px 8px', borderRadius: 3, flexShrink: 0 }}>
+              {posLabel.toUpperCase()}
+            </span>
+          )}
+          {player.classYear && (
+            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--text-muted)', border: '1px solid var(--border)', padding: '2px 7px', borderRadius: 3, flexShrink: 0 }}>
+              {player.classYear}
+            </span>
+          )}
         </div>
-        <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', fontSize: 13, color: 'var(--text-muted)' }}>
+        <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: 'var(--text-muted)', alignItems: 'center' }}>
           {player.hometown && <span>{player.hometown}</span>}
-          {player.height && <span>{player.height}</span>}
-          {player.weight && <span>{player.weight} lbs</span>}
+          {highlightStat && (
+            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 11, letterSpacing: '0.1em', color: primary }}>
+              {highlightStat.label}: <strong>{highlightStat.value}</strong>
+            </span>
+          )}
         </div>
       </div>
-    </div>
+
+      {/* Arrow */}
+      <div style={{ fontFamily: 'var(--font-accent)', fontSize: 13, letterSpacing: '0.1em', color: 'var(--text-muted)', flexShrink: 0 }}>VIEW →</div>
+    </Link>
   );
 }
 
@@ -237,7 +304,7 @@ export default function CollegeTeamPage({ params }: Props) {
             {rosterLoading ? (
               <div>{[...Array(10)].map((_, i) => <SkeletonRow key={i} />)}</div>
             ) : filtered.length > 0 ? (
-              <div>{filtered.map((player, i) => <PlayerCard key={`${player.name}-${i}`} player={player} primary={team.primary} />)}</div>
+              <div>{filtered.map((player, i) => <PlayerCard key={`${player.name}-${i}`} player={player} primary={team.primary} teamSlug={slug} />)}</div>
             ) : (
               <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
                 {search ? `No players matching "${search}"` : 'No roster data available.'}
