@@ -270,29 +270,36 @@ export default function HomePage() {
   return (
     <div>
 
-      {/* ─── VIDEO FEATURE HERO ─── */}
-      <section style={{ position: 'relative', background: '#000', overflow: 'hidden', borderBottom: '1px solid var(--border)', minHeight: '480px' }}>
-        {/* Dynamic background from featured video thumbnail */}
+      {/* ─── VIDEO HERO ─── */}
+      <section style={{ position: 'relative', background: '#0a0a0a', overflow: 'hidden', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+
+        {/* Full-bleed background — blurred thumbnail of featured video */}
         {featuredVideo && (
-          <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
-            <img src={featuredVideo.thumbnailUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(18px) brightness(0.28) saturate(1.4)', transform: 'scale(1.08)' }} />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.2) 100%)' }} />
+          <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+            <img
+              src={featuredVideo.thumbnailUrl}
+              alt=""
+              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'blur(28px) brightness(0.18) saturate(1.6)', transform: 'scale(1.1)', pointerEvents: 'none' }}
+            />
+            {/* Red gradient overlay left */}
+            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, color-mix(in srgb, var(--primary) 22%, transparent) 0%, transparent 55%)' }} />
+            {/* Vignette */}
+            <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 80% 70% at 50% 50%, transparent 40%, rgba(0,0,0,0.7) 100%)' }} />
           </div>
         )}
 
-        <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '48px', paddingBottom: '48px' }}>
-          {/* Header */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px', flexWrap: 'wrap', gap: '12px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ width: '3px', height: '28px', background: 'var(--primary)' }} />
-              <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '22px', letterSpacing: '0.05em', color: '#fff' }}>
-                FEATURED <span style={{ color: 'var(--primary)' }}>VIDEO</span>
-              </span>
+        <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '56px', paddingBottom: '64px' }}>
+
+          {/* Filter tabs + label row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '12px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '3px', height: '22px', background: 'var(--primary)', flexShrink: 0 }} />
+              <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Featured Video</span>
             </div>
-            <div style={{ display: 'flex', gap: 0, border: '1px solid rgba(255,255,255,0.18)' }}>
+            <div style={{ display: 'flex', border: '1px solid rgba(255,255,255,0.14)' }}>
               {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
                 <button key={f} onClick={() => { setVideoFilter(f); setActiveVideoId(null); }}
-                  style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.14em', padding: '7px 16px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'rgba(255,255,255,0.5)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.18)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}>
+                  style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.16em', padding: '7px 18px', background: videoFilter === f ? 'var(--primary)' : 'transparent', color: videoFilter === f ? '#fff' : 'rgba(255,255,255,0.4)', border: 'none', borderRight: i < arr.length - 1 ? '1px solid rgba(255,255,255,0.14)' : 'none', cursor: 'pointer', transition: 'all 0.18s' }}>
                   {f}
                 </button>
               ))}
@@ -300,72 +307,137 @@ export default function HomePage() {
           </div>
 
           {videosLoading ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '28px', alignItems: 'center' }}>
-              <div style={{ aspectRatio: '16/9', background: 'rgba(255,255,255,0.07)' }} />
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {[80, 55, 65, 40].map((w, i) => <div key={i} style={{ height: '14px', background: 'rgba(255,255,255,0.07)', width: `${w}%` }} />)}
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '56px', alignItems: 'center', minHeight: '440px' }}>
+              <div style={{ aspectRatio: '1', maxWidth: '480px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)' }} />
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[70,45,55,35,50].map((w,i) => <div key={i} style={{ height: '14px', background: 'rgba(255,255,255,0.06)', width: `${w}%`, borderRadius: '2px' }} />)}
               </div>
             </div>
           ) : filteredVideos.length === 0 ? (
-            <div style={{ padding: '48px', textAlign: 'center' }}>
-              <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '15px' }}>No videos yet — add channels in the admin panel.</p>
+            <div style={{ textAlign: 'center', padding: '80px 0' }}>
+              <p style={{ color: 'rgba(255,255,255,0.3)', fontSize: '15px' }}>No videos yet — add channels in the admin panel.</p>
             </div>
           ) : featuredVideo ? (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 360px', gap: '32px', alignItems: 'center' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: '64px', alignItems: 'center' }}>
 
-              {/* Video player */}
-              <div style={{ position: 'relative', aspectRatio: '16/9', background: '#000', overflow: 'hidden', boxShadow: '0 32px 80px rgba(0,0,0,0.7)' }}>
-                {activeVideoId === featuredVideo.id ? (
-                  <iframe src={`${featuredVideo.embedUrl}?autoplay=1`} allow="autoplay; fullscreen; encrypted-media" allowFullScreen style={{ width: '100%', height: '100%', border: 'none', display: 'block' }} title={featuredVideo.title} />
-                ) : (
-                  <div style={{ position: 'relative', width: '100%', height: '100%', cursor: 'pointer' }}
-                    onClick={() => setActiveVideoId(featuredVideo.id)}
-                    onMouseEnter={(e) => { const img = e.currentTarget.querySelector('img') as HTMLImageElement; if (img) img.style.transform = 'scale(1.04)'; }}
-                    onMouseLeave={(e) => { const img = e.currentTarget.querySelector('img') as HTMLImageElement; if (img) img.style.transform = 'scale(1)'; }}>
-                    <img src={featuredVideo.thumbnailUrl} alt={featuredVideo.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }} />
-                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <div style={{ width: '72px', height: '72px', borderRadius: '50%', background: 'rgba(0,0,0,0.7)', border: '3px solid rgba(255,255,255,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'transform 0.2s, background 0.2s' }}>
-                        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><polygon points="6,3 20,12 6,21" /></svg>
+              {/* LEFT — circular video frame */}
+              <div style={{ display: 'flex', justifyContent: 'center', position: 'relative' }}>
+                {/* Glowing ring behind circle */}
+                <div style={{
+                  position: 'absolute', top: '50%', left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '490px', height: '490px',
+                  borderRadius: '50%',
+                  background: `radial-gradient(circle, color-mix(in srgb, var(--primary) 28%, transparent) 0%, transparent 70%)`,
+                  filter: 'blur(8px)',
+                  pointerEvents: 'none',
+                }} />
+
+                {/* Thick accent ring */}
+                <div style={{
+                  position: 'absolute', top: '50%', left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: '470px', height: '470px',
+                  borderRadius: '50%',
+                  border: '6px solid var(--primary)',
+                  opacity: 0.55,
+                  pointerEvents: 'none',
+                }} />
+
+                {/* Circle clipped video/thumbnail */}
+                <div style={{
+                  width: '440px', height: '440px',
+                  borderRadius: '50%',
+                  overflow: 'hidden',
+                  position: 'relative',
+                  boxShadow: '0 40px 100px rgba(0,0,0,0.8)',
+                  flexShrink: 0,
+                  cursor: 'pointer',
+                }}
+                  onClick={() => setActiveVideoId(activeVideoId === featuredVideo.id ? null : featuredVideo.id)}
+                >
+                  {activeVideoId === featuredVideo.id ? (
+                    <iframe
+                      src={`${featuredVideo.embedUrl}?autoplay=1`}
+                      allow="autoplay; fullscreen; encrypted-media"
+                      allowFullScreen
+                      style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                      title={featuredVideo.title}
+                    />
+                  ) : (
+                    <>
+                      <img
+                        src={featuredVideo.thumbnailUrl}
+                        alt={featuredVideo.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform 0.5s ease' }}
+                        onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.06)')}
+                        onMouseLeave={e => (e.currentTarget.style.transform = 'scale(1)')}
+                      />
+                      {/* Dark overlay */}
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.28)' }} />
+                      {/* Play button */}
+                      <div style={{
+                        position: 'absolute', top: '50%', left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: '88px', height: '88px',
+                        borderRadius: '50%',
+                        background: 'var(--primary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        boxShadow: '0 0 0 10px rgba(var(--primary-rgb, 180,20,20), 0.22), 0 16px 48px rgba(0,0,0,0.6)',
+                        transition: 'transform 0.2s, box-shadow 0.2s',
+                      }}>
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="white" style={{ marginLeft: '4px' }}>
+                          <polygon points="6,3 20,12 6,21" />
+                        </svg>
                       </div>
-                    </div>
-                    <div style={{ position: 'absolute', bottom: '14px', left: '14px', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: '#fff', background: 'var(--primary)', padding: '4px 10px' }}>
-                      {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
-                    </div>
-                  </div>
-                )}
+                      {/* League badge bottom-left */}
+                      <div style={{ position: 'absolute', bottom: '44px', left: '50%', transform: 'translateX(-50%)', whiteSpace: 'nowrap', fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.22em', color: '#fff', background: 'var(--primary)', padding: '5px 12px' }}>
+                        {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`}
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
 
-              {/* Info panel */}
-              <div style={{ color: '#fff' }}>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'var(--primary)', marginBottom: '12px' }}>
+              {/* RIGHT — info panel */}
+              <div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'var(--primary)', marginBottom: '8px', textTransform: 'uppercase' }}>
                   {featuredVideo.league === 'CUSTOM' ? 'MY VIDEOS' : `${featuredVideo.league} OFFICIAL`} · {featuredVideo.channelName}
                 </div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(22px, 3vw, 38px)', lineHeight: 1.05, color: '#fff', marginBottom: '14px' }}>
+
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(26px, 3.5vw, 46px)', lineHeight: 1.02, color: '#fff', marginBottom: '16px' }}>
                   {featuredVideo.title}
                 </h2>
+
                 {featuredVideo.publishedAt && (
-                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'rgba(255,255,255,0.45)', marginBottom: '28px', letterSpacing: '0.08em' }}>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.1em', color: 'rgba(255,255,255,0.38)', marginBottom: '32px' }}>
                     {new Date(featuredVideo.publishedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
                   </div>
                 )}
 
-                {/* Next up thumbnails */}
+                {/* Divider */}
+                <div style={{ width: '48px', height: '3px', background: 'var(--primary)', marginBottom: '28px' }} />
+
+                {/* Up next */}
                 {sideVideos.length > 0 && (
                   <div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.2em', color: 'rgba(255,255,255,0.35)', marginBottom: '12px' }}>UP NEXT</div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.28)', marginBottom: '14px' }}>UP NEXT</div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                       {sideVideos.map((v) => (
-                        <div key={v.id} onClick={() => window.open(v.youtubeUrl, '_blank')} style={{ display: 'flex', gap: '12px', alignItems: 'center', cursor: 'pointer', padding: '8px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', transition: 'background 0.2s' }}
-                          onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.1)')}
-                          onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.05)')}>
-                          <div style={{ width: '80px', height: '45px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: '#000' }}>
+                        <div key={v.id}
+                          onClick={() => window.open(v.youtubeUrl, '_blank')}
+                          style={{ display: 'flex', gap: '14px', alignItems: 'center', cursor: 'pointer', padding: '10px 12px', background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', transition: 'background 0.18s, border-color 0.18s' }}
+                          onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.09)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.18)'; }}
+                          onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.04)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(255,255,255,0.07)'; }}
+                        >
+                          <div style={{ width: '72px', height: '42px', flexShrink: 0, position: 'relative', overflow: 'hidden', background: '#111', borderRadius: '2px' }}>
                             <img src={v.thumbnailUrl} alt={v.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                              <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.85)"><polygon points="6,3 20,12 6,21" /></svg>
+                            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.3)' }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)"><polygon points="6,3 20,12 6,21" /></svg>
                             </div>
                           </div>
                           <div style={{ minWidth: 0 }}>
-                            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.15em', color: 'var(--primary)', marginBottom: '3px' }}>
+                            <div style={{ fontFamily: 'var(--font-accent)', fontSize: '9px', letterSpacing: '0.18em', color: 'var(--primary)', marginBottom: '3px' }}>
                               {v.league === 'CUSTOM' ? 'MY VIDEOS' : `${v.league} OFFICIAL`}
                             </div>
                             <div style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '13px', lineHeight: 1.2, color: '#fff', overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}>
@@ -378,7 +450,9 @@ export default function HomePage() {
                   </div>
                 )}
 
-                <a href="/videos" style={{ display: 'inline-block', marginTop: '20px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.5)', borderBottom: '1px solid rgba(255,255,255,0.2)', paddingBottom: '2px', textDecoration: 'none' }}>
+                <a href="/videos" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '28px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.45)', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.18)', paddingBottom: '3px', transition: 'color 0.18s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
                   ALL VIDEOS →
                 </a>
               </div>
@@ -388,7 +462,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ─── TEAM FAN HUB ─── */}
+            {/* ─── TEAM FAN HUB ─── */}
       <section style={{ padding: '80px 0', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', alignItems: 'start' }}>
