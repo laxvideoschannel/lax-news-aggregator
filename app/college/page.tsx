@@ -54,18 +54,24 @@ export default function CollegePage() {
               <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Team pages live now</div>
               <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>+ ADD YOUR SCHOOL →</div>
             </Link>
-            <Link href="/videos" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
+            <a href="https://www.youtube.com/results?search_query=college+lacrosse+highlights+2026" target="_blank" rel="noopener noreferrer" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>Video</div>
-              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>COLLEGE VIDEOS</div>
+              <div style={{ fontFamily: 'var(--font-acc)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px', fontFamily: 'var(--font-accent)' }}>COLLEGE VIDEOS</div>
               <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Watch college lacrosse highlights</div>
               <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>WATCH NOW →</div>
-            </Link>
-            <Link href="/college/teams/duke" className="card" style={{ display: 'block', padding: '24px', textDecoration: 'none' }}>
+            </a>
+            <div className="card" style={{ display: 'block', padding: '24px' }}>
               <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>Players</div>
               <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--text)', marginTop: '6px' }}>TEAM ROSTERS</div>
               <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginTop: '6px' }}>Browse players from each school</div>
-              <div style={{ marginTop: '14px', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.12em', color: 'var(--primary)' }}>VIEW ROSTERS →</div>
-            </Link>
+              <div style={{ marginTop: '14px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {COLLEGE_TEAMS.slice(0, 4).map((t) => (
+                  <Link key={t.slug} href={`/college/teams/${t.slug}`} style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.1em', color: 'var(--primary)', padding: '4px 8px', border: '1px solid var(--primary)', textDecoration: 'none' }}>
+                    {t.shortName}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -161,54 +167,54 @@ export default function CollegePage() {
             </div>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '18px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
             {visibleTeams.map((team) => (
-              <Link key={team.slug} href={`/college/teams/${team.slug}`} className="card" style={{ display: 'block', padding: '22px', position: 'relative', overflow: 'hidden' }}>
-                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 12%, transparent) 0%, transparent 70%)` }} />
-                <div style={{ position: 'relative', zIndex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '14px', alignItems: 'flex-start', marginBottom: '16px' }}>
-                    <div>
-                      <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: team.primary }}>{team.conference}</div>
-                      <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '34px', lineHeight: 0.95, marginTop: '8px' }}>
-                        {team.school.toUpperCase()}
-                      </h3>
-                    </div>
-                    <div
-                      style={{
-                        minWidth: '74px',
-                        height: '74px',
-                        borderRadius: '14px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: `color-mix(in srgb, ${team.primary} 18%, var(--team-surface))`,
-                        border: '1px solid var(--border)',
-                        overflow: 'hidden',
-                        padding: '8px',
-                      }}
-                    >
-                      {team.logoUrl ? (
-                        <img
-                          src={team.logoUrl}
-                          alt={team.school}
-                          style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement!.innerHTML = `<span style="font-family:var(--font-display);font-weight:900;font-size:20px;color:${team.primary};padding:0 4px">${team.shortName}</span>`;
-                          }}
-                        />
-                      ) : (
-                        <span style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '20px', color: team.primary, padding: '0 4px' }}>{team.shortName}</span>
-                      )}
-                    </div>
+              <Link key={team.slug} href={`/college/teams/${team.slug}`} className="card"
+                style={{ display: 'block', padding: '24px', position: 'relative', overflow: 'hidden', minHeight: '150px', textDecoration: 'none', transition: 'border-color 0.2s, transform 0.2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = team.primary; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = 'none'; }}
+              >
+                {/* Background gradient wash */}
+                <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(135deg, color-mix(in srgb, ${team.primary} 10%, transparent) 0%, transparent 60%)`, pointerEvents: 'none' }} />
+                {/* Logo watermark — bottom-right, rotated, partially cropped */}
+                {team.logoUrl && (
+                  <div style={{ position: 'absolute', bottom: '-18px', right: '-18px', width: '110px', height: '110px', transform: 'rotate(12deg)', opacity: 0.13, filter: 'grayscale(80%)', pointerEvents: 'none' }}>
+                    <img src={team.logoUrl} alt="" style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                      onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none'; }} />
                   </div>
-
-                  <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '12px' }}>{team.nickname} - {team.city}, {team.state}</div>
-                  <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.7, marginBottom: '16px' }}>{team.overview}</p>
-
+                )}
+                <div style={{ position: 'relative', zIndex: 1 }}>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.2em', color: team.primary, marginBottom: '10px' }}>
+                    {team.conference}
+                  </div>
+                  <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 3vw, 38px)', lineHeight: 0.92, marginBottom: '10px' }}>
+                    {team.school.toUpperCase()}
+                  </h3>
+                  <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '18px' }}>
+                    {team.nickname} · {team.city}, {team.state}
+                  </div>
+                  <div style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', letterSpacing: '0.14em', color: 'var(--primary)' }}>
+                    VIEW HUB →
+                  </div>
                 </div>
               </Link>
             ))}
+          </div>
+
+          {/* Add School CTA */}
+          <div style={{ marginTop: '40px', padding: '32px', background: 'var(--bg-card)', border: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '24px' }}>
+            <div>
+              <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'var(--primary)', marginBottom: '8px' }}>DON'T SEE YOUR SCHOOL?</div>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(24px, 3vw, 36px)', lineHeight: 0.95, marginBottom: '8px' }}>
+                ADD YOUR SCHOOL <span style={{ color: 'var(--primary)' }}>TO THE HUB</span>
+              </h3>
+              <p style={{ fontSize: '14px', color: 'var(--text-muted)', maxWidth: '480px', lineHeight: 1.7 }}>
+                Submit your school's info and we'll build out a full team hub with schedule, roster, and watch links — the MaxPreps of college lax.
+              </p>
+            </div>
+            <Link href="/college/add-school" className="btn-primary" style={{ whiteSpace: 'nowrap', flexShrink: 0 }}>
+              + ADD YOUR SCHOOL →
+            </Link>
           </div>
         </div>
       </section>
