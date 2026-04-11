@@ -43,19 +43,19 @@ function NewsImageLazy({ url, alt }: { url: string; alt: string }) {
 
   useEffect(() => {
     if (!url) { setFailed(true); return; }
-    // If it's already a real image URL (not Google News), use it directly
-    const isGoogleNews = url.includes('news.google.com') || url.includes('googleusercontent.com') || url.includes('lh3.google');
-    if (!isGoogleNews) { setSrc(url); return; }
-    // Otherwise fetch via our image proxy
+    // If url looks like a real image file, try it directly first
+    const looksLikeImage = /\.(jpe?g|png|webp|gif|avif)(\?|$)/i.test(url);
+    if (looksLikeImage) { setSrc(url); return; }
+    // Otherwise always proxy through our server-side extractor
     fetch(`/api/news-image?url=${encodeURIComponent(url)}`)
       .then(r => r.json())
       .then(d => { if (d.image) setSrc(d.image); else setFailed(true); })
       .catch(() => setFailed(true));
   }, [url]);
 
-  // Also try lazy-fetching even non-Google URLs if they fail to load
   const handleImgError = () => {
-    if (src && !src.includes('/api/news-image')) {
+    // If the direct image URL failed, try the proxy as fallback
+    if (src && !/\/api\/news-image/.test(src)) {
       fetch(`/api/news-image?url=${encodeURIComponent(url)}`)
         .then(r => r.json())
         .then(d => { if (d.image) setSrc(d.image); else setFailed(true); })
