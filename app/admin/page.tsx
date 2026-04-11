@@ -90,6 +90,7 @@ export default function AdminPage() {
   const [siteSettings, setSiteSettings] = useState<SiteSettings>({ showFilmCta: false, filmCtaEmail: '', filmCtaHeadline: 'WANT YOUR TEAM ON FILM?' });
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
 
   const [videoForm, setVideoForm] = useState({ title: '', youtubeUrl: '', channelName: '', description: '', league: 'CUSTOM' as 'PLL' | 'WLL' | 'CUSTOM', featured: false });
   const [sourceForm, setSourceForm] = useState({ title: '', handleUrl: '', channelName: '', league: 'CUSTOM' as 'PLL' | 'WLL' | 'CUSTOM', pullMode: 'select' as 'all' | 'select', teamId: '' });
