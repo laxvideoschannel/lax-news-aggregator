@@ -239,8 +239,8 @@ export default function TeamPage() {
           </div>
 
           <div className="section-tag" style={{ marginBottom: '16px' }}>{content.titleTag}</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
-            {team.city.toUpperCase()}<br /><span style={{ color: 'var(--primary)' }}>{team.name.toUpperCase()}</span>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px', textShadow: '0 2px 12px rgba(0,0,0,0.55)' }}>
+            <span style={{ color: '#fff' }}>{team.city.toUpperCase()}</span><br /><span style={{ color: 'var(--primary)', WebkitTextStroke: '1.5px color-mix(in srgb, var(--primary) 40%, rgba(0,0,0,0.6))', paintOrder: 'stroke fill' }}>{team.name.toUpperCase()}</span>
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>{content.seasonNote}</p>
 
@@ -305,7 +305,7 @@ export default function TeamPage() {
                     }}
                   />
                 ) : (
-                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'color-mix(in srgb, var(--primary) 12%, var(--team-surface-strong))' }}>
                     <TeamLogo teamId={teamId} size={180} />
                   </div>
                 )}
@@ -385,9 +385,26 @@ export default function TeamPage() {
               <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, marginBottom: '36px' }}>{activePlayer.description}</p>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '36px' }}>
-                {activePlayer.stats.map((stat) => (
+                {[
+                  {
+                    label: activePlayer.highlight ? 'HIGHLIGHT' : (activePlayer.stats[1]?.label?.toUpperCase() ?? 'HIGHLIGHT'),
+                    value: activePlayer.highlight ?? (activePlayer.stats[1] ? `${activePlayer.stats[1].value} ${activePlayer.stats[1].label}` : '—'),
+                  },
+                  {
+                    label: 'NUMBER',
+                    value: activePlayer.number ? `#${activePlayer.number}` : activePlayer.position,
+                  },
+                  {
+                    label: 'ATTENDED',
+                    value: activePlayer.college ?? '—',
+                  },
+                  {
+                    label: 'FROM',
+                    value: activePlayer.hometown ?? '—',
+                  },
+                ].map((item) => (
                   <div
-                    key={`${activePlayer.name}-${stat.label}`}
+                    key={item.label}
                     style={{
                       background: 'color-mix(in srgb, var(--team-surface) 72%, var(--bg-card))',
                       border: '1px solid var(--border)',
@@ -395,8 +412,8 @@ export default function TeamPage() {
                       borderLeft: '3px solid var(--primary)',
                     }}
                   >
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '36px', color: 'var(--primary)', lineHeight: 1 }}>{stat.value}</div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{item.label}</div>
                   </div>
                 ))}
               </div>
