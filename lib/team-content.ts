@@ -17,6 +17,7 @@ export type TeamSpotlight = {
   position: string;
   hometown?: string;
   college?: string;
+  highlight?: string;
   imagePage?: string;
   description: string;
   quote: string;
