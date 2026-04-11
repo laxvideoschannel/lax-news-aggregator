@@ -239,8 +239,8 @@ export default function TeamPage() {
           </div>
 
           <div className="section-tag" style={{ marginBottom: '16px' }}>{content.titleTag}</div>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px', textShadow: '0 2px 12px rgba(0,0,0,0.55)' }}>
-            <span style={{ color: '#fff' }}>{team.city.toUpperCase()}</span><br /><span style={{ color: 'var(--primary)', WebkitTextStroke: '1.5px color-mix(in srgb, var(--primary) 40%, rgba(0,0,0,0.6))', paintOrder: 'stroke fill' }}>{team.name.toUpperCase()}</span>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
+            <span style={{ color: '#fff' }}>{team.city.toUpperCase()}</span><br /><span style={{ color: 'var(--primary)', WebkitTextStroke: '2px white', paintOrder: 'stroke fill' }}>{team.name.toUpperCase()}</span>
           </h1>
           <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>{content.seasonNote}</p>
 
