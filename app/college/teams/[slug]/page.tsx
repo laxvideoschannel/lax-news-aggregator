@@ -2,12 +2,12 @@
 
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { use, useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { getCollegeTeam } from '@/lib/college';
 import type { RosterPlayer } from '@/app/api/college-roster/route';
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 };
 
 const POSITION_LABELS: Record<string, string> = {
@@ -62,7 +62,7 @@ function SkeletonRow() {
 }
 
 export default function CollegeTeamPage({ params }: Props) {
-  const { slug } = use(params);
+  const { slug } = params;
   const team = getCollegeTeam(slug);
 
   const [liveRoster, setLiveRoster] = useState<RosterPlayer[] | null>(null);
