@@ -5,14 +5,26 @@ import Link from 'next/link';
 import { ALL_TEAMS } from '@/lib/teams';
 import { COLLEGE_TEAMS } from '@/lib/college';
 
-type Tab = 'videos' | 'channels' | 'schedule' | 'news' | 'college' | 'settings' | 'schools';
+type Tab = 'videos' | 'channels' | 'schedule' | 'news' | 'college' | 'settings' | 'schools' | 'hero';
 
 type AdminVideo = { id: string | number; title: string; youtube_url: string; channel_name?: string; league?: 'PLL' | 'WLL' | 'CUSTOM'; published_at?: string; };
 type AdminSource = { id: string | number; title?: string; handle_url?: string; channel_name?: string; channel_id?: string; league?: 'PLL' | 'WLL' | 'CUSTOM'; pull_mode?: 'all' | 'select'; active?: boolean; team_id?: string | null; };
 type PreviewVideo = { id: string; title: string; youtubeUrl: string; thumbnailUrl: string; channelName: string; publishedAt?: string; };
 type AdminGame = { id: string | number; slug: string; date_label: string; sort_date?: string; venue: string; event: string; home_id: string; away_id: string; time: string; broadcast: string; status: 'final' | 'upcoming'; score?: string; ticket_url?: string; recap_title?: string; };
 type NewsSource = { id: string | number; label: string; feed_url: string; category: string; active: boolean; };
-type SiteSettings = { showFilmCta: boolean; filmCtaEmail: string; filmCtaHeadline: string; };
+type SiteSettings = {
+  showFilmCta: boolean;
+  filmCtaEmail: string;
+  filmCtaHeadline: string;
+  heroTag: string;
+  heroHeadline1: string;
+  heroHeadline2: string;
+  heroCta1Text: string;
+  heroCta1Url: string;
+  heroCta2Text: string;
+  heroCta2Url: string;
+  tickerItems: string;
+};
 
 const inputStyle: React.CSSProperties = { padding: '11px 14px', background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', width: '100%', fontFamily: 'var(--font-body)', fontSize: '14px' };
 const labelStyle: React.CSSProperties = { fontFamily: 'var(--font-accent)', fontSize: '10px', letterSpacing: '0.18em', color: 'var(--text-muted)', display: 'block', marginBottom: '5px' };
@@ -87,7 +99,11 @@ export default function AdminPage() {
   const [newsLoading, setNewsLoading] = useState(false);
 
   const [schoolSubs, setSchoolSubs] = useState<any[]>([]);
-  const [siteSettings, setSiteSettings] = useState<SiteSettings>({ showFilmCta: false, filmCtaEmail: '', filmCtaHeadline: 'WANT YOUR TEAM ON FILM?' });
+  const [siteSettings, setSiteSettings] = useState<SiteSettings>({
+    showFilmCta: false, filmCtaEmail: '', filmCtaHeadline: 'WANT YOUR TEAM ON FILM?',
+    heroTag: 'PLL + WLL HUB', heroHeadline1: 'WATCH.', heroHeadline2: 'FOLLOW.', heroCta1Text: 'WATCH LATEST →', heroCta1Url: '/videos',
+    heroCta2Text: 'ALL NEWS →', heroCta2Url: '/news', tickerItems: 'CAROLINA CHAOS WIN THE 2026 PLL CHAMPIONSHIP SERIES 24-16 | BLAZE RIORDEN - PLL ALL-TIME SAVE RECORD HOLDER (25 SAVES) | 2026 CHAMPIONSHIP SERIES RETURNS TO D.C. - FEB 27 TO MAR 8 | SHANE KNOBLOCH WINS GOLDEN STICK AWARD - 30 POINTS',
+  });
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
@@ -106,12 +122,17 @@ export default function AdminPage() {
 
   const loadDashboard = useCallback(async () => {
     const [vRes, sRes, setRes] = await Promise.all([fetch('/api/admin/videos'), fetch('/api/admin/video-sources'), fetch('/api/admin/settings').catch(() => null)]);
-    if (!vRes.ok || !sRes.ok) { setIsAuthed(false); setChecking(false); return; }
-    const vd = await vRes.json(); const sd = await sRes.json();
+    // Only kick out if explicitly unauthorized (401/403) — don't boot on Supabase 500s
+    if (vRes.status === 401 || vRes.status === 403 || sRes.status === 401 || sRes.status === 403) {
+      setIsAuthed(false); setChecking(false); return;
+    }
+    // Parse data gracefully — treat 500s as empty, not as logout triggers
+    const vd = vRes.ok ? await vRes.json().catch(() => ({})) : {};
+    const sd = sRes.ok ? await sRes.json().catch(() => ({})) : {};
     setVideos(Array.isArray(vd.videos) ? vd.videos : []);
     setSources(Array.isArray(sd.sources) ? sd.sources : []);
     setDefaultSources(Array.isArray(sd.defaults) ? sd.defaults : []);
-    if (setRes?.ok) { const s = await setRes.json(); setSiteSettings((p) => ({ ...p, ...s })); }
+    if (setRes?.ok) { const s = await setRes.json().catch(() => ({})); setSiteSettings((p) => ({ ...p, ...s })); }
     setIsAuthed(true); setChecking(false);
   }, []);
 
@@ -140,10 +161,18 @@ export default function AdminPage() {
 
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault(); setError(''); setSubmitting(true);
-    const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(loginForm) });
+    try {
+      const res = await fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(loginForm) });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        flash(body.error || `Login failed (${res.status}). Check your credentials.`, true);
+        setSubmitting(false); return;
+      }
+      await loadDashboard();
+    } catch (err) {
+      flash('Network error — could not reach the server. Try again.', true);
+    }
     setSubmitting(false);
-    if (!res.ok) { flash((await res.json().catch(() => ({}))).error || 'Login failed.', true); return; }
-    await loadDashboard();
   };
 
   const handleLogout = async () => {
@@ -329,6 +358,7 @@ export default function AdminPage() {
         <TabButton active={activeTab === 'schedule'} onClick={() => handleTabChange('schedule')} badge={games.length}>SCHEDULE</TabButton>
         <TabButton active={activeTab === 'news'} onClick={() => handleTabChange('news')}>NEWS SOURCES</TabButton>
         <TabButton active={activeTab === 'college'} onClick={() => handleTabChange('college')}>COLLEGE</TabButton>
+        <TabButton active={activeTab === 'hero'} onClick={() => handleTabChange('hero')}>✦ HERO EDITOR</TabButton>
         <TabButton active={activeTab === 'settings'} onClick={() => handleTabChange('settings')}>SETTINGS</TabButton>
         <TabButton active={activeTab === 'schools'} onClick={() => handleTabChange('schools')} badge={pendingSubs}>SCHOOL QUEUE</TabButton>
       </div>
@@ -612,6 +642,97 @@ export default function AdminPage() {
               ))}
             </div>
           </Card>
+        </div>
+      )}
+
+      {/* ── HERO EDITOR ── */}
+      {activeTab === 'hero' && (
+        <div style={{ display: 'grid', gap: '20px' }}>
+          <Card title="TICKER BAR">
+            <Field label="TICKER ITEMS (separate with |)">
+              <textarea
+                value={siteSettings.tickerItems}
+                onChange={(e) => setSiteSettings((p) => ({ ...p, tickerItems: e.target.value }))}
+                placeholder="ITEM ONE | ITEM TWO | ITEM THREE"
+                style={{ ...inputStyle, height: '80px', resize: 'vertical' }}
+              />
+            </Field>
+            <div style={{ marginTop: 10, fontSize: 12, color: 'var(--text-muted)', lineHeight: 1.6 }}>
+              Separate each ticker item with a <code style={{ background: 'var(--bg)', padding: '1px 5px', borderRadius: 3 }}>|</code> character. Changes apply to the live updates bar at the top of every page.
+            </div>
+          </Card>
+
+          <Card title="SITE TAGLINE">
+            <Field label="TAGLINE (shown below LAXHUB logo)">
+              <input value={siteSettings.heroTag} onChange={(e) => setSiteSettings((p) => ({ ...p, heroTag: e.target.value }))} placeholder="PLL + WLL HUB" style={inputStyle} />
+            </Field>
+          </Card>
+
+          <Card title="HERO PREVIEW">
+            <div style={{ background: '#0a0a0a', border: '1px solid var(--border)', padding: '32px 28px', borderRadius: 4, position: 'relative', overflow: 'hidden', marginBottom: 16 }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg, rgba(204,0,0,0.15) 0%, transparent 55%)' }} />
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: 11, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.45)', marginBottom: 8, borderLeft: '3px solid var(--primary)', paddingLeft: 10 }}>
+                  {siteSettings.heroTag || 'PLL + WLL HUB'}
+                </div>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(36px,5vw,52px)', lineHeight: 0.9, marginBottom: 24, color: '#fff' }}>
+                  {siteSettings.heroHeadline1 || 'WATCH.'}<br />
+                  <span style={{ color: 'var(--primary)' }}>{siteSettings.heroHeadline2 || 'FOLLOW.'}</span>
+                </div>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <div style={{ padding: '9px 18px', background: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.12em', color: '#fff' }}>
+                    {siteSettings.heroCta1Text || 'WATCH LATEST →'}
+                  </div>
+                  <div style={{ padding: '9px 18px', border: '1px solid rgba(255,255,255,0.3)', fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.12em', color: '#fff' }}>
+                    {siteSettings.heroCta2Text || 'ALL NEWS →'}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={twoCol}>
+              <Field label="LINE 1 (white text)">
+                <input value={siteSettings.heroHeadline1} onChange={(e) => setSiteSettings((p) => ({ ...p, heroHeadline1: e.target.value }))} placeholder="WATCH." style={inputStyle} />
+              </Field>
+              <Field label="LINE 2 (team color)">
+                <input value={siteSettings.heroHeadline2} onChange={(e) => setSiteSettings((p) => ({ ...p, heroHeadline2: e.target.value }))} placeholder="FOLLOW." style={inputStyle} />
+              </Field>
+            </div>
+          </Card>
+
+          <Card title="CALL TO ACTION BUTTONS">
+            <div style={twoCol}>
+              <Field label="PRIMARY BUTTON TEXT">
+                <input value={siteSettings.heroCta1Text} onChange={(e) => setSiteSettings((p) => ({ ...p, heroCta1Text: e.target.value }))} placeholder="WATCH LATEST →" style={inputStyle} />
+              </Field>
+              <Field label="PRIMARY BUTTON URL">
+                <input value={siteSettings.heroCta1Url} onChange={(e) => setSiteSettings((p) => ({ ...p, heroCta1Url: e.target.value }))} placeholder="/videos" style={inputStyle} />
+              </Field>
+              <Field label="SECONDARY BUTTON TEXT">
+                <input value={siteSettings.heroCta2Text} onChange={(e) => setSiteSettings((p) => ({ ...p, heroCta2Text: e.target.value }))} placeholder="ALL NEWS →" style={inputStyle} />
+              </Field>
+              <Field label="SECONDARY BUTTON URL">
+                <input value={siteSettings.heroCta2Url} onChange={(e) => setSiteSettings((p) => ({ ...p, heroCta2Url: e.target.value }))} placeholder="/news" style={inputStyle} />
+              </Field>
+            </div>
+          </Card>
+
+          <div style={{ display: 'flex', gap: 10 }}>
+            <button
+              onClick={async () => {
+                setSubmitting(true);
+                const res = await fetch('/api/admin/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(siteSettings) });
+                setSubmitting(false);
+                if (res.ok) flash('Hero settings saved! Redeploy or wait for ISR to see changes on the live site.');
+                else flash('Save failed — check your Supabase connection.', true);
+              }}
+              className="btn-primary"
+              disabled={submitting}
+              style={{ cursor: 'pointer' }}
+            >
+              {submitting ? 'Saving…' : 'Save Hero Settings →'}
+            </button>
+          </div>
         </div>
       )}
 
