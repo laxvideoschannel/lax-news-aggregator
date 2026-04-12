@@ -70,7 +70,6 @@ function ArticleModal({ item, onClose }: { item: any; onClose: () => void }) {
           </div>
         </div>
       </div>
-      {selectedNewsItem && <ArticleModal item={selectedNewsItem} onClose={() => setSelectedNewsItem(null)} />}
     </div>
   );
 }
@@ -101,7 +100,7 @@ export default function NewsPage() {
     <div>
       {/* Page header */}
       <div style={{
-        background: 'linear-gradient(180deg, #0d0000 0%, var(--bg) 100%)',
+        background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 12%, var(--bg)) 0%, var(--bg) 100%)',
         padding: '80px 0 60px',
         borderBottom: '1px solid var(--border)',
         position: 'relative', overflow: 'hidden',
@@ -109,7 +108,7 @@ export default function NewsPage() {
         <div style={{
           position: 'absolute', top: '-100px', right: '-100px',
           width: '400px', height: '400px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(204,0,0,0.12) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, color-mix(in srgb, var(--primary) 14%, transparent) 0%, transparent 70%)',
         }} />
         <div className="container">
           <div className="section-tag" style={{ marginBottom: '16px' }}>PLL LACROSSE</div>
