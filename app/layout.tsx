@@ -87,7 +87,9 @@ function MoonIcon() {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [teamId, setTeamId] = useState('chaos');
+  const [teamId, setTeamId] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('lax_team') || 'chaos' : 'chaos'
+  );
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [teamPickerOpen, setTeamPickerOpen] = useState(false);
   const [collegeMenuOpen, setCollegeMenuOpen] = useState(false);
@@ -127,15 +129,58 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   }, [teamId, theme]);
 
   useEffect(() => {
-    fetch('/api/settings')
-      .then(r => r.json())
-      .then(d => {
-        if (d.tickerItems) {
-          const items = d.tickerItems.split('|').map((s: string) => s.trim()).filter(Boolean);
-          if (items.length > 0) setTickerItems(items);
-        }
-      })
-      .catch(() => {});
+    const MANUAL_KEY = 'laxhub_ticker_manual';
+
+    const applyManualItems = (raw: string) => {
+      const items = raw.split('|').map((s: string) => s.trim()).filter(Boolean);
+      if (items.length > 0) {
+        setTickerItems(items);
+        try { localStorage.setItem(MANUAL_KEY, raw); } catch {}
+      }
+    };
+
+    // 1. Load manual items: localStorage first (instant), then API
+    const cached = localStorage.getItem(MANUAL_KEY);
+    if (cached) applyManualItems(cached);
+
+    fetch('/api/settings').then(r => r.json()).then(d => {
+      if (d.tickerItems) applyManualItems(d.tickerItems);
+    }).catch(() => {});
+
+    // 2. Auto-fetch latest news headlines and inject into ticker
+    const injectNewsHeadlines = () => {
+      fetch('/api/news').then(r => r.json()).then((articles: any[]) => {
+        if (!Array.isArray(articles) || articles.length === 0) return;
+        const headlines = articles
+          .slice(0, 5)
+          .map((a: any) => (a.title || '').toUpperCase().trim())
+          .filter(Boolean);
+        if (headlines.length === 0) return;
+        setTickerItems(prev => {
+          // Keep manual items that aren't news headlines; prepend news
+          const manualRaw = localStorage.getItem(MANUAL_KEY) || '';
+          const manual = manualRaw.split('|').map(s => s.trim()).filter(Boolean);
+          const combined = [...headlines, ...manual];
+          // Dedupe preserving order
+          const seen = new Set<string>();
+          return combined.filter(item => seen.has(item) ? false : (seen.add(item), true)).slice(0, 10);
+        });
+      }).catch(() => {});
+    };
+    injectNewsHeadlines();
+    const newsInterval = setInterval(injectNewsHeadlines, 5 * 60 * 1000);
+
+    // 3. Listen for instant saves from admin
+    const onSettingsChange = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.tickerItems) applyManualItems(detail.tickerItems);
+    };
+    window.addEventListener('laxhub-settings-change', onSettingsChange);
+
+    return () => {
+      clearInterval(newsInterval);
+      window.removeEventListener('laxhub-settings-change', onSettingsChange);
+    };
   }, []);
 
   useEffect(() => {
