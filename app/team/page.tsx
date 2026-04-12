@@ -16,7 +16,9 @@ function getPositionFilter(position: string) {
 }
 
 export default function TeamPage() {
-  const [teamId, setTeamId] = useState('chaos');
+  const [teamId, setTeamId] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('lax_team') || 'chaos' : 'chaos'
+  );
   const [filter, setFilter] = useState('All');
   const content = getTeamPageContent(teamId);
   const [activePlayer, setActivePlayer] = useState<TeamSpotlight>(content.spotlights[0]);
