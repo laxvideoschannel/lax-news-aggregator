@@ -218,6 +218,15 @@ export default function HomePage() {
   const [spotlightIndex, setSpotlightIndex] = useState(0);
   const [news, setNews] = useState<any[]>([]);
   const [showFilmCta, setShowFilmCta] = useState(false);
+  const [siteConfig, setSiteConfig] = useState({
+    heroTag: 'PLL + WLL HUB',
+    heroHeadline1: 'WATCH.',
+    heroHeadline2: 'FOLLOW.',
+    heroCta1Text: 'WATCH LATEST →',
+    heroCta1Url: '/videos',
+    heroCta2Text: 'ALL NEWS →',
+    heroCta2Url: '/news',
+  });
   const [selectedNewsItem, setSelectedNewsItem] = useState<any | null>(null);
 
   useEffect(() => {
@@ -231,7 +240,19 @@ export default function HomePage() {
   useEffect(() => {
     fetch('/api/videos').then((r) => r.json()).then((d) => { setVideos(Array.isArray(d) ? d : []); setVideosLoading(false); }).catch(() => setVideosLoading(false));
     fetch('/api/news').then((r) => r.json()).then((d) => setNews(Array.isArray(d) ? d.slice(0, 4) : [])).catch(() => {});
-    fetch('/api/settings').then((r) => r.json()).then((d) => setShowFilmCta(Boolean(d.showFilmCta))).catch(() => {});
+    fetch('/api/settings').then((r) => r.json()).then((d) => {
+      setShowFilmCta(Boolean(d.showFilmCta));
+      setSiteConfig(prev => ({
+        ...prev,
+        heroTag: d.heroTag || prev.heroTag,
+        heroHeadline1: d.heroHeadline1 || prev.heroHeadline1,
+        heroHeadline2: d.heroHeadline2 || prev.heroHeadline2,
+        heroCta1Text: d.heroCta1Text || prev.heroCta1Text,
+        heroCta1Url: d.heroCta1Url || prev.heroCta1Url,
+        heroCta2Text: d.heroCta2Text || prev.heroCta2Text,
+        heroCta2Url: d.heroCta2Url || prev.heroCta2Url,
+      }));
+    }).catch(() => {});
   }, []);
 
   const loadSpotlight = useCallback((team: string, idx?: number) => {
@@ -294,7 +315,7 @@ export default function HomePage() {
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '12px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <div style={{ width: '3px', height: '22px', background: 'var(--primary)', flexShrink: 0 }} />
-              <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>Featured Video</span>
+              <span style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.5)', textTransform: 'uppercase' }}>{siteConfig.heroTag}</span>
             </div>
             <div style={{ display: 'flex', border: '1px solid rgba(255,255,255,0.14)' }}>
               {(['ALL', 'PLL', 'WLL', ...(hasCustomVideos ? ['MY VIDEOS' as VideoFilter] : [])] as VideoFilter[]).map((f, i, arr) => (
@@ -450,11 +471,14 @@ export default function HomePage() {
                   </div>
                 )}
 
-                <a href="/videos" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginTop: '28px', fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'rgba(255,255,255,0.45)', textDecoration: 'none', borderBottom: '1px solid rgba(255,255,255,0.18)', paddingBottom: '3px', transition: 'color 0.18s' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'rgba(255,255,255,0.45)')}>
-                  ALL VIDEOS →
-                </a>
+                <div style={{ display: 'flex', gap: '12px', marginTop: '28px', flexWrap: 'wrap' }}>
+                  <a href={siteConfig.heroCta1Url} className="btn-primary" style={{ fontSize: '11px', letterSpacing: '0.18em', padding: '10px 18px' }}>
+                    {siteConfig.heroCta1Text}
+                  </a>
+                  <a href={siteConfig.heroCta2Url} className="btn-outline" style={{ fontSize: '11px', letterSpacing: '0.18em', padding: '10px 18px', color: '#fff' }}>
+                    {siteConfig.heroCta2Text}
+                  </a>
+                </div>
               </div>
 
             </div>
