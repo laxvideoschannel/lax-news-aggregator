@@ -180,8 +180,31 @@ export default function CollegeTeamPage({ params }: Props) {
   return (
     <div>
       {/* ── HEADER ── */}
-      <section style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${team.primary} 8%, var(--bg)) 0%, var(--bg) 100%)`, padding: '46px 0 28px', borderBottom: '1px solid var(--border)' }}>
-        <div className="container">
+      <section style={{
+        position: 'relative',
+        padding: '46px 0 28px',
+        borderBottom: '1px solid var(--border)',
+        overflow: 'hidden',
+      }}>
+        {/* Background image layer */}
+        {team.headerImageUrl && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `url(${team.headerImageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 30%',
+            opacity: 0.18,
+            filter: 'grayscale(60%)',
+            zIndex: 0,
+          }} />
+        )}
+        {/* Color gradient overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(180deg, color-mix(in srgb, ${team.primary} 22%, var(--bg)) 0%, var(--bg) 85%)`,
+          zIndex: 1,
+        }} />
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           <Link href="/college" style={{ fontFamily: 'var(--font-accent)', fontSize: 14, letterSpacing: '0.14em', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 24 }}>
             ← BACK TO COLLEGE
           </Link>
