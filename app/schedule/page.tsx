@@ -33,7 +33,9 @@ function TeamBadge({ teamId, isWinner = false }: { teamId: string; isWinner?: bo
 }
 
 export default function SchedulePage() {
-  const [teamId, setTeamId] = useState('chaos');
+  const [teamId, setTeamId] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('lax_team') || 'chaos' : 'chaos'
+  );
   const [filter, setFilter] = useState<'team' | 'all' | 'results' | 'upcoming'>('team');
 
   useEffect(() => {
@@ -81,10 +83,18 @@ export default function SchedulePage() {
           overflow: 'hidden',
         }}
       >
+        {/* Team-tinted photo background */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: `url(https://picsum.photos/seed/${teamId}-schedule/1400/500)`,
+          backgroundSize: 'cover', backgroundPosition: 'center',
+          opacity: 0.1, filter: 'grayscale(55%)',
+        }} />
         <div
           style={{
             position: 'absolute',
             inset: 0,
+            zIndex: 1,
             backgroundImage: 'linear-gradient(color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--primary) 8%, transparent) 1px, transparent 1px)',
             backgroundSize: '40px 40px',
           }}
