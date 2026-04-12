@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
-import { getCollegeTeam, COLLEGE_TEAMS } from '@/lib/college';
+import { getCollegeTeam } from '@/lib/college';
 import type { RosterPlayer } from '@/app/api/college-roster/route';
-
-export const dynamic = 'force-dynamic';
 
 type Props = {
   params: { slug: string };
