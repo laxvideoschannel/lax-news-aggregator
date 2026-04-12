@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
-import { getCollegeTeam } from '@/lib/college';
+import { getCollegeTeam, COLLEGE_TEAMS } from '@/lib/college';
 import type { RosterPlayer } from '@/app/api/college-roster/route';
+
+export const dynamic = 'force-dynamic';
 
 type Props = {
   params: { slug: string };
@@ -130,6 +132,7 @@ function SkeletonRow() {
 
 export default function CollegeTeamPage({ params }: Props) {
   const { slug } = params;
+  const router = useRouter();
   const team = getCollegeTeam(slug);
 
   const [liveRoster, setLiveRoster] = useState<RosterPlayer[] | null>(null);
@@ -139,7 +142,10 @@ export default function CollegeTeamPage({ params }: Props) {
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    if (!team) return;
+    if (!team) {
+      router.replace('/college');
+      return;
+    }
     setRosterLoading(true);
     setRosterError(false);
     fetch(`/api/college-roster?url=${encodeURIComponent(team.rosterUrl)}`)
@@ -152,7 +158,20 @@ export default function CollegeTeamPage({ params }: Props) {
       .finally(() => setRosterLoading(false));
   }, [team?.slug]);
 
-  if (!team) { notFound(); }
+  if (!team) {
+    return (
+      <div className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
+        <div className="section-tag" style={{ marginBottom: 14 }}>NOT FOUND</div>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(36px, 5vw, 64px)', lineHeight: 0.92, marginBottom: 20 }}>
+          TEAM NOT<br /><span style={{ color: 'var(--primary)' }}>FOUND</span>
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: 15, marginBottom: 28 }}>
+          This team doesn&apos;t exist in our hub yet.
+        </p>
+        <Link href="/college" className="btn-primary">← Back to College Hub</Link>
+      </div>
+    );
+  }
 
   const seedRoster: RosterPlayer[] = team.roster.map((p) => ({
     name: p.name, number: p.number, position: p.position,
