@@ -125,8 +125,24 @@ export default function PlayerProfilePage({ params }: Props) {
   if (loading) {
     return (
       <div>
-        <section style={{ background: `linear-gradient(180deg, color-mix(in srgb, ${team.primary} 10%, var(--bg)) 0%, var(--bg) 100%)`, padding: '56px 0', borderBottom: '1px solid var(--border)' }}>
-          <div className="container">
+        <section style={{ position: 'relative', padding: '56px 0', borderBottom: '1px solid var(--border)', overflow: 'hidden' }}>
+          {team.headerImageUrl && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              backgroundImage: `url(${team.headerImageUrl})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center 30%',
+              opacity: 0.18,
+              filter: 'grayscale(60%)',
+              zIndex: 0,
+            }} />
+          )}
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: `linear-gradient(180deg, color-mix(in srgb, ${team.primary} 22%, var(--bg)) 0%, var(--bg) 85%)`,
+            zIndex: 1,
+          }} />
+          <div className="container" style={{ position: 'relative', zIndex: 2 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 48, alignItems: 'start' }}>
               <div style={{ width: 280, height: 340, borderRadius: 12, background: 'var(--bg-card)', opacity: 0.5 }} />
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16, paddingTop: 24 }}>
@@ -167,13 +183,30 @@ export default function PlayerProfilePage({ params }: Props) {
       {/* ── HERO ── */}
       <section
         style={{
-          background: `linear-gradient(160deg, color-mix(in srgb, ${team.primary} 12%, var(--bg)) 0%, var(--bg) 60%)`,
           padding: '48px 0 0',
           borderBottom: '1px solid var(--border)',
           position: 'relative',
           overflow: 'hidden',
         }}
       >
+        {/* Background image */}
+        {team.headerImageUrl && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            backgroundImage: `url(${team.headerImageUrl})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center 30%',
+            opacity: 0.14,
+            filter: 'grayscale(60%)',
+            zIndex: 0,
+          }} />
+        )}
+        {/* Color gradient overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(160deg, color-mix(in srgb, ${team.primary} 20%, var(--bg)) 0%, var(--bg) 65%)`,
+          zIndex: 1,
+        }} />
         {/* Big number watermark */}
         {player.number && (
           <div style={{
@@ -187,7 +220,7 @@ export default function PlayerProfilePage({ params }: Props) {
           </div>
         )}
 
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="container" style={{ position: 'relative', zIndex: 2 }}>
           {/* Breadcrumb */}
           <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 28, flexWrap: 'wrap' }}>
             <Link href="/college" style={{ fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.14em', color: 'var(--text-muted)', textDecoration: 'none' }}>COLLEGE</Link>
