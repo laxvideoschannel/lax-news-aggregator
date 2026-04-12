@@ -92,6 +92,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const [teamPickerOpen, setTeamPickerOpen] = useState(false);
   const [collegeMenuOpen, setCollegeMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [tickerItems, setTickerItems] = useState([
+    'CAROLINA CHAOS WIN THE 2026 PLL CHAMPIONSHIP SERIES 24-16',
+    'BLAZE RIORDEN - PLL ALL-TIME SAVE RECORD HOLDER (25 SAVES)',
+    '2026 CHAMPIONSHIP SERIES RETURNS TO D.C. - FEB 27 TO MAR 8',
+    'SHANE KNOBLOCH WINS GOLDEN STICK AWARD - 30 POINTS',
+  ]);
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
   const team = getTeam(teamId);
@@ -119,6 +125,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     applyTeamTheme(teamId, theme);
   }, [teamId, theme]);
+
+  useEffect(() => {
+    fetch('/api/settings')
+      .then(r => r.json())
+      .then(d => {
+        if (d.tickerItems) {
+          const items = d.tickerItems.split('|').map((s: string) => s.trim()).filter(Boolean);
+          if (items.length > 0) setTickerItems(items);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
@@ -199,10 +217,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <div className="ticker-track" style={{ gap: '60px' }}>
               {[...Array(2)].map((_, i) => (
                 <span key={i} style={{ display: 'flex', gap: '60px', fontFamily: 'var(--font-accent)', fontSize: '14px', color: 'rgba(255,255,255,0.9)', letterSpacing: '0.1em' }}>
-                  <span>CAROLINA CHAOS WIN THE 2026 PLL CHAMPIONSHIP SERIES 24-16</span>
-                  <span>BLAZE RIORDEN - PLL ALL-TIME SAVE RECORD HOLDER (25 SAVES)</span>
-                  <span>2026 CHAMPIONSHIP SERIES RETURNS TO D.C. - FEB 27 TO MAR 8</span>
-                  <span>SHANE KNOBLOCH WINS GOLDEN STICK AWARD - 30 POINTS</span>
+                  {tickerItems.map((item, j) => <span key={j}>{item}</span>)}
                 </span>
               ))}
             </div>
