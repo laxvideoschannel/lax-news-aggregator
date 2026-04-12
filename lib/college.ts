@@ -44,6 +44,7 @@ export interface CollegeTeam {
   primary: string;
   secondary: string;
   logoUrl?: string;
+  headerImageUrl?: string;
   officialUrl: string;
   scheduleUrl: string;
   rosterUrl: string;
@@ -107,7 +108,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NC',
     primary: '#003087',
     secondary: '#ffffff',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/200px-Duke_Athletics_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Duke_Athletics_logo.svg/240px-Duke_Athletics_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Koskinen_Stadium_at_Duke_University.jpg/1200px-Koskinen_Stadium_at_Duke_University.jpg',
     officialUrl: 'https://goduke.com/sports/mens-lacrosse',
     scheduleUrl: 'https://goduke.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://goduke.com/sports/mens-lacrosse/roster',
@@ -125,10 +127,10 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'YouTube Search: Duke Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=duke+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Aidan Maguire', number: '6', position: 'A', classYear: 'Sr', hometown: 'Glen Head, NY', standout: 'Primary scoring catalyst in settled offense' },
-      { name: 'Max Sloat', number: '34', position: 'M', classYear: 'Sr', hometown: 'Ambler, PA', standout: 'Two-way midfielder with matchup versatility' },
-      { name: 'Patrick Jameison', number: '9', position: 'G', classYear: 'Jr', hometown: 'Haddonfield, NJ', standout: 'Backbone goalie presence in big-game spots' },
-      { name: 'Andrew McAdorey', number: '1', position: 'A', classYear: 'So', hometown: 'Stony Brook, NY', standout: 'Dynamic dodger and transition threat' },
+      { name: 'Aidan Maguire', number: '6', position: 'A', classYear: 'Sr', hometown: 'Glen Head, NY', standout: 'Primary scoring catalyst in settled offense', imagePage: 'https://goduke.com/sports/mens-lacrosse/roster/aidan-maguire/21580' },
+      { name: 'Max Sloat', number: '34', position: 'M', classYear: 'Sr', hometown: 'Ambler, PA', standout: 'Two-way midfielder with matchup versatility', imagePage: 'https://goduke.com/sports/mens-lacrosse/roster/max-sloat/21582' },
+      { name: 'Patrick Jameison', number: '9', position: 'G', classYear: 'Jr', hometown: 'Haddonfield, NJ', standout: 'Backbone goalie presence in big-game spots', imagePage: 'https://goduke.com/sports/mens-lacrosse/roster/patrick-jameison/23116' },
+      { name: 'Andrew McAdorey', number: '1', position: 'A', classYear: 'So', hometown: 'Stony Brook, NY', standout: 'Dynamic dodger and transition threat', imagePage: 'https://goduke.com/sports/mens-lacrosse/roster/andrew-mcadorey/26089' },
     ],
     featuredSchedule: [
       { slug: 'duke-vs-virginia-2026-04-04', dateLabel: 'Apr 4', opponent: 'Virginia', opponentSlug: 'virginia', location: 'home', status: 'final', result: 'L', score: '10-14', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Virginia knocked off previously unbeaten Duke.', watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
@@ -146,7 +148,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NY',
     primary: '#f76900',
     secondary: '#0f0f0f',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/49/Syracuse_Orange_logo.svg',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/Syracuse_Orange_logo.svg/240px-Syracuse_Orange_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Carrier_Dome_2009.jpg/1200px-Carrier_Dome_2009.jpg',
     officialUrl: 'https://cuse.com/',
     scheduleUrl: 'https://cuse.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://cuse.com/sports/mens-lacrosse/roster',
@@ -165,7 +168,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     ],
     roster: [
       { name: 'Joey Spallina', number: '22', position: 'A', classYear: 'Jr', hometown: 'Mount Sinai, NY', standout: 'Face-of-the-program attackman and creator', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/joey-spallina/24013' },
-      { name: 'Owen Hiltz', number: '77', position: 'A', classYear: 'Sr', hometown: 'Peterborough, ON', standout: 'Finisher with elite lefty scoring touch' },
+      { name: 'Owen Hiltz', number: '77', position: 'A', classYear: 'Sr', hometown: 'Peterborough, ON', standout: 'Finisher with elite lefty scoring touch', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/owen-hiltz/24014' },
       { name: 'Jimmy McCool', number: '30', position: 'G', classYear: 'Sr', hometown: 'Redding, CT', standout: 'Veteran goalie stabilizing big possession swings', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/jimmy-mccool/24941' },
       { name: 'Sam English', number: '44', position: 'M', classYear: 'Jr', hometown: 'Haverford, PA', standout: 'High-volume midfielder driving pace and offense', imagePage: 'https://cuse.com/sports/mens-lacrosse/roster/english-sam/23981' },
     ],
@@ -185,7 +188,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'IN',
     primary: '#0c2340',
     secondary: '#c99700',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Notre_Dame_Fighting_Irish_logo.svg/960px-Notre_Dame_Fighting_Irish_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Notre_Dame_Fighting_Irish_logo.svg/240px-Notre_Dame_Fighting_Irish_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/Notre_Dame_Stadium_2010.jpg/1200px-Notre_Dame_Stadium_2010.jpg',
     officialUrl: 'https://fightingirish.com/sports/mlax/',
     scheduleUrl: 'https://fightingirish.com/sports/mlax/schedule/',
     rosterUrl: 'https://fightingirish.com/sports/mlax/roster/',
@@ -203,10 +207,10 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'YouTube Search: Notre Dame Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=notre+dame+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Jake Taylor', number: '5', position: 'A', classYear: 'Sr', hometown: 'Calgary, AB', standout: 'Premier finisher inside and around the crease' },
-      { name: 'Chris Kavanagh', number: '14', position: 'A', classYear: 'Sr', hometown: 'Rockville Centre, NY', standout: 'High-level initiator with playoff pedigree' },
+      { name: 'Jake Taylor', number: '5', position: 'A', classYear: 'Sr', hometown: 'Calgary, AB', standout: 'Premier finisher inside and around the crease', imagePage: 'https://fightingirish.com/sports/mlax/roster/jake-taylor/21820' },
+      { name: 'Chris Kavanagh', number: '14', position: 'A', classYear: 'Sr', hometown: 'Rockville Centre, NY', standout: 'High-level initiator with playoff pedigree', imagePage: 'https://fightingirish.com/sports/mlax/roster/chris-kavanagh/26104' },
       { name: 'Liam Entenmann', number: '21', position: 'G', classYear: 'Sr', hometown: 'Garden City, NY', standout: 'One of the nation\'s most respected goalies' },
-      { name: 'Will Donovan', number: '19', position: 'D', classYear: 'Sr', hometown: 'Hingham, MA', standout: 'Anchor defender against top attack units' },
+      { name: 'Will Donovan', number: '19', position: 'D', classYear: 'Sr', hometown: 'Hingham, MA', standout: 'Anchor defender against top attack units', imagePage: 'https://virginiasports.com/sports/mlax/roster/will-donovan/24559' },
     ],
     featuredSchedule: [
       { slug: 'notre-dame-at-virginia-2026-03-28', dateLabel: 'Mar 28', opponent: 'Virginia', opponentSlug: 'virginia', location: 'away', status: 'final', result: 'L', score: '9-11', broadcast: 'ACCNX', venue: 'Charlottesville, VA', notes: 'Virginia collected a marquee ACC win over the Irish.', watchHref: 'https://virginiasports.com/sports/mlax/schedule/', watchLabel: 'Official recap' },
@@ -224,7 +228,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'VA',
     primary: '#232d4b',
     secondary: '#f84c1e',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/04/UVA_Cavaliers_logo.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/UVA_Cavaliers_logo.png/240px-UVA_Cavaliers_logo.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Scott_Stadium_2007.jpg/1200px-Scott_Stadium_2007.jpg',
     officialUrl: 'https://virginiasports.com/sports/mlax/',
     scheduleUrl: 'https://virginiasports.com/sports/mlax/schedule/',
     rosterUrl: 'https://virginiasports.com/sports/mlax/roster/',
@@ -241,10 +246,10 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'YouTube Search: Virginia Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=virginia+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Connor Shellenberger', number: '1', position: 'A', classYear: 'Sr', hometown: 'Charlottesville, VA', standout: 'Elite distributor and face of the offense' },
-      { name: 'Payton Cormier', number: '42', position: 'A', classYear: 'Sr', hometown: 'Oakville, ON', standout: 'Power shooter and proven game-breaker' },
-      { name: 'Cole Kastner', number: '15', position: 'D', classYear: 'Sr', hometown: 'Atlanta, GA', standout: 'Premier cover defender in ACC matchups' },
-      { name: 'Matthew Nunes', number: '18', position: 'G', classYear: 'Jr', hometown: 'Smithtown, NY', standout: 'Goaltending stabilizer in transition games' },
+      { name: 'Connor Shellenberger', number: '1', position: 'A', classYear: 'Sr', hometown: 'Charlottesville, VA', standout: 'Elite distributor and face of the offense', imagePage: 'https://virginiasports.com/sports/mlax/roster/connor-shellenberger/21690' },
+      { name: 'Payton Cormier', number: '42', position: 'A', classYear: 'Sr', hometown: 'Oakville, ON', standout: 'Power shooter and proven game-breaker', imagePage: 'https://virginiasports.com/sports/mlax/roster/payton-cormier/24557' },
+      { name: 'Cole Kastner', number: '15', position: 'D', classYear: 'Sr', hometown: 'Atlanta, GA', standout: 'Premier cover defender in ACC matchups', imagePage: 'https://umterps.com/sports/mens-lacrosse/roster/cole-kastner/24038' },
+      { name: 'Matthew Nunes', number: '18', position: 'G', classYear: 'Jr', hometown: 'Smithtown, NY', standout: 'Goaltending stabilizer in transition games', imagePage: 'https://umterps.com/sports/mens-lacrosse/roster/matthew-nunes/26260' },
     ],
     featuredSchedule: [
       { slug: 'virginia-at-duke-2026-04-04', dateLabel: 'Apr 4', opponent: 'Duke', opponentSlug: 'duke', location: 'away', status: 'final', result: 'W', score: '14-10', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Best resume win of the spring so far for Virginia.', watchHref: 'https://goduke.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
@@ -262,7 +267,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'MD',
     primary: '#e03a3e',
     secondary: '#ffd520',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Maryland_Terrapins_logo.svg/330px-Maryland_Terrapins_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a6/Maryland_Terrapins_logo.svg/240px-Maryland_Terrapins_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/SECU_Stadium_Maryland.jpg/1200px-SECU_Stadium_Maryland.jpg',
     officialUrl: 'https://umterps.com/',
     scheduleUrl: 'https://umterps.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://umterps.com/sports/mens-lacrosse/roster',
@@ -279,10 +285,10 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'YouTube Search: Maryland Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=maryland+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Daniel Kelly', number: '7', position: 'A', classYear: 'Sr', hometown: 'Davenport, IA', standout: 'Lead scoring option with strong off-ball timing' },
-      { name: 'Eric Malever', number: '14', position: 'M', classYear: 'Sr', hometown: 'Timonium, MD', standout: 'Veteran midfielder who settles possessions' },
-      { name: 'AJ Larkin', number: '30', position: 'G', classYear: 'Jr', hometown: 'Huntington, NY', standout: 'Key save-maker when games tighten late' },
-      { name: 'Brett Makar', number: '32', position: 'D', classYear: 'Sr', hometown: 'Yorktown Heights, NY', standout: 'Top-end cover defender against primary dodgers' },
+      { name: 'Daniel Kelly', number: '7', position: 'A', classYear: 'Sr', hometown: 'Davenport, IA', standout: 'Lead scoring option with strong off-ball timing', imagePage: 'https://goprincetontigers.com/sports/mens-lacrosse/roster/daniel-kelly/21853' },
+      { name: 'Eric Malever', number: '14', position: 'M', classYear: 'Sr', hometown: 'Timonium, MD', standout: 'Veteran midfielder who settles possessions', imagePage: 'https://goprincetontigers.com/sports/mens-lacrosse/roster/eric-malever/21856' },
+      { name: 'AJ Larkin', number: '30', position: 'G', classYear: 'Jr', hometown: 'Huntington, NY', standout: 'Key save-maker when games tighten late', imagePage: 'https://clemsontigers.com/sports/mens-lacrosse/roster/aj-larkin/25192' },
+      { name: 'Brett Makar', number: '32', position: 'D', classYear: 'Sr', hometown: 'Yorktown Heights, NY', standout: 'Top-end cover defender against primary dodgers', imagePage: 'https://clemsontigers.com/sports/mens-lacrosse/roster/brett-makar/21852' },
     ],
     featuredSchedule: [
       { slug: 'maryland-vs-ohio-state-2026-04-04', dateLabel: 'Apr 4', opponent: 'Ohio State', location: 'home', status: 'upcoming', broadcast: 'Big Ten Plus', venue: 'College Park, MD', notes: 'Major Big Ten swing game in the conference title race.', watchHref: 'https://umterps.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
@@ -300,7 +306,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NJ',
     primary: '#f58025',
     secondary: '#111111',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/31/Princeton_Tigers_logo.svg/200px-Princeton_Tigers_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/31/Princeton_Tigers_logo.svg/240px-Princeton_Tigers_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/80/Princeton_University_Jadwin_Gym.jpg/1200px-Princeton_University_Jadwin_Gym.jpg',
     officialUrl: 'https://goprincetontigers.com/sports/mens-lacrosse',
     scheduleUrl: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://goprincetontigers.com/sports/mens-lacrosse/roster',
@@ -317,10 +324,10 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'YouTube Search: Princeton Men\'s Lacrosse Highlights', href: 'https://www.youtube.com/results?search_query=princeton+men%27s+lacrosse+highlights', type: 'highlights' },
     ],
     roster: [
-      { name: 'Coulter Mackesy', number: '6', position: 'A', classYear: 'Sr', hometown: 'Bronxville, NY', standout: 'One of the most dangerous scorers in the Ivy League' },
-      { name: 'Peter Buonanno', number: '13', position: 'M', classYear: 'Sr', hometown: 'Port Washington, NY', standout: 'Play-driving midfielder in key possessions' },
-      { name: 'Nate Kabiri', number: '17', position: 'D', classYear: 'Sr', hometown: 'McLean, VA', standout: 'Reliable defender against top-end initiators' },
-      { name: 'Michael Gianforcaro', number: '30', position: 'G', classYear: 'Sr', hometown: 'Summit, NJ', standout: 'Strong stopper with postseason-caliber poise' },
+      { name: 'Coulter Mackesy', number: '6', position: 'A', classYear: 'Sr', hometown: 'Bronxville, NY', standout: 'One of the most dangerous scorers in the Ivy League', imagePage: 'https://clemsontigers.com/sports/mens-lacrosse/roster/coulter-mackesy/24578' },
+      { name: 'Peter Buonanno', number: '13', position: 'M', classYear: 'Sr', hometown: 'Port Washington, NY', standout: 'Play-driving midfielder in key possessions', imagePage: 'https://bceagles.com/sports/mens-lacrosse/roster/peter-buonanno/21779' },
+      { name: 'Nate Kabiri', number: '17', position: 'D', classYear: 'Sr', hometown: 'McLean, VA', standout: 'Reliable defender against top-end initiators', imagePage: 'https://bceagles.com/sports/mens-lacrosse/roster/nate-kabiri/24571' },
+      { name: 'Michael Gianforcaro', number: '30', position: 'G', classYear: 'Sr', hometown: 'Summit, NJ', standout: 'Strong stopper with postseason-caliber poise', imagePage: 'https://bceagles.com/sports/mens-lacrosse/roster/michael-gianforcaro/21780' },
     ],
     featuredSchedule: [
       { slug: 'princeton-vs-cornell-2026-03-21', dateLabel: 'Mar 21', opponent: 'Cornell', location: 'home', status: 'final', result: 'Ivy Test', score: 'Key Conference Game', broadcast: 'ESPN+', venue: 'Princeton, NJ', notes: 'High-value Ivy result with direct standings significance.', watchHref: 'https://goprincetontigers.com/sports/mens-lacrosse/schedule', watchLabel: 'Official recap' },
@@ -338,7 +345,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'SC',
     primary: '#F66733',
     secondary: '#522D80',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Clemson_Tigers_logo.svg/200px-Clemson_Tigers_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/39/Clemson_Tigers_logo.svg/240px-Clemson_Tigers_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Clemson_Memorial_Stadium_2012.jpg/1200px-Clemson_Memorial_Stadium_2012.jpg',
     officialUrl: 'https://clemsontigers.com/sports/mens-lacrosse',
     scheduleUrl: 'https://clemsontigers.com/sports/mens-lacrosse/schedule',
     rosterUrl: 'https://clemsontigers.com/sports/mens-lacrosse/roster',
@@ -352,8 +360,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'ACC Network', href: 'https://www.espn.com/watch/accn', type: 'official' },
     ],
     roster: [
-      { name: 'Tyler Carpenter', number: '1', position: 'Attack', classYear: 'Sr', hometown: 'Annapolis, MD', standout: 'Leading scorer and team captain.' },
-      { name: 'Brendan Kelly', number: '22', position: 'Midfield', classYear: 'Jr', hometown: 'Severna Park, MD', standout: 'Two-way midfielder with high ground ball output.' },
+      { name: 'Tyler Carpenter', number: '1', position: 'Attack', classYear: 'Sr', hometown: 'Annapolis, MD', standout: 'Leading scorer and team captain.', imagePage: 'https://nusports.com/sports/womens-lacrosse/roster/tyler-carpenter/21904' },
+      { name: 'Brendan Kelly', number: '22', position: 'Midfield', classYear: 'Jr', hometown: 'Severna Park, MD', standout: 'Two-way midfielder with high ground ball output.', imagePage: 'https://nusports.com/sports/womens-lacrosse/roster/brendan-kelly/24579' },
     ],
     featuredSchedule: [
       { slug: 'clemson-vs-duke-2026-03-28', dateLabel: 'Mar 28', opponent: 'Duke', opponentSlug: 'duke', location: 'away', status: 'upcoming', broadcast: 'ACCNX', venue: 'Durham, NC', notes: 'Big ACC test against one of the sport\'s premier programs.', watchHref: 'https://clemsontigers.com/sports/mens-lacrosse/schedule', watchLabel: 'Official game page' },
@@ -370,7 +378,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'MA',
     primary: '#8B0000',
     secondary: '#D4AF37',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Boston_College_Eagles_logo.svg/200px-Boston_College_Eagles_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Boston_College_Eagles_logo.svg/240px-Boston_College_Eagles_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Alumni_Stadium_Boston_College.jpg/1200px-Alumni_Stadium_Boston_College.jpg',
     officialUrl: 'https://bceagles.com/sports/womens-lacrosse',
     scheduleUrl: 'https://bceagles.com/sports/womens-lacrosse/schedule',
     rosterUrl: 'https://bceagles.com/sports/womens-lacrosse/roster',
@@ -387,7 +396,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     ],
     roster: [
       { name: 'Shea Dolce', number: '14', position: 'Midfield', classYear: 'Sr', hometown: 'Setauket, NY', standout: 'Preseason All-American and the heart of BC\'s offense — one of the best midfielders in the country. Plays with rare poise, vision, and a killer shot from distance. Expected WLL first-round talent.' },
-      { name: 'Ally Kennedy', number: '3', position: 'Attack', classYear: 'Jr', hometown: 'Hingham, MA', standout: 'Dynamic attacker and key scoring threat alongside Dolce.' },
+      { name: 'Ally Kennedy', number: '3', position: 'Attack', classYear: 'Jr', hometown: 'Hingham, MA', standout: 'Dynamic attacker and key scoring threat alongside Dolce.', imagePage: 'https://nusports.com/sports/womens-lacrosse/roster/ally-kennedy/24576' },
       { name: 'Cameron Whitlock', number: '7', position: 'Defense', classYear: 'Sr', hometown: 'Fairfield, CT', standout: 'Anchor of the Eagles\' back line, consistent All-ACC consideration.' },
     ],
     featuredSchedule: [
@@ -405,7 +414,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'IL',
     primary: '#4E2A84',
     secondary: '#B6ACD1',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Northwestern_Wildcats_logo.svg/200px-Northwestern_Wildcats_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Northwestern_Wildcats_logo.svg/240px-Northwestern_Wildcats_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Ryan_Field_Northwestern_2009.jpg/1200px-Ryan_Field_Northwestern_2009.jpg',
     officialUrl: 'https://nusports.com/sports/womens-lacrosse',
     scheduleUrl: 'https://nusports.com/sports/womens-lacrosse/schedule',
     rosterUrl: 'https://nusports.com/sports/womens-lacrosse/roster',
@@ -421,7 +431,7 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     ],
     roster: [
       { name: 'Izzy Scane', number: '9', position: 'Attack', classYear: 'Sr', hometown: 'Lake Forest, IL', standout: 'Three-time Tewaaraton Award winner — the greatest scorer in women\'s college lacrosse history.' },
-      { name: 'Samantha Meeder', number: '22', position: 'Midfield', classYear: 'Jr', hometown: 'Westfield, NJ', standout: 'High-energy two-way midfielder who sets the tone in transition.' },
+      { name: 'Samantha Meeder', number: '22', position: 'Midfield', classYear: 'Jr', hometown: 'Westfield, NJ', standout: 'High-energy two-way midfielder who sets the tone in transition.', imagePage: 'https://nusports.com/sports/womens-lacrosse/roster/samantha-meeder/24580' },
     ],
     featuredSchedule: [
       { slug: 'nu-vs-maryland-2026-04-06', dateLabel: 'Apr 6', opponent: 'Maryland', location: 'home', status: 'upcoming', broadcast: 'BTN', venue: 'Evanston, IL', notes: 'Marquee Big Ten showdown between two national title contenders.', watchHref: 'https://nusports.com/sports/womens-lacrosse/schedule', watchLabel: 'Official game page' },
@@ -438,7 +448,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
     state: 'NC',
     primary: '#56A0D3',
     secondary: '#FFFFFF',
-    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/North_Carolina_Tar_Heels_logo.svg/200px-North_Carolina_Tar_Heels_logo.svg.png',
+    logoUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/North_Carolina_Tar_Heels_logo.svg/240px-North_Carolina_Tar_Heels_logo.svg.png',
+    headerImageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Kenan_Memorial_Stadium_2014.jpg/1200px-Kenan_Memorial_Stadium_2014.jpg',
     officialUrl: 'https://goheels.com/sports/womens-lacrosse',
     scheduleUrl: 'https://goheels.com/sports/womens-lacrosse/schedule',
     rosterUrl: 'https://goheels.com/sports/womens-lacrosse/roster',
@@ -453,8 +464,8 @@ export const COLLEGE_TEAMS: CollegeTeam[] = [
       { label: 'ACC Network', href: 'https://www.espn.com/watch/accn', type: 'official' },
     ],
     roster: [
-      { name: 'Katie Hoeg', number: '6', position: 'Attack', classYear: 'Jr', hometown: 'New Canaan, CT', standout: 'Preseason All-ACC with a relentless shot and exceptional off-ball movement.' },
-      { name: 'Olivia Dirks', number: '13', position: 'Midfield', classYear: 'Sr', hometown: 'Lutherville, MD', standout: 'Two-way mid who leads the Tar Heels in caused turnovers and ranks top-5 in ACC scoring.' },
+      { name: 'Katie Hoeg', number: '6', position: 'Attack', classYear: 'Jr', hometown: 'New Canaan, CT', standout: 'Preseason All-ACC with a relentless shot and exceptional off-ball movement.', imagePage: 'https://goheels.com/sports/womens-lacrosse/roster/katie-hoeg/24581' },
+      { name: 'Olivia Dirks', number: '13', position: 'Midfield', classYear: 'Sr', hometown: 'Lutherville, MD', standout: 'Two-way mid who leads the Tar Heels in caused turnovers and ranks top-5 in ACC scoring.', imagePage: 'https://goheels.com/sports/womens-lacrosse/roster/olivia-dirks/21905' },
     ],
     featuredSchedule: [
       { slug: 'unc-vs-bc-2026-04-05', dateLabel: 'Apr 5', opponent: 'Boston College', opponentSlug: 'boston-college', location: 'home', status: 'upcoming', broadcast: 'ACCNX', venue: 'Chapel Hill, NC', notes: 'Top-5 ACC women\'s matchup — massive seeding implications.', watchHref: 'https://goheels.com/sports/womens-lacrosse/schedule', watchLabel: 'Official game page' },
