@@ -89,7 +89,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(circle at 20% 30%, rgba(204,0,0,0.16), transparent 45%)',
+            background: 'radial-gradient(circle at 20% 30%, color-mix(in srgb, var(--primary) 16%, transparent), transparent 45%)',
           }}
         />
         <div className="container" style={{ position: 'relative', zIndex: 1, paddingTop: '70px', paddingBottom: '70px' }}>
@@ -108,7 +108,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                   borderRadius: '36px',
                   overflow: 'hidden',
                   background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(204,0,0,0.18)',
+                  border: '1px solid color-mix(in srgb, var(--primary) 18%, transparent)',
                   boxShadow: '0 40px 120px rgba(0,0,0,0.45)',
                 }}
               >
@@ -148,7 +148,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                   right: '-28px',
                   bottom: '28px',
                   background: 'rgba(0,0,0,0.82)',
-                  border: '1px solid rgba(204,0,0,0.25)',
+                  border: '1px solid color-mix(in srgb, var(--primary) 25%, transparent)',
                   padding: '14px 18px',
                 }}
               >
@@ -240,7 +240,7 @@ export default function PlayerBioPage({ params }: { params: { slug: string } }) 
                 className="card"
                 style={{ padding: '22px', display: 'block', position: 'relative', overflow: 'hidden', minHeight: '220px' }}
               >
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, rgba(204,0,0,0.14), rgba(0,0,0,0.9))' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(180deg, color-mix(in srgb, var(--primary) 14%, transparent), rgba(0,0,0,0.9))' }} />
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ width: '62px', height: '62px', borderRadius: '50%', border: '2px solid rgba(255,255,255,0.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '26px', marginBottom: '18px' }}>
                     â–¶
