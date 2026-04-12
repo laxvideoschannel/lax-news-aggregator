@@ -158,6 +158,7 @@ export async function GET(request: Request) {
     'yalebulldogs.com', 'cornellbigred.com', 'hopkinssports.com',
     'pennathletics.com', 'dartmouthsports.com', 'columbiasports.com',
     'brownbears.com', 'bearcats.com', 'denverpioneers.com',
+    'clemsontigers.com', 'bceagles.com', 'nusports.com', 'goheels.com',
   ];
   const hostname = new URL(url).hostname.replace('www.', '');
   if (!allowedDomains.some((d) => hostname.endsWith(d))) {
