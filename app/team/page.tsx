@@ -1,341 +1,755 @@
-'use client';
-
+﻿'use client';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { useEffect, useState, useMemo } from 'react';
-import { getCollegeTeam } from '@/lib/college';
-import type { RosterPlayer } from '@/app/api/college-roster/route';
+import { useEffect, useMemo, useState } from 'react';
+import { ALL_TEAMS, getTeam } from '@/lib/teams';
+import { TeamLogo } from '@/lib/team-logo';
+import { getTeamPageContent, TeamRosterPlayer, TeamSpotlight } from '@/lib/team-content';
+import { ALL_PLAYERS, CHAOS_PLAYERS } from '@/lib/players';
+import { TeamMerchItem, getTeamMerch } from '@/lib/team-merch';
 
-type Props = {
-  params: { slug: string };
-};
-
-const POSITION_LABELS: Record<string, string> = {
-  A: 'Attack', M: 'Midfield', D: 'Defense', G: 'Goalie', LSM: 'LSM', SSDM: 'SSDM',
-  'ATTACK': 'Attack', 'MIDFIELD': 'Midfield', 'DEFENSE': 'Defense', 'GOALIE': 'Goalie',
-  'MF': 'Midfield', 'DEF': 'Defense', 'ATT': 'Attack',
-};
-
-const POSITION_COLORS: Record<string, string> = {
-  A: '#dc2626', ATT: '#dc2626', ATTACK: '#dc2626',
-  M: '#2563eb', MF: '#2563eb', MIDFIELD: '#2563eb',
-  D: '#16a34a', DEF: '#16a34a', DEFENSE: '#16a34a',
-  G: '#d97706', GOALIE: '#d97706',
-  LSM: '#7c3aed', SSDM: '#0891b2',
-};
-
-function nameToSlug(name: string) {
-  return name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+function getPlayerImageSrc(imagePage?: string) {
+  return imagePage ? `/api/player-image?url=${encodeURIComponent(imagePage)}` : '';
 }
 
-function getPosKey(position: string) {
-  return position?.toUpperCase().trim().split(/[\/\s]/)[0] || '';
+function getPositionFilter(position: string) {
+  return position === 'FO' ? 'M' : position;
 }
 
-function PlayerCard({ player, primary, teamSlug }: { player: RosterPlayer; primary: string; teamSlug: string }) {
-  const initials = player.name.split(' ').map((p: string) => p[0]).slice(0, 2).join('');
-  const playerSlug = nameToSlug(player.name);
-  const posKey = getPosKey(player.position || '');
-  const posLabel = POSITION_LABELS[posKey] || player.position || '';
-  const posColor = POSITION_COLORS[posKey] || primary;
+export default function TeamPage() {
+  const [teamId, setTeamId] = useState('chaos');
+  const [filter, setFilter] = useState('All');
+  const content = getTeamPageContent(teamId);
+  const [activePlayer, setActivePlayer] = useState<TeamSpotlight>(content.spotlights[0]);
+  const [gearItems, setGearItems] = useState<TeamMerchItem[]>([]);
+  const team = getTeam(teamId);
+  const positionOrder = ['G', 'D', 'LSM', 'SSDM', 'M', 'FO', 'A'];
+  const roster: TeamRosterPlayer[] = useMemo(() => {
+    if (teamId === 'chaos') {
+      return CHAOS_PLAYERS.map((player) => ({
+        slug: player.slug,
+        name: player.name,
+        number: player.number,
+        pos: player.pos,
+        hometown: player.hometown,
+        college: player.college,
+        highlight: player.highlight,
+        imagePage: player.imagePage,
+      }));
+    }
 
-  // Highlight stat: prefer height, then weight, then class year as a "bio stat"
-  const highlightStat = player.height
-    ? { label: 'HT', value: player.height }
-    : player.weight
-    ? { label: 'WT', value: `${player.weight} lbs` }
-    : player.classYear
-    ? { label: 'CLASS', value: player.classYear }
-    : null;
-
-  return (
-    <Link
-      href={`/college/teams/${teamSlug}/players/${playerSlug}`}
-      style={{ display: 'grid', gridTemplateColumns: '96px 1fr auto', gap: 18, padding: '14px 0', borderBottom: '1px solid var(--border)', alignItems: 'center', textDecoration: 'none', transition: 'background 0.15s' }}
-      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'color-mix(in srgb, var(--primary) 4%, transparent)'; (e.currentTarget as HTMLElement).style.marginLeft = '-12px'; (e.currentTarget as HTMLElement).style.paddingLeft = '12px'; (e.currentTarget as HTMLElement).style.marginRight = '-12px'; (e.currentTarget as HTMLElement).style.paddingRight = '12px'; }}
-      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'transparent'; (e.currentTarget as HTMLElement).style.marginLeft = '0'; (e.currentTarget as HTMLElement).style.paddingLeft = '0'; (e.currentTarget as HTMLElement).style.marginRight = '0'; (e.currentTarget as HTMLElement).style.paddingRight = '0'; }}
-    >
-      {/* Photo */}
-      <div style={{ position: 'relative', flexShrink: 0 }}>
-        {player.imageUrl ? (
-          <img
-            src={player.imageUrl}
-            alt={player.name}
-            style={{ width: 96, height: 96, objectFit: 'cover', objectPosition: 'top', borderRadius: 10, border: `2px solid color-mix(in srgb, ${primary} 30%, var(--border))`, display: 'block' }}
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-              (e.currentTarget.nextElementSibling as HTMLElement).style.display = 'flex';
-            }}
-          />
-        ) : null}
-        <div style={{
-          width: 96, height: 96, borderRadius: 10,
-          border: `2px solid color-mix(in srgb, ${primary} 30%, var(--border))`,
-          background: `color-mix(in srgb, ${primary} 15%, var(--bg-card))`,
-          display: player.imageUrl ? 'none' : 'flex',
-          alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 26, color: primary,
-        }}>
-          {initials}
-        </div>
-        {player.number && (
-          <div style={{ position: 'absolute', bottom: -5, right: -5, background: primary, color: '#fff', fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 11, padding: '2px 6px', borderRadius: 4, lineHeight: 1.5, border: '2px solid var(--bg-card)' }}>
-            #{player.number}
-          </div>
-        )}
-      </div>
-
-      {/* Info */}
-      <div style={{ minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 7, flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22, lineHeight: 1, color: 'var(--text)' }}>{player.name}</span>
-          {posLabel && (
-            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 10, letterSpacing: '0.14em', color: '#fff', background: posColor, padding: '3px 8px', borderRadius: 3, flexShrink: 0 }}>
-              {posLabel.toUpperCase()}
-            </span>
-          )}
-          {player.classYear && (
-            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--text-muted)', border: '1px solid var(--border)', padding: '2px 7px', borderRadius: 3, flexShrink: 0 }}>
-              {player.classYear}
-            </span>
-          )}
-        </div>
-        <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', fontSize: 13, color: 'var(--text-muted)', alignItems: 'center' }}>
-          {player.hometown && <span>{player.hometown}</span>}
-          {highlightStat && (
-            <span style={{ fontFamily: 'var(--font-accent)', fontSize: 11, letterSpacing: '0.1em', color: primary }}>
-              {highlightStat.label}: <strong>{highlightStat.value}</strong>
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Arrow */}
-      <div style={{ fontFamily: 'var(--font-accent)', fontSize: 13, letterSpacing: '0.1em', color: 'var(--text-muted)', flexShrink: 0 }}>VIEW →</div>
-    </Link>
-  );
-}
-
-function SkeletonRow() {
-  return (
-    <div style={{ display: 'grid', gridTemplateColumns: '72px 1fr', gap: 16, padding: '16px 0', borderBottom: '1px solid var(--border)', alignItems: 'center' }}>
-      <div style={{ width: 72, height: 72, borderRadius: 10, background: 'var(--bg-card)', opacity: 0.5 }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ height: 22, width: '45%', background: 'var(--bg-card)', borderRadius: 4, opacity: 0.5 }} />
-        <div style={{ height: 14, width: '30%', background: 'var(--bg-card)', borderRadius: 4, opacity: 0.35 }} />
-      </div>
-    </div>
-  );
-}
-
-export default function CollegeTeamPage({ params }: Props) {
-  const { slug } = params;
-  const team = getCollegeTeam(slug);
-
-  const [liveRoster, setLiveRoster] = useState<RosterPlayer[] | null>(null);
-  const [rosterLoading, setRosterLoading] = useState(true);
-  const [rosterError, setRosterError] = useState(false);
-  const [posFilter, setPosFilter] = useState('ALL');
-  const [search, setSearch] = useState('');
+    return content.roster.map((player) => {
+      const enriched = ALL_PLAYERS.find((candidate) => candidate.teamId === teamId && candidate.name === player.name);
+      return enriched
+        ? {
+            ...player,
+            slug: enriched.slug,
+          }
+        : player;
+    });
+  }, [content.roster, teamId]);
+  const positions = useMemo(() => {
+    const seen = new Set(roster.map((player) => player.pos));
+    const sorted = positionOrder.filter((position) => seen.has(position));
+    return ['All', ...sorted];
+  }, [roster]);
 
   useEffect(() => {
-    if (!team) return;
-    setRosterLoading(true);
-    setRosterError(false);
-    fetch(`/api/college-roster?url=${encodeURIComponent(team.rosterUrl)}`)
-      .then((r) => r.json())
-      .then((d) => {
-        if (d.players && d.players.length > 0) setLiveRoster(d.players);
-        else setRosterError(true);
+    const saved = localStorage.getItem('lax_team') || 'chaos';
+    setTeamId(saved);
+  }, []);
+
+  useEffect(() => {
+    const nextContent = getTeamPageContent(teamId);
+    setActivePlayer(nextContent.spotlights[0]);
+    setFilter('All');
+  }, [teamId]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    fetch(`/api/team-gear?teamId=${encodeURIComponent(teamId)}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (isMounted && Array.isArray(data.items)) {
+          setGearItems(data.items);
+        }
       })
-      .catch(() => setRosterError(true))
-      .finally(() => setRosterLoading(false));
-  }, [team?.slug]);
+      .catch(() => {
+        if (isMounted) {
+          setGearItems([]);
+        }
+      });
 
-  if (!team) { notFound(); }
+    return () => {
+      isMounted = false;
+    };
+  }, [teamId]);
 
-  const seedRoster: RosterPlayer[] = team.roster.map((p) => ({
-    name: p.name, number: p.number, position: p.position,
-    classYear: p.classYear, hometown: p.hometown,
-    imageUrl: p.imagePage ? `/api/player-image?url=${encodeURIComponent(p.imagePage)}` : undefined,
-  }));
+  useEffect(() => {
+    const syncFromStorage = () => {
+      const saved = localStorage.getItem('lax_team') || 'chaos';
+      setTeamId(saved);
+    };
 
-  const displayRoster: RosterPlayer[] = liveRoster ?? (rosterError ? seedRoster : []);
+    window.addEventListener('storage', syncFromStorage);
+    window.addEventListener('lax-team-change', syncFromStorage);
+    return () => {
+      window.removeEventListener('storage', syncFromStorage);
+      window.removeEventListener('lax-team-change', syncFromStorage);
+    };
+  }, []);
 
-  const positions = useMemo(() => {
-    const seen = new Set<string>();
-    for (const p of displayRoster) {
-      const pos = p.position?.toUpperCase().trim();
-      if (pos) seen.add(pos);
-    }
-    return Array.from(seen).sort();
-  }, [displayRoster]);
+  const filteredRoster = useMemo(() => {
+    if (filter === 'All') return roster;
+    return roster.filter((player) => getPositionFilter(player.pos) === filter);
+  }, [roster, filter]);
 
-  const filtered = useMemo(() => displayRoster.filter((p) => {
-    const matchPos = posFilter === 'ALL' || p.position?.toUpperCase().trim() === posFilter;
-    const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase()) || (p.hometown || '').toLowerCase().includes(search.toLowerCase());
-    return matchPos && matchSearch;
-  }), [displayRoster, posFilter, search]);
+  const selectTeam = (id: string) => {
+    setTeamId(id);
+    localStorage.setItem('lax_team', id);
+    window.dispatchEvent(new Event('lax-team-change'));
+  };
+
+  const heroBackground = 'linear-gradient(135deg, var(--team-surface-strong) 0%, var(--bg) 58%, color-mix(in srgb, var(--team-surface) 82%, var(--bg)) 100%)';
+  const spotlightBackground = 'linear-gradient(180deg, color-mix(in srgb, var(--team-surface) 86%, var(--bg)) 0%, var(--bg) 100%)';
+  const merch = getTeamMerch(teamId);
+  const merchItems = gearItems.length ? gearItems : merch.items;
+  const merchRail = [...merchItems, ...merchItems];
+  const heroImageSrc = getPlayerImageSrc(activePlayer.imagePage || content.heroImagePage || content.spotlights[0]?.imagePage);
+  const statItems = [
+    { label: 'Championships', val: content.championships },
+    { label: 'Roster Size', val: content.rosterSize },
+    { label: team.league === 'PLL' ? 'Conference' : 'League', val: team.league === 'PLL' ? (team.conference === 'Eastern' ? 'East' : 'West') : 'WLL' },
+    { label: 'Founded', val: content.founded },
+  ];
 
   return (
     <div>
-      {/* ── HEADER ── */}
-      <section style={{
-        position: 'relative',
-        padding: '46px 0 28px',
-        borderBottom: '1px solid var(--border)',
-        overflow: 'hidden',
-      }}>
-        {/* Background image layer */}
-        {team.headerImageUrl && (
-          <div style={{
-            position: 'absolute', inset: 0,
-            backgroundImage: `url(${team.headerImageUrl})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center 30%',
-            opacity: 0.18,
-            filter: 'grayscale(60%)',
-            zIndex: 0,
-          }} />
-        )}
-        {/* Color gradient overlay */}
-        <div style={{
-          position: 'absolute', inset: 0,
-          background: `linear-gradient(180deg, color-mix(in srgb, ${team.primary} 22%, var(--bg)) 0%, var(--bg) 85%)`,
-          zIndex: 1,
-        }} />
+      <div
+        style={{
+          background: heroBackground,
+          padding: '80px 0 0',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {heroImageSrc ? (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <img
+              src={heroImageSrc}
+              alt={activePlayer.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center top',
+                filter: 'grayscale(1) contrast(1.05) brightness(0.62)',
+                opacity: 0.42,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: `linear-gradient(90deg, color-mix(in srgb, var(--bg) 24%, transparent) 0%, color-mix(in srgb, var(--primary) 26%, transparent) 45%, color-mix(in srgb, var(--bg) 16%, transparent) 100%)`,
+              }}
+            />
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.52) 42%, rgba(0,0,0,0.72) 100%)',
+              }}
+            />
+          </div>
+        ) : null}
+        <div
+          style={{
+            position: 'absolute',
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: '42%',
+            background: 'var(--primary)',
+            opacity: 0.08,
+            clipPath: 'polygon(20% 0, 100% 0, 100% 100%, 0% 100%)',
+          }}
+        />
+        <div
+          style={{
+            position: 'absolute',
+            left: '8%',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            fontFamily: 'var(--font-display)',
+            fontWeight: 900,
+            fontSize: '220px',
+            color: 'color-mix(in srgb, var(--primary) 16%, transparent)',
+            lineHeight: 1,
+            userSelect: 'none',
+            pointerEvents: 'none',
+          }}
+        >
+          {team.name.toUpperCase()}
+        </div>
+
+        <div className="container" style={{ position: 'relative', zIndex: 2, paddingBottom: '60px' }}>
+          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '28px' }}>
+            {ALL_TEAMS.map((option) => (
+              <button
+                key={option.id}
+                onClick={() => selectTeam(option.id)}
+                aria-label={`Show ${option.full}`}
+                className="team-selector-tile"
+                style={{
+                  width: '74px',
+                  height: '74px',
+                  borderRadius: '18px',
+                  border: `${teamId === option.id ? 3 : 2}px solid ${teamId === option.id ? 'var(--primary)' : 'color-mix(in srgb, var(--border) 82%, transparent)'}`,
+                  background: 'color-mix(in srgb, var(--bg-card) 90%, transparent)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s, opacity 0.2s, border-color 0.2s, box-shadow 0.2s',
+                  boxShadow: teamId === option.id ? '0 0 0 1px color-mix(in srgb, var(--primary) 20%, transparent), 0 18px 40px color-mix(in srgb, var(--primary) 10%, transparent)' : 'none',
+                  opacity: teamId === option.id ? 1 : 0.62,
+                  padding: 0,
+                }}
+              >
+                <TeamLogo
+                  teamId={option.id}
+                  size={56}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    borderRadius: '16px',
+                    transition: 'transform 0.2s, opacity 0.2s',
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+
+          <div className="section-tag" style={{ marginBottom: '16px' }}>{content.titleTag}</div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(48px, 8vw, 96px)', lineHeight: 0.9, marginBottom: '24px' }}>
+            <span style={{ color: '#fff' }}>{team.city.toUpperCase()}</span><br /><span style={{ color: 'var(--primary)', WebkitTextStroke: '2px white', paintOrder: 'stroke fill' }}>{team.name.toUpperCase()}</span>
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '15px' }}>{content.seasonNote}</p>
+
+          <div style={{ display: 'flex', gap: '40px', marginTop: '40px', flexWrap: 'wrap' }}>
+            {statItems.map((stat) => (
+              <div key={stat.label}>
+                <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: 'var(--primary)', lineHeight: 1 }}>{stat.val}</div>
+                <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'rgba(255,255,255,0.55)', marginTop: '4px' }}>{stat.label.toUpperCase()}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <section
+        style={{
+          background: spotlightBackground,
+          padding: '80px 0',
+          borderTop: '3px solid var(--primary)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div
+          style={{
+            position: 'absolute',
+            right: '-180px',
+            top: '-180px',
+            width: '540px',
+            height: '540px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, color-mix(in srgb, var(--team-glow) 20%, transparent) 0%, transparent 65%)',
+          }}
+        />
+
         <div className="container" style={{ position: 'relative', zIndex: 2 }}>
-          <Link href="/college" style={{ fontFamily: 'var(--font-accent)', fontSize: 14, letterSpacing: '0.14em', color: 'var(--text-muted)', display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 24 }}>
-            ← BACK TO COLLEGE
-          </Link>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 28, alignItems: 'end' }}>
-            <div style={{ display: 'flex', gap: 20, alignItems: 'flex-start' }}>
-              {team.logoUrl && <img src={team.logoUrl} alt={team.school} style={{ width: 72, height: 72, objectFit: 'contain', flexShrink: 0 }} />}
-              <div>
-                <div className="section-tag" style={{ marginBottom: 14 }}>{team.conference}</div>
-                <h1 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(34px, 5vw, 58px)', lineHeight: 0.96, marginBottom: 12 }}>
-                  {team.school}<span style={{ color: team.primary }}> {team.nickname}</span>
-                </h1>
-                <div style={{ display: 'flex', gap: 18, flexWrap: 'wrap', color: 'var(--text-muted)', fontSize: 14 }}>
-                  <span>{team.city}, {team.state}</span>
-                  <span>{team.conference}</span>
-                  <span>{team.record} record</span>
-                  {team.ranking ? <span>No. {team.ranking} snapshot</span> : null}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+            <div style={{ position: 'relative' }}>
+              <div
+                style={{
+                  width: '380px',
+                  height: '380px',
+                  borderRadius: '50%',
+                  background: 'color-mix(in srgb, var(--team-surface-strong) 70%, transparent)',
+                  border: '1px solid color-mix(in srgb, var(--primary) 26%, var(--border))',
+                  position: 'relative',
+                  margin: '0 auto',
+                  overflow: 'hidden',
+                  boxShadow: '0 30px 80px rgba(0,0,0,0.35)',
+                }}
+              >
+                {activePlayer.imagePage ? (
+                  <img
+                    src={getPlayerImageSrc(activePlayer.imagePage)}
+                    alt={activePlayer.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center top',
+                      filter: 'contrast(1.05) brightness(0.92)',
+                    }}
+                  />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'color-mix(in srgb, var(--primary) 12%, var(--team-surface-strong))' }}>
+                    <TeamLogo teamId={teamId} size={180} />
+                  </div>
+                )}
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(180deg, rgba(0,0,0,0.04) 0%, rgba(0,0,0,0.16) 55%, rgba(0,0,0,0.82) 100%)',
+                  }}
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: '-16px',
+                    border: '1px dashed color-mix(in srgb, var(--primary) 36%, transparent)',
+                    borderRadius: '50%',
+                    animation: 'spin 20s linear infinite',
+                  }}
+                />
+              </div>
+
+              <div
+                style={{
+                  position: 'absolute',
+                  top: '58%',
+                  right: '-20px',
+                  transform: 'translateY(-50%)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'flex-start',
+                  gap: '2px',
+                  pointerEvents: 'none',
+                }}
+              >
+                {activePlayer.number ? (
+                  <div
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 900,
+                      fontSize: '76px',
+                      color: 'var(--primary)',
+                      lineHeight: 0.9,
+                      textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                    }}
+                  >
+                    #{activePlayer.number}
+                  </div>
+                ) : null}
+                <div
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontWeight: 900,
+                    fontSize: '20px',
+                    color: 'var(--text)',
+                    letterSpacing: '0.05em',
+                    lineHeight: 1,
+                    textShadow: '0 10px 30px rgba(0,0,0,0.45)',
+                    maxWidth: '160px',
+                  }}
+                >
+                  {activePlayer.position.toUpperCase()}
                 </div>
               </div>
+
+              <div style={{ textAlign: 'center', marginTop: '24px' }}>
+                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '48px', lineHeight: 0.95 }}>{activePlayer.name.toUpperCase()}</h2>
+                {activePlayer.hometown || activePlayer.college ? (
+                  <div style={{ fontFamily: 'var(--font-body)', fontSize: '14px', color: 'var(--text-muted)', marginTop: '8px' }}>
+                    {[activePlayer.hometown, activePlayer.college].filter(Boolean).join(' - ')}
+                  </div>
+                ) : null}
+              </div>
             </div>
-            <div className="card" style={{ padding: 20 }}>
-              <div className="section-tag" style={{ marginBottom: 12 }}>QUICK LINKS</div>
-              <div style={{ display: 'grid', gap: 10 }}>
-                <a href={team.officialUrl} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Team Site</a>
-                <a href={team.scheduleUrl} target="_blank" rel="noopener noreferrer" className="btn-outline" style={{ textAlign: 'center' }}>Official Schedule</a>
+
+            <div>
+              <div className="section-tag" style={{ marginBottom: '20px' }}>FEATURED ATHLETE</div>
+              <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, marginBottom: '36px' }}>{activePlayer.description}</p>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '36px' }}>
+                {[
+                  {
+                    label: activePlayer.highlight ? 'HIGHLIGHT' : (activePlayer.stats[1]?.label?.toUpperCase() ?? 'HIGHLIGHT'),
+                    value: activePlayer.highlight ?? (activePlayer.stats[1] ? `${activePlayer.stats[1].value} ${activePlayer.stats[1].label}` : '—'),
+                  },
+                  {
+                    label: 'NUMBER',
+                    value: activePlayer.number ? `#${activePlayer.number}` : activePlayer.position,
+                  },
+                  {
+                    label: 'ATTENDED',
+                    value: activePlayer.college ?? '—',
+                  },
+                  {
+                    label: 'FROM',
+                    value: activePlayer.hometown ?? '—',
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    style={{
+                      background: 'color-mix(in srgb, var(--team-surface) 72%, var(--bg-card))',
+                      border: '1px solid var(--border)',
+                      padding: '20px',
+                      borderLeft: '3px solid var(--primary)',
+                    }}
+                  >
+                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '28px', color: 'var(--primary)', lineHeight: 1 }}>{item.value}</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginTop: '4px' }}>{item.label}</div>
+                  </div>
+                ))}
+              </div>
+
+              <blockquote style={{ borderLeft: '3px solid var(--primary)', paddingLeft: '20px', fontStyle: 'italic', color: 'var(--text)', fontSize: '15px', lineHeight: 1.6, marginBottom: '32px' }}>
+                "{activePlayer.quote}"
+              </blockquote>
+
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                {content.spotlights.map((player) => (
+                  <button
+                    key={player.name}
+                    onClick={() => setActivePlayer(player)}
+                    style={{
+                      padding: '8px 10px 8px 8px',
+                      background: activePlayer.name === player.name ? 'var(--primary)' : 'transparent',
+                      border: '1px solid',
+                      borderColor: activePlayer.name === player.name ? 'var(--primary)' : 'var(--border)',
+                      color: activePlayer.name === player.name ? '#fff' : 'var(--text-muted)',
+                      cursor: 'pointer',
+                      fontFamily: 'var(--font-accent)',
+                      fontSize: '14px',
+                      letterSpacing: '0.1em',
+                      transition: 'all 0.2s',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                    }}
+                  >
+                    {player.imagePage ? (
+                      <img
+                        src={getPlayerImageSrc(player.imagePage)}
+                        alt={player.name}
+                        style={{
+                          width: '28px',
+                          height: '28px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          objectPosition: 'center top',
+                          border: '1px solid rgba(255,255,255,0.15)',
+                          filter: 'grayscale(1) contrast(1.08) brightness(0.86)',
+                        }}
+                      />
+                    ) : (
+                      <TeamLogo teamId={teamId} size={28} />
+                    )}
+                    <span>{player.name.split(' ').slice(-1)[0].toUpperCase()}</span>
+                  </button>
+                ))}
               </div>
             </div>
           </div>
         </div>
+        <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
       </section>
 
-      {/* ── PROGRAM + SCHEDULE ── */}
-      <section style={{ padding: '28px 0 22px' }}>
-        <div className="container" style={{ display: 'grid', gridTemplateColumns: '0.95fr 1.05fr', gap: 20 }}>
-          <div className="card" style={{ padding: 24 }}>
-            <div className="section-tag" style={{ marginBottom: 12 }}>PROGRAM NOTES</div>
-            <p style={{ color: 'var(--text-muted)', fontSize: 14, lineHeight: 1.8, marginBottom: 18 }}>{team.recruitingAngle}</p>
-            <div style={{ display: 'grid', gap: 12 }}>
-              {team.strengths.map((item) => (
-                <div key={item} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                  <div style={{ width: 7, height: 7, borderRadius: '50%', background: team.primary, marginTop: 7, flexShrink: 0 }} />
-                  <span style={{ color: 'var(--text)', fontSize: 14, lineHeight: 1.6 }}>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="card" style={{ padding: 24 }}>
-            <div className="section-tag" style={{ marginBottom: 12 }}>SCHEDULE WATCH</div>
-            <div style={{ display: 'grid', gap: 12 }}>
-              {team.featuredSchedule.map((game) => (
-                <a key={game.slug} href={game.watchHref} target="_blank" rel="noreferrer"
-                  style={{ display: 'grid', gridTemplateColumns: '92px 1fr auto', gap: 16, alignItems: 'center', padding: '16px 0', borderBottom: '1px solid var(--border)' }}>
-                  <div>
-                    <div className="section-tag" style={{ marginBottom: 8 }}>{game.dateLabel}</div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: 14 }}>{game.broadcast}</div>
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 26, lineHeight: 1, marginBottom: 8 }}>
-                      {game.location === 'away' ? '@' : 'VS'} {game.opponent}
-                    </div>
-                    <div style={{ color: 'var(--text-muted)', fontSize: 14, marginBottom: 6 }}>{game.venue}</div>
-                    <div style={{ color: 'var(--text)', fontSize: 14, lineHeight: 1.6 }}>{game.notes}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: 13, letterSpacing: '0.12em', color: game.status === 'final' ? team.primary : 'var(--text-muted)', marginBottom: 8 }}>
-                      {game.status === 'final' ? `${game.result} ${game.score || ''}`.trim() : 'UPCOMING'}
-                    </div>
-                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: 13, letterSpacing: '0.12em', color: 'var(--primary)' }}>
-                      {game.watchLabel ?? (game.status === 'final' ? 'RECAP' : 'GAME PAGE')}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── ROSTER ── */}
-      <section style={{ padding: '0 0 80px' }}>
+      <section style={{ padding: '80px 0' }}>
         <div className="container">
-          <div className="card" style={{ padding: 28 }}>
-
-            {/* Header row */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 24, gap: 16, flexWrap: 'wrap' }}>
-              <div>
-                <div className="section-tag" style={{ marginBottom: 10 }}>ROSTER</div>
-                <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 42px)', lineHeight: 0.98 }}>
-                  {team.school} <span style={{ color: team.primary }}>{team.nickname}</span>
-                </h2>
-                <div style={{ fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.14em', color: 'var(--text-muted)', marginTop: 6 }}>
-                  {rosterLoading && 'LOADING ROSTER…'}
-                  {!rosterLoading && liveRoster && `${liveRoster.length} PLAYERS · LIVE FROM OFFICIAL SITE`}
-                  {!rosterLoading && rosterError && (
-                    <>SHOWING FEATURED PLAYERS · <a href={team.rosterUrl} target="_blank" rel="noopener noreferrer" style={{ color: team.primary }}>FULL ROSTER ↗</a></>
-                  )}
-                </div>
-              </div>
-              <a href={team.rosterUrl} target="_blank" rel="noopener noreferrer" className="btn-outline">
-                Official Roster Site ↗
-              </a>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '40px', gap: '24px', flexWrap: 'wrap' }}>
+            <div>
+              <div className="section-tag" style={{ marginBottom: '12px' }}>{`2026 ${team.league} ROSTER`}</div>
+              <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(28px, 4vw, 48px)' }}>
+                MEET THE<br /><span style={{ color: 'var(--primary)' }}>TEAM</span>
+              </h2>
             </div>
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {positions.map((position) => (
+                <button
+                  key={position}
+                  onClick={() => setFilter(position)}
+                  style={{
+                    fontFamily: 'var(--font-accent)',
+                    fontSize: '14px',
+                    letterSpacing: '0.1em',
+                    padding: '6px 14px',
+                    border: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s',
+                    background: filter === position ? 'var(--primary)' : 'color-mix(in srgb, var(--team-surface) 58%, transparent)',
+                    color: filter === position ? '#fff' : 'var(--text-muted)',
+                  }}
+                >
+                  {position}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            {/* Search + position filters */}
-            {!rosterLoading && displayRoster.length > 0 && (
-              <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap', alignItems: 'center' }}>
-                <input type="text" placeholder="Search by name or hometown…" value={search} onChange={(e) => setSearch(e.target.value)}
-                  style={{ flex: '1 1 200px', minWidth: 160, background: 'var(--bg)', border: '1px solid var(--border)', color: 'var(--text)', fontFamily: 'var(--font-body)', fontSize: 14, padding: '9px 14px', outline: 'none' }} />
-                <div style={{ display: 'flex', gap: 0, border: '1px solid var(--border)', flexShrink: 0, flexWrap: 'wrap' }}>
-                  {(['ALL', ...positions]).map((pos, i, arr) => (
-                    <button key={pos} onClick={() => setPosFilter(pos)}
-                      style={{ fontFamily: 'var(--font-accent)', fontSize: 12, letterSpacing: '0.14em', padding: '9px 14px', cursor: 'pointer', border: 'none', borderRight: i < arr.length - 1 ? '1px solid var(--border)' : 'none', background: posFilter === pos ? team.primary : 'transparent', color: posFilter === pos ? '#fff' : 'var(--text-muted)', transition: 'all 0.15s' }}>
-                      {pos === 'ALL' ? 'ALL' : (POSITION_LABELS[pos] || pos)}
-                    </button>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '16px' }}>
+            {filteredRoster.map((player) => {
+              const card = (
+                <>
+                  {player.imagePage ? (
+                    <>
+                      <img
+                        src={getPlayerImageSrc(player.imagePage)}
+                        alt={player.name}
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center top',
+                          filter: 'grayscale(1) contrast(1.05) brightness(0.7)',
+                          opacity: 0.18,
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background: 'linear-gradient(180deg, rgba(10,10,10,0.12) 0%, rgba(10,10,10,0.76) 58%, rgba(10,10,10,0.94) 100%)',
+                        }}
+                      />
+                    </>
+                  ) : null}
+                  <div style={{ height: '4px', background: player.pos === 'G' ? 'var(--primary)' : 'color-mix(in srgb, var(--team-surface-strong) 76%, var(--bg-card2))' }} />
+                  <div style={{ padding: '24px', position: 'relative', zIndex: 1 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '12px' }}>
+                      <div>
+                        <div style={{ fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.15em', color: 'var(--text-muted)', marginBottom: '4px' }}>{player.pos}</div>
+                        <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: '22px', lineHeight: 1 }}>{player.name}</h3>
+                      </div>
+                      {player.number ? (
+                        <div style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: '40px', color: player.pos === 'G' ? 'var(--primary)' : 'color-mix(in srgb, var(--text) 12%, transparent)', lineHeight: 1 }}>
+                          #{player.number}
+                        </div>
+                      ) : null}
+                    </div>
+                    {player.hometown ? (
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: player.college ? '4px' : '0' }}>{player.hometown}</div>
+                    ) : null}
+                    {player.college ? (
+                      <div style={{ fontSize: '14px', color: 'var(--text-muted)', marginBottom: '16px' }}>{player.college}</div>
+                    ) : (
+                      <div style={{ marginBottom: '16px' }} />
+                    )}
+                    <div style={{ padding: '8px 12px', background: 'color-mix(in srgb, var(--primary) 10%, transparent)', borderLeft: '2px solid var(--primary)', fontSize: '14px', color: 'var(--text)', lineHeight: 1.4 }}>
+                      {player.highlight}
+                    </div>
+                  </div>
+                </>
+              );
+
+              if (player.slug) {
+                return (
+                  <Link
+                    key={`${teamId}-${player.name}`}
+                    href={`/team/${player.slug}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card"
+                    style={{ overflow: 'hidden', cursor: 'pointer', position: 'relative', display: 'block' }}
+                  >
+                    {card}
+                  </Link>
+                );
+              }
+
+              return (
+                <div
+                  key={`${teamId}-${player.name}`}
+                  className="card"
+                  style={{ overflow: 'hidden', position: 'relative', display: 'block' }}
+                >
+                  {card}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+      <section
+        style={{
+          padding: '10px 0 120px',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        <div className="container">
+          <div
+            style={{
+              borderTop: '1px solid color-mix(in srgb, var(--border) 88%, transparent)',
+              borderBottom: '1px solid color-mix(in srgb, var(--border) 88%, transparent)',
+              padding: '24px 0 18px',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
+                gap: '20px',
+                position: 'relative',
+                zIndex: 1,
+                flexWrap: 'wrap',
+              }}
+            >
+              <div>
+                <div className="section-tag" style={{ marginBottom: '12px' }}>
+                  SHOP {team.full.toUpperCase()} GEAR
+                </div>
+                <p style={{ color: '#fff', fontSize: '15px', lineHeight: 1.7, margin: 0, maxWidth: '760px' }}>
+                  Official team gear from the {team.league} shop. Jerseys, sideline apparel, hats, and fan essentials for {team.full}.
+                </p>
+              </div>
+              <a
+                href={merch.shopUrl}
+                target="_blank"
+                rel="noreferrer"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  minHeight: '52px',
+                  padding: '0 22px',
+                  background: 'var(--primary)',
+                  color: '#fff',
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: '14px',
+                  letterSpacing: '0.12em',
+                  textDecoration: 'none',
+                  clipPath: 'polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 0 0)',
+                }}
+              >
+                SHOP {team.name.toUpperCase()} GEAR
+              </a>
+
+              <div style={{ overflow: 'hidden', maskImage: 'linear-gradient(90deg, transparent, black 4%, black 96%, transparent)', width: '100%', flexBasis: '100%' }}>
+                <div
+                  className="team-gear-rail"
+                  style={{
+                    display: 'flex',
+                    gap: '26px',
+                    width: 'max-content',
+                  }}
+                >
+                  {merchRail.map((item, index) => (
+                    <a
+                      key={`${teamId}-${item.title}-${index}`}
+                      href={item.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{
+                        width: '360px',
+                        minHeight: '432px',
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        display: 'flex',
+                        flexDirection: 'column',
+                      }}
+                    >
+                      <div
+                        style={{
+                          height: '300px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          position: 'relative',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: '16px 24px 0',
+                            background: 'radial-gradient(circle at 50% 55%, color-mix(in srgb, var(--primary) 12%, transparent) 0%, transparent 68%)',
+                            pointerEvents: 'none',
+                          }}
+                        />
+                        {item.image ? (
+                          <img
+                            src={item.image}
+                            alt={item.title}
+                            style={{
+                              position: 'relative',
+                              zIndex: 1,
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'contain',
+                            }}
+                          />
+                        ) : (
+                          <TeamLogo teamId={teamId} size={220} style={{ position: 'relative', zIndex: 1, width: '220px', height: '220px', filter: 'drop-shadow(0 22px 36px rgba(0,0,0,0.26))' }} />
+                        )}
+                      </div>
+
+                      <div style={{ marginTop: '8px', padding: '0 8px' }}>
+                        <div style={{ fontFamily: 'var(--font-body)', fontWeight: 500, fontSize: '15px', lineHeight: 1.4, color: '#fff', letterSpacing: '0.01em' }}>
+                          {item.title}
+                        </div>
+                        <div style={{ color: '#fff', fontSize: '14px', lineHeight: 1.6, marginTop: '10px', opacity: 0.92 }}>
+                          {item.subtitle}{item.price ? ` • ${item.price}` : ''}
+                        </div>
+                      </div>
+
+                      <div style={{ marginTop: '16px', fontFamily: 'var(--font-accent)', fontSize: '14px', letterSpacing: '0.14em', color: 'var(--primary)' }}>
+                        VIEW IN OFFICIAL SHOP
+                      </div>
+                    </a>
                   ))}
                 </div>
               </div>
-            )}
-
-            {/* Player list */}
-            {rosterLoading ? (
-              <div>{[...Array(10)].map((_, i) => <SkeletonRow key={i} />)}</div>
-            ) : filtered.length > 0 ? (
-              <div>{filtered.map((player, i) => <PlayerCard key={`${player.name}-${i}`} player={player} primary={team.primary} teamSlug={slug} />)}</div>
-            ) : (
-              <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--text-muted)', fontSize: 14 }}>
-                {search ? `No players matching "${search}"` : 'No roster data available.'}
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </section>
+      <style>{`
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes teamGearMarquee {
+          from { transform: translateX(0); }
+          to { transform: translateX(calc(-50% - 13px)); }
+        }
+        .team-selector-tile:hover {
+          opacity: 1 !important;
+          transform: translateY(-2px) scale(1.05);
+          border-color: var(--primary) !important;
+        }
+        .team-selector-tile:hover img {
+          opacity: 1 !important;
+          transform: scale(1.08);
+        }
+        .team-gear-rail {
+          animation: teamGearMarquee 42s linear infinite;
+        }
+        .team-gear-rail:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
     </div>
   );
 }
+
+
+
+
