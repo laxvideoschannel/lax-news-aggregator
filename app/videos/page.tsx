@@ -23,7 +23,9 @@ type VideoItem = {
 export default function VideosPage() {
   const [videos, setVideos] = useState<VideoItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [teamId, setTeamId] = useState('chaos');
+  const [teamId, setTeamId] = useState(() =>
+    typeof window !== 'undefined' ? localStorage.getItem('lax_team') || 'chaos' : 'chaos'
+  );
   const [filter, setFilter] = useState<'TEAM' | 'ALL' | VideoLeague>('TEAM');
 
   useEffect(() => {
