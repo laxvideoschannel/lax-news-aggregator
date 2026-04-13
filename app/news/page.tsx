@@ -180,9 +180,28 @@ export default function NewsPage() {
                         display: 'block',
                         borderBottom: '1px solid var(--border)',
                       }}
-                      onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                      onError={e => {
+                        // On broken image, swap to the placeholder div
+                        const el = e.currentTarget as HTMLImageElement;
+                        el.style.display = 'none';
+                        const ph = el.nextElementSibling as HTMLElement;
+                        if (ph) ph.style.display = 'flex';
+                      }}
                     />
                   ) : null}
+                  <div style={{
+                    display: item.image_url ? 'none' : 'flex',
+                    width: '100%', aspectRatio: '16 / 9',
+                    alignItems: 'center', justifyContent: 'center',
+                    background: 'color-mix(in srgb, var(--primary) 8%, var(--bg-card))',
+                    borderBottom: '1px solid var(--border)',
+                    flexDirection: 'column', gap: '10px',
+                  }}>
+                    <div style={{ fontSize: '32px' }}>🥍</div>
+                    <div style={{ fontFamily: 'var(--font-accent)', fontSize: '11px', letterSpacing: '0.18em', color: 'var(--text-muted)' }}>
+                      {(item.category || 'GENERAL').toUpperCase()}
+                    </div>
+                  </div>
                   <div style={{ padding: '24px' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '14px' }}>
                       <span className="news-pill">{item.category}</span>
