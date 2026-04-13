@@ -37,6 +37,10 @@ async function resolveArticleImage(url: string): Promise<string | undefined> {
     // Decode Google News redirect first
     const resolvedUrl = await decodeGoogleNewsUrl(url);
 
+    // If decoding failed and URL is still Google News, bail —
+    // fetching news.google.com directly returns their app logo as og:image
+    if (resolvedUrl.includes('news.google.com')) return undefined;
+
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
     const response = await fetch(resolvedUrl, {
@@ -63,13 +67,18 @@ async function resolveArticleImage(url: string): Promise<string | undefined> {
       /<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i,
       /<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i,
     ];
+    // Known bad image patterns to reject (Google News logo, favicons, tracking pixels)
+    const BAD_PATTERNS = ['favicon', '1x1', 'pixel', 'gstatic.com', 'googleusercontent.com', 'news.google.com', 'g-logo'];
+    const isGoodImage = (imgUrl: string) =>
+      imgUrl.startsWith('http') && !BAD_PATTERNS.some((p) => imgUrl.toLowerCase().includes(p));
+
     for (const pattern of metaPatterns) {
       const match = html.match(pattern);
       if (match?.[1] && !match[1].startsWith('data:')) {
-        const imgUrl = new URL(match[1], finalUrl).toString();
-        if (!imgUrl.includes('favicon') && !imgUrl.includes('1x1') && !imgUrl.includes('pixel')) {
-          return imgUrl;
-        }
+        try {
+          const imgUrl = new URL(match[1], finalUrl).toString();
+          if (isGoodImage(imgUrl)) return imgUrl;
+        } catch { /* ignore */ }
       }
     }
 
