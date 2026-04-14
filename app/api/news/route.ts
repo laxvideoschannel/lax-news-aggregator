@@ -5,6 +5,7 @@ export const fetchCache = 'force-no-store';
 type FeedStory = {
   title: string;
   link: string;
+  article_url: string;  // real article URL (not Google News redirect)
   summary: string;
   source: string;
   category: string;
@@ -12,15 +13,35 @@ type FeedStory = {
   image_url?: string;
 };
 
+// Lacrosse fallback images — confirmed Unsplash sport/action photo IDs
+// Rotated deterministically by hashing the article title
+const LAX_FALLBACK_IMAGES = [
+  'https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?w=1200&q=80&auto=format&fit=crop', // sport crowd stadium
+  'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&q=80&auto=format&fit=crop', // basketball sport action
+  'https://images.unsplash.com/photo-1594470117722-de4b9a02ebed?w=1200&q=80&auto=format&fit=crop', // sport action field
+  'https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&q=80&auto=format&fit=crop', // athlete running
+  'https://images.unsplash.com/photo-1626248801379-51a0748a5f96?w=1200&q=80&auto=format&fit=crop', // sport athlete field
+  'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=1200&q=80&auto=format&fit=crop', // sport field game
+  'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=1200&q=80&auto=format&fit=crop', // sport team
+  'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=1200&q=80&auto=format&fit=crop', // athlete sport
+  'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6?w=1200&q=80&auto=format&fit=crop', // basketball game
+  'https://images.unsplash.com/photo-1535131749006-b7f58c99034b?w=1200&q=80&auto=format&fit=crop', // green sport field
+];
+
+function getLaxFallbackImage(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) hash = (hash * 31 + title.charCodeAt(i)) & 0xfffffff;
+  return LAX_FALLBACK_IMAGES[Math.abs(hash) % LAX_FALLBACK_IMAGES.length];
+}
+
 /**
  * Extract the real article URL from a Google News RSS item.
  * Google News RSS embeds the real URL as an <a href> inside the description HTML.
- * e.g. <a href="https://real-site.com/article">Title</a>
  */
 function extractRealUrlFromDescription(description: string): string | null {
   if (!description) return null;
-  // Decode HTML entities first
-  const decoded = description.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+  const decoded = description
+    .replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
   const match = decoded.match(/href=["']([^"']+)["']/i);
   if (match?.[1] && match[1].startsWith('http') && !match[1].includes('news.google.com')) {
     return match[1];
@@ -110,25 +131,21 @@ function categorizeStory(title: string, summary: string) {
 
 async function getFallbackFeedStories(): Promise<FeedStory[]> {
   const { default: Parser } = await import('rss-parser');
-
-  // Custom parser that captures description (contains real URL for Google News items)
   const parser = new Parser({
     customFields: { item: ['description', 'content:encoded'] },
   });
 
   const feeds = [
-    // Direct lacrosse feeds — real URLs, often have images in RSS
     'https://www.laxallstars.com/feed/',
     'https://premierlacrosseleague.com/feed/',
     'https://www.insidelacrosse.com/rss/articles',
-    // Google News search feeds — need URL extraction from description
     'https://news.google.com/rss/search?q=PLL+lacrosse+OR+WLL+lacrosse+OR+premier+lacrosse+league&hl=en-US&gl=US&ceid=US:en',
     'https://news.google.com/rss/search?q=college+lacrosse&hl=en-US&gl=US&ceid=US:en',
     'https://news.google.com/rss/search?q=lacrosse+news&hl=en-US&gl=US&ceid=US:en',
   ];
 
   const results = await Promise.allSettled(feeds.map((feed) => parser.parseURL(feed)));
-  const stories = new Map<string, FeedStory & { _articleUrl?: string }>();
+  const stories = new Map<string, FeedStory>();
 
   for (const result of results) {
     if (result.status !== 'fulfilled') continue;
@@ -139,11 +156,10 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
       const title = titleParts[0]?.trim() || item.title.trim();
       const summary = item.contentSnippet?.slice(0, 500) || '';
 
-      // For Google News items: extract real article URL from description HTML
       const isGoogleNews = item.link.includes('news.google.com');
       const rawDescription = (item as any).description || (item as any)['content:encoded'] || '';
-      const realUrl = isGoogleNews
-        ? extractRealUrlFromDescription(rawDescription) || ''
+      const article_url = isGoogleNews
+        ? (extractRealUrlFromDescription(rawDescription) || item.link)
         : item.link;
 
       const mediaImage = extractMediaImage(item);
@@ -151,12 +167,12 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
       stories.set(item.link, {
         title,
         link: item.link,
+        article_url,
         summary,
         source: titleParts.slice(1).join(' - ').trim() || result.value.title || 'Lax News',
         category: categorizeStory(title, summary),
         published_at: item.pubDate ? new Date(item.pubDate).toISOString() : new Date().toISOString(),
         image_url: mediaImage,
-        _articleUrl: realUrl || item.link,
       });
     }
   }
@@ -172,10 +188,11 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
     const batch = sortedStories.slice(i, i + BATCH);
     const resolved = await Promise.all(
       batch.map(async (story) => {
-        const { _articleUrl, ...storyData } = story;
+        const articleImg = story.image_url || await fetchArticleImage(story.article_url);
         return {
-          ...storyData,
-          image_url: story.image_url || await fetchArticleImage(_articleUrl || story.link),
+          ...story,
+          // Use article image if found, otherwise deterministic lacrosse fallback
+          image_url: articleImg || getLaxFallbackImage(story.title),
         };
       }),
     );
