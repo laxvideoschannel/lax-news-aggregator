@@ -1,82 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
-
-type ArticleData = {
-  title?: string;
-  author?: string;
-  paragraphs?: string[];
-  image?: string;
-  description?: string;
-  sourceUrl?: string;
-  canEmbed?: boolean;
-};
-
-function ArticleModal({ item, onClose }: { item: any; onClose: () => void }) {
-  const [article, setArticle] = useState<ArticleData | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Use article_url (real URL) for fetching — not the Google News redirect link
-  const fetchUrl = item.article_url || item.link;
-
-  useEffect(() => {
-    fetch(`/api/news-article?url=${encodeURIComponent(fetchUrl)}`)
-      .then(r => r.json())
-      .then(d => { setArticle(d); setLoading(false); })
-      .catch(() => { setArticle({ canEmbed: false }); setLoading(false); });
-  }, [fetchUrl]);
-
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    document.addEventListener('keydown', handler);
-    document.body.style.overflow = 'hidden';
-    return () => { document.removeEventListener('keydown', handler); document.body.style.overflow = ''; };
-  }, [onClose]);
-
-  const displayImage = article?.image || item.image_url;
-  const paragraphs = article?.paragraphs || [];
-  const hasContent = !loading && paragraphs.length > 0;
-
-  return (
-    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-      <div onClick={e => e.stopPropagation()} style={{ background: 'var(--bg-card)', border: '1px solid var(--border)', width: '100%', maxWidth: '760px', maxHeight: '90vh', overflowY: 'auto', position: 'relative' }}>
-        <button onClick={onClose} style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 10, background: 'rgba(0,0,0,0.5)', border: '1px solid var(--border)', color: '#fff', width: '36px', height: '36px', cursor: 'pointer', fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>&#x2715;</button>
-
-        {displayImage && (
-          <div style={{ aspectRatio: '16/9', overflow: 'hidden' }}>
-            <img src={displayImage} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} onError={e => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none'; }} />
-          </div>
-        )}
-
-        <div style={{ padding: '28px 32px 32px' }}>
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap' }}>
-            <span className="news-pill">{item.category || 'General'}</span>
-            {item.source && <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'var(--text-muted)', letterSpacing: '0.1em' }}>{item.source.toUpperCase()}</span>}
-            {item.published_at && <span style={{ fontFamily: 'var(--font-accent)', fontSize: '12px', color: 'var(--text-muted)' }}>{new Date(item.published_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>}
-          </div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontWeight: 900, fontSize: 'clamp(24px, 4vw, 38px)', lineHeight: 1.05, color: 'var(--text)', marginBottom: '8px' }}>{article?.title || item.title}</h2>
-          {article?.author && <div style={{ fontFamily: 'var(--font-acc)', fontSize: '13px', letterSpacing: '0.1em', color: 'var(--text-muted)', marginBottom: '24px', fontFamily: 'var(--font-accent)' }}>BY {article.author.toUpperCase()}</div>}
-          <div style={{ width: '48px', height: '3px', background: 'var(--primary)', marginBottom: '24px' }} />
-          {loading ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {[100, 85, 92, 78].map((w, i) => <div key={i} style={{ height: '14px', background: 'var(--bg)', opacity: 0.6, width: `${w}%` }} />)}
-            </div>
-          ) : hasContent ? (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              {paragraphs.map((p: string, i: number) => <p key={i} style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8, margin: 0 }}>{p}</p>)}
-            </div>
-          ) : (
-            <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.8 }}>{item.summary || article?.description || 'Content unavailable — click the button below to read on the original site.'}</p>
-          )}
-          <div style={{ marginTop: '28px', paddingTop: '20px', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
-            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Source: {item.source}</span>
-            {/* Use article_url (real URL) not the Google News redirect */}
-            <a href={fetchUrl} target="_blank" rel="noopener noreferrer" className="btn-primary" style={{ fontSize: '13px' }}>Read Full Article &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { useState, useEffect } from 'react';
 
 const CATEGORIES = ['All', 'Pro', 'College', 'HS', 'General'];
 
@@ -85,7 +8,6 @@ export default function NewsPage() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState('All');
   const [search, setSearch] = useState('');
-  const [selectedNewsItem, setSelectedNewsItem] = useState<any | null>(null);
 
   useEffect(() => {
     fetch('/api/news')
@@ -157,7 +79,7 @@ export default function NewsPage() {
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
             {[...Array(9)].map((_, i) => (
-              <div key={i} style={{ background: 'var(--bg-card)', height: '320px', border: '1px solid var(--border)' }} />
+              <div key={i} style={{ background: 'var(--bg-card)', height: '220px', border: '1px solid var(--border)' }} />
             ))}
           </div>
         ) : filtered.length === 0 ? (
@@ -175,53 +97,23 @@ export default function NewsPage() {
               {filtered.map((item, i) => {
                 const readUrl = item.article_url || item.link;
                 return (
-                  <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', cursor: 'pointer' }}
-                    onClick={() => setSelectedNewsItem(item)}>
-
-                    {/* Image — shows article photo if available, category banner if not */}
-                    {item.image_url ? (
+                  <a
+                    key={i}
+                    href={readUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="card"
+                    style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', cursor: 'pointer', textDecoration: 'none', color: 'inherit' }}
+                  >
+                    {/* Only show image if the feed or scraper actually found one */}
+                    {item.image_url && (
                       <img
                         src={item.image_url}
                         alt={item.title}
                         style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block', borderBottom: '1px solid var(--border)', flexShrink: 0 }}
-                        onError={e => {
-                          const img = e.currentTarget as HTMLImageElement;
-                          const placeholder = img.nextElementSibling as HTMLElement | null;
-                          img.style.display = 'none';
-                          if (placeholder) placeholder.style.display = 'flex';
-                        }}
+                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                       />
-                    ) : null}
-                    {/* Placeholder shown when no image_url, or when img errors */}
-                    <div style={{
-                      display: item.image_url ? 'none' : 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      aspectRatio: '16 / 9',
-                      flexShrink: 0,
-                      borderBottom: '1px solid var(--border)',
-                      background: item.category === 'Pro' ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
-                        : item.category === 'College' ? 'linear-gradient(135deg, #0f2027 0%, #203a43 100%)'
-                        : item.category === 'HS' ? 'linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%)'
-                        : 'linear-gradient(135deg, #141414 0%, #222 100%)',
-                      position: 'relative',
-                      overflow: 'hidden',
-                    }}>
-                      {/* decorative lacrosse cross pattern */}
-                      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style={{ opacity: 0.12, position: 'absolute' }}>
-                        <rect x="28" y="4" width="8" height="56" rx="4" fill="white"/>
-                        <rect x="4" y="28" width="56" height="8" rx="4" fill="white"/>
-                        <circle cx="32" cy="32" r="14" stroke="white" strokeWidth="3" fill="none"/>
-                      </svg>
-                      <span style={{
-                        fontFamily: 'var(--font-accent)',
-                        fontSize: '11px',
-                        letterSpacing: '0.2em',
-                        color: 'var(--primary)',
-                        fontWeight: 700,
-                        zIndex: 1,
-                      }}>{item.category?.toUpperCase() || 'LAX'} NEWS</span>
-                    </div>
+                    )}
 
                     <div style={{ padding: '20px 24px', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -240,24 +132,15 @@ export default function NewsPage() {
 
                     <div style={{ borderTop: '1px solid var(--border)', padding: '12px 24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>{item.source}</span>
-                      {/* Direct link to real article — also triggers modal for inline reading */}
-                      <a
-                        href={readUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={e => { e.preventDefault(); e.stopPropagation(); setSelectedNewsItem(item); }}
-                        style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.1em', textDecoration: 'none' }}
-                      >READ STORY →</a>
+                      <span style={{ color: 'var(--primary)', fontFamily: 'var(--font-accent)', fontSize: '13px', letterSpacing: '0.1em' }}>READ STORY →</span>
                     </div>
-                  </div>
+                  </a>
                 );
               })}
             </div>
           </>
         )}
       </div>
-
-      {selectedNewsItem && <ArticleModal item={selectedNewsItem} onClose={() => setSelectedNewsItem(null)} />}
     </div>
   );
 }
