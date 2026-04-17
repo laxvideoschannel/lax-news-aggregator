@@ -13,29 +13,6 @@ type FeedStory = {
   image_url?: string;
 };
 
-// Static pool of confirmed lacrosse photos from Unsplash CDN.
-// source.unsplash.com (the redirect API) is shut down — these are stable direct CDN URLs.
-const LAX_IMAGE_POOL: string[] = [
-  'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=1200&q=80&auto=format&fit=crop', // lacrosse game action
-  'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1200&q=80&auto=format&fit=crop', // lacrosse player
-  'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80&auto=format&fit=crop', // sports field
-  'https://images.unsplash.com/photo-1543357480-c60d40007a3f?w=1200&q=80&auto=format&fit=crop', // sports action
-  'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80&auto=format&fit=crop', // stadium crowd
-  'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=1200&q=80&auto=format&fit=crop', // athlete training
-  'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80&auto=format&fit=crop', // sports team
-  'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1200&q=80&auto=format&fit=crop', // sports gear
-];
-
-function buildLaxImagePool(): string[] {
-  return LAX_IMAGE_POOL;
-}
-
-function pickFromPool(pool: string[], title: string): string {
-  let hash = 0;
-  for (let i = 0; i < title.length; i++) hash = (hash * 31 + title.charCodeAt(i)) & 0xfffffff;
-  return pool[Math.abs(hash) % pool.length];
-}
-
 /**
  * Extract the real article URL from a Google News RSS description.
  * Google News embeds the real URL as the first <a href> in the description HTML.
@@ -169,8 +146,6 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
   ];
 
   // Image pool is now synchronous — no need to race it with feed fetches
-  const laxPool = buildLaxImagePool();
-
   const feedResults = await Promise.allSettled(feeds.map(feed => parser.parseURL(feed)));
 
   const stories = new Map<string, FeedStory>();
@@ -215,8 +190,7 @@ async function getFallbackFeedStories(): Promise<FeedStory[]> {
         const articleImg = story.image_url || await fetchArticleImage(story.article_url);
         return {
           ...story,
-          // Real article image first; if none found, pick a lacrosse photo from the pool
-          image_url: articleImg || (laxPool.length > 0 ? pickFromPool(laxPool, story.title) : undefined),
+          image_url: articleImg || undefined,
         };
       }),
     );
