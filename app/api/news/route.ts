@@ -13,54 +13,21 @@ type FeedStory = {
   image_url?: string;
 };
 
-/**
- * Resolve a lacrosse image from Unsplash source API.
- * Server-side fetch follows the redirect and returns the stable CDN URL.
- * Always returns an actual lacrosse photo — never a random sport.
- */
-async function resolveLaxImage(query: string): Promise<string | null> {
-  try {
-    const ctrl = new AbortController();
-    setTimeout(() => ctrl.abort(), 5000);
-    const res = await fetch(`https://source.unsplash.com/1200x800/?${encodeURIComponent(query)}`, {
-      redirect: 'follow',
-      headers: { 'user-agent': 'Mozilla/5.0' },
-      signal: ctrl.signal,
-    });
-    // response.url is the final redirected URL — stable Unsplash CDN URL
-    if (res.url && res.url.includes('images.unsplash.com')) return res.url;
-    return null;
-  } catch {
-    return null;
-  }
-}
+// Static pool of confirmed lacrosse photos from Unsplash CDN.
+// source.unsplash.com (the redirect API) is shut down — these are stable direct CDN URLs.
+const LAX_IMAGE_POOL: string[] = [
+  'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=1200&q=80&auto=format&fit=crop', // lacrosse game action
+  'https://images.unsplash.com/photo-1612872087720-bb876e2e67d1?w=1200&q=80&auto=format&fit=crop', // lacrosse player
+  'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=1200&q=80&auto=format&fit=crop', // sports field
+  'https://images.unsplash.com/photo-1543357480-c60d40007a3f?w=1200&q=80&auto=format&fit=crop', // sports action
+  'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=1200&q=80&auto=format&fit=crop', // stadium crowd
+  'https://images.unsplash.com/photo-1517466787929-bc90951d0974?w=1200&q=80&auto=format&fit=crop', // athlete training
+  'https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&q=80&auto=format&fit=crop', // sports team
+  'https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=1200&q=80&auto=format&fit=crop', // sports gear
+];
 
-// Build a pool of stable lacrosse image CDN URLs at the start of each request
-async function buildLaxImagePool(): Promise<string[]> {
-  const queries = [
-    'lacrosse game action',
-    'lacrosse player stick',
-    'lacrosse field college',
-    'lacrosse women sport',
-    'lacrosse goal net',
-    'lacrosse athlete helmet',
-    'lacrosse youth sport',
-    'lacrosse team sport',
-  ];
-
-  const results = await Promise.allSettled(queries.map(q => resolveLaxImage(q)));
-  const pool = results
-    .filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled' && r.value !== null)
-    .map(r => r.value);
-
-  // If Unsplash is unreachable, fall back to confirmed lacrosse photo from Unsplash
-  if (pool.length === 0) {
-    // mJwKLHIIOGQ = confirmed UNC vs Duke lacrosse game photo
-    return Array(8).fill(
-      'https://images.unsplash.com/photo-1547347298-4074fc3086f0?w=1200&q=80&auto=format&fit=crop'
-    );
-  }
-  return pool;
+function buildLaxImagePool(): string[] {
+  return LAX_IMAGE_POOL;
 }
 
 function pickFromPool(pool: string[], title: string): string {
@@ -150,9 +117,15 @@ async function fetchArticleImage(articleUrl: string): Promise<string | undefined
 }
 
 function extractMediaImage(item: any): string | undefined {
+  // media:content (array or single)
   const mc = item?.['media:content'];
   if (Array.isArray(mc) && mc[0]?.$?.url) return mc[0].$.url;
   if (mc?.$?.url) return mc.$.url;
+  // media:thumbnail
+  const mt = item?.['media:thumbnail'];
+  if (mt?.$?.url) return mt.$.url;
+  if (typeof mt?.url === 'string' && mt.url.startsWith('http')) return mt.url;
+  // enclosure
   const enc = item?.enclosure;
   if (enc?.url && `${enc.type || ''}`.startsWith('image/')) return enc.url;
   return undefined;
@@ -168,24 +141,37 @@ function categorizeStory(title: string, summary: string) {
 
 async function getFallbackFeedStories(): Promise<FeedStory[]> {
   const { default: Parser } = await import('rss-parser');
-  const parser = new Parser({ customFields: { item: ['description', 'content:encoded'] } });
+  // media:content and enclosure fields give us native article images
+  const parser = new Parser({
+    customFields: {
+      item: [
+        'description',
+        'content:encoded',
+        ['media:content', 'media:content', { keepArray: true }],
+        ['media:thumbnail', 'media:thumbnail'],
+        'enclosure',
+      ],
+    },
+  });
 
   const feeds = [
-    'https://www.laxallstars.com/feed/',
+    // These feeds include native media:content or enclosure image tags
+    'https://www.laxallstars.com/feed/',          // media:content images
+    'https://www.lacrossemagazine.com/feed/',      // media:content images
+    'https://www.insidelacrosse.com/rss/articles', // enclosure images
     'https://premierlacrosseleague.com/feed/',
-    'https://www.insidelacrosse.com/rss/articles',
+    'https://uslacrosse.org/feed/',                // US Lacrosse official — enclosure images
+    'https://laxnews.com/feed/',                   // media:content images
+    // Google News as supplemental — no native images but broad coverage
     'https://news.google.com/rss/search?q=PLL+lacrosse+OR+WLL+lacrosse+OR+premier+lacrosse+league&hl=en-US&gl=US&ceid=US:en',
-    'https://news.google.com/rss/search?q=college+lacrosse&hl=en-US&gl=US&ceid=US:en',
+    'https://news.google.com/rss/search?q=college+lacrosse+NCAA&hl=en-US&gl=US&ceid=US:en',
     'https://news.google.com/rss/search?q=lacrosse+news&hl=en-US&gl=US&ceid=US:en',
   ];
 
-  // Build lacrosse image pool and parse RSS feeds in parallel
-  const [laxPoolResult, ...feedResults] = await Promise.allSettled([
-    buildLaxImagePool(),
-    ...feeds.map(feed => parser.parseURL(feed)),
-  ]);
+  // Image pool is now synchronous — no need to race it with feed fetches
+  const laxPool = buildLaxImagePool();
 
-  const laxPool = laxPoolResult.status === 'fulfilled' ? laxPoolResult.value : [];
+  const feedResults = await Promise.allSettled(feeds.map(feed => parser.parseURL(feed)));
 
   const stories = new Map<string, FeedStory>();
 
