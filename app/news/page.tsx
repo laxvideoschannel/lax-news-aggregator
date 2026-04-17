@@ -178,15 +178,50 @@ export default function NewsPage() {
                   <div key={i} className="card" style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden', cursor: 'pointer' }}
                     onClick={() => setSelectedNewsItem(item)}>
 
-                    {/* Image */}
+                    {/* Image — shows article photo if available, category banner if not */}
                     {item.image_url ? (
                       <img
                         src={item.image_url}
                         alt={item.title}
                         style={{ width: '100%', aspectRatio: '16 / 9', objectFit: 'cover', display: 'block', borderBottom: '1px solid var(--border)', flexShrink: 0 }}
-                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                        onError={e => {
+                          const img = e.currentTarget as HTMLImageElement;
+                          const placeholder = img.nextElementSibling as HTMLElement | null;
+                          img.style.display = 'none';
+                          if (placeholder) placeholder.style.display = 'flex';
+                        }}
                       />
                     ) : null}
+                    {/* Placeholder shown when no image_url, or when img errors */}
+                    <div style={{
+                      display: item.image_url ? 'none' : 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      aspectRatio: '16 / 9',
+                      flexShrink: 0,
+                      borderBottom: '1px solid var(--border)',
+                      background: item.category === 'Pro' ? 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)'
+                        : item.category === 'College' ? 'linear-gradient(135deg, #0f2027 0%, #203a43 100%)'
+                        : item.category === 'HS' ? 'linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%)'
+                        : 'linear-gradient(135deg, #141414 0%, #222 100%)',
+                      position: 'relative',
+                      overflow: 'hidden',
+                    }}>
+                      {/* decorative lacrosse cross pattern */}
+                      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" style={{ opacity: 0.12, position: 'absolute' }}>
+                        <rect x="28" y="4" width="8" height="56" rx="4" fill="white"/>
+                        <rect x="4" y="28" width="56" height="8" rx="4" fill="white"/>
+                        <circle cx="32" cy="32" r="14" stroke="white" strokeWidth="3" fill="none"/>
+                      </svg>
+                      <span style={{
+                        fontFamily: 'var(--font-accent)',
+                        fontSize: '11px',
+                        letterSpacing: '0.2em',
+                        color: 'var(--primary)',
+                        fontWeight: 700,
+                        zIndex: 1,
+                      }}>{item.category?.toUpperCase() || 'LAX'} NEWS</span>
+                    </div>
 
                     <div style={{ padding: '20px 24px', flex: 1, display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
